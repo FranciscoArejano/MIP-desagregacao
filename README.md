@@ -14,21 +14,23 @@ demanda final no RS com um modelo de Leontief com coeficientes de emissão.
 | Rodada | Situação | Relatório |
 |---|---|---|
 | 01 — organização, leitor, validação, replicação, diagnóstico do S38, motor de desagregação (com parâmetros **fictícios**), teste de fontes externas | concluída em 15/10/2026 | [respostas/RODADA_01_resposta.md](respostas/RODADA_01_resposta.md) |
-| 02 — coleta de dados externos (ANEEL, ONS, CCEE, EPE, IBGE, SEEG, RAIS) | aguardando decisões D1–D6 e liberação de rede | — |
-| 03 — MIP desagregada com parâmetros reais | — | — |
+| 02 — dados de 2019, motor com 11 subsetores, parâmetros reais e MIP v01 | **parcial** em 15/10/2026: ONS coletado e conferido; motor com 11 subsetores pronto (T6–T8); leitores das demais fontes prontos. Parâmetros e MIP v01 **parados**: a rede liberada não chegou ao ambiente (`*.gov.br` e `seeg.eco.br` com 403) | [respostas/RODADA_02_resposta.md](respostas/RODADA_02_resposta.md) |
 
-Até aqui **nenhuma desagregação real** foi feita. O arquivo em `resultados/rodada01/teste/` usa
-valores fictícios e não deve ser usado em análises.
+Decisões do Francisco em vigor: D1 = C (11 subsetores), D2 = D3 = D4 = D6 = A, D5 = E1 (E2 e E3 como
+sensibilidades), D7 = A.
+
+Até aqui **nenhuma desagregação real** foi feita. Os arquivos em `resultados/rodada01/teste/` usam
+valores fictícios e não devem ser usados em análises.
 
 ## Estrutura
 
 ```
 MIP-desagregacao/
 ├── README.md
-├── requirements.txt          pandas, numpy, openpyxl, pytest, pyyaml
+├── requirements.txt          pandas, numpy, openpyxl, pytest, pyyaml, pyarrow
 ├── dados/
 │   ├── original/             planilha original (somente leitura) + CHECKSUM.txt (SHA-256)
-│   ├── externos/             dados de fontes externas + FONTES.md (registro de fontes)
+│   ├── externos/             dados de fontes externas + FONTES.md (registro de fontes); brutos/ fica fora do git
 │   └── intermediarios/       CSVs derivados (MIP em formato longo)
 ├── parametros/               especificações da desagregação (YAML + CSV); LEIAME_parametros.md
 ├── src/mip/                  código (pacote Python)
@@ -39,8 +41,11 @@ MIP-desagregacao/
 │   ├── referencia.py         cenários e valores de referência da Rodada 01
 │   ├── diagnostico.py        diagnóstico de um setor nas duas regiões
 │   ├── desagregacao.py       motor de desagregação, RAS e verificação
-│   └── exportacao.py         .xlsx com o layout da original e CSV formato longo
-├── scripts/                  rodada01.py (todas as saídas) e rodada01_teste_fontes.py (rede)
+│   ├── exportacao.py         .xlsx com o layout da original e CSV formato longo
+│   ├── dados_externos.py     funções de tratamento das fontes externas (reúne mip.externos)
+│   └── externos/             um leitor por fonte: ons, siga, leiloes (+ IPCA), seeg, cempre
+├── scripts/                  rodada01.py; rodada01_teste_fontes.py; rodada02_coleta.py (downloads, rede);
+│                             rodada02.py (tratamento e saídas da Rodada 02)
 ├── tests/                    pytest (T1–T5 e demais)
 ├── resultados/rodada01/      saídas da Rodada 01
 ├── instrucoes/               instruções de cada rodada
@@ -54,6 +59,8 @@ pip install -r requirements.txt
 python scripts/rodada01.py              # regenera todas as saídas da Rodada 01
 python -m pytest                        # testes (inclui T1: hash da planilha original)
 python scripts/rodada01_teste_fontes.py # opcional: teste de acesso às fontes externas (precisa de rede)
+python scripts/rodada02_coleta.py       # Rodada 02: baixa as fontes (precisa de rede; brutos > 20 MB ficam fora do git)
+python scripts/rodada02.py              # Rodada 02: trata o que foi baixado e gera as saídas
 ```
 
 Para desagregar com outra especificação:
