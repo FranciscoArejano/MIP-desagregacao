@@ -119,3 +119,90 @@ def mip_pequena() -> MIP:
         V_df=np.zeros((len(ITENS_PRIMARIOS_DF), len(COLUNAS_DF))), X_df=F.sum(axis=0),
         S=S, totais_ev={},
     )
+
+
+# ---------------------------------------------------------------------------------------------
+# Rodada 02: especificação de 11 subsetores com valores FICTÍCIOS (só para testar o motor)
+# ---------------------------------------------------------------------------------------------
+SUBSETORES_11 = [
+    ("S38_HID", "Geração hidrelétrica", "geracao"),
+    ("S38_EOL", "Geração eólica", "geracao"),
+    ("S38_SOL", "Geração solar fotovoltaica", "geracao"),
+    ("S38_BIO", "Geração a biomassa e biogás", "geracao"),
+    ("S38_CAR", "Geração a carvão mineral", "geracao"),
+    ("S38_GN", "Geração a gás natural", "geracao"),
+    ("S38_PET", "Geração a derivados de petróleo", "geracao"),
+    ("S38_NUC", "Geração nuclear", "geracao"),
+    ("S38_TRA", "Transmissão", "transmissao"),
+    ("S38_DIS", "Distribuição e comercialização", "distribuicao"),
+    ("S38_GAS", "Gás canalizado e utilidades", "gas_utilidades"),
+]
+GERACAO_11 = [c for c, _, t in SUBSETORES_11 if t == "geracao"]
+# pesos da geração (fictícios); SOL e PET no RS = latentes; NUC no RS = zero
+PESOS_GERACAO_FICT = {
+    "RS": {"S38_HID": 0.60, "S38_EOL": 0.22, "S38_SOL": 0.0, "S38_BIO": 0.007, "S38_CAR": 0.16,
+           "S38_GN": 0.013, "S38_PET": 0.0, "S38_NUC": 0.0},
+    "RB": {"S38_HID": 0.65, "S38_EOL": 0.08, "S38_SOL": 0.01, "S38_BIO": 0.03, "S38_CAR": 0.06,
+           "S38_GN": 0.12, "S38_PET": 0.01, "S38_NUC": 0.04},
+}
+NIVEIS_CO2E_FICT = {  # t CO2e (fictícios)
+    "RS": {"S38_CAR": 3.0e6, "S38_GN": 7.0e4, "S38_BIO": 1.0e3, "S38_TRA": 1.0e4, "S38_DIS": 9.6e3},
+    "RB": {"S38_CAR": 9.7e6, "S38_GN": 2.05e7, "S38_PET": 4.3e6, "S38_BIO": 1.0e4, "S38_TRA": 1.5e5, "S38_DIS": 1.5e5},
+}
+
+
+def espec_11_ficticia(modo_niveis: str = "residuo", gas_termicas: float = 0.0, niveis=None) -> Especificacao:
+    subs = pd.DataFrame(SUBSETORES_11, columns=["codigo", "nome", "tipo"])
+    part = []
+    for r, pesos in PESOS_GERACAO_FICT.items():
+        for c, _, tipo in SUBSETORES_11:
+            part.append((r, c, pesos.get(c, np.nan) if tipo == "geracao" else np.nan, FONTE))
+    part = pd.DataFrame(part, columns=["regiao", "subsetor", "participacao", "fonte"])
+    comp = pd.DataFrame(
+        [("RS", "vbp_transmissao", 1500.0, FONTE), ("RS", "vbp_gas", 1000.0, FONTE),
+         ("RB", "vbp_transmissao", 24000.0, FONTE), ("RB", "vbp_gas", 20000.0, FONTE),
+         ("*", "fracao_transmissao_distribuicao", 0.5, FONTE),
+         ("RS", "gas_termicas", gas_termicas, FONTE), ("RB", "gas_termicas", gas_termicas, FONTE)],
+        columns=["regiao", "componente", "valor", "fonte"],
+    )
+    col = [("*", "*", "*", "proporcional_vbp", "", np.nan, np.nan, "")]
+    col += [("*", "S04", "*", "fixa_com_teto", "S38_CAR", 1.0, 0.40, "demais_vbp")]
+    col += [("*", "S05", "*", "fixa_com_teto", "S38_GN", 0.6, 0.60, "demais_vbp"),
+            ("*", "S05", "*", "fixa_com_teto", "S38_GAS", 0.4, np.nan, "demais_vbp")]
+    col += [("*", "S19", "*", "fixa_com_teto", "S38_PET", 1.0, 0.60, "demais_vbp")]
+    col += [("*", f, "*", "fixa_com_teto", "S38_BIO", 1.0, 0.40, "demais_vbp") for f in ("S03", "S09")]
+    regras_coluna = pd.DataFrame(col, columns=["regiao", "fornecedor", "regiao_fornecedor", "regra", "subsetor",
+                                               "valor", "teto_vbp", "destino_excedente"])
+    regras_coluna["fonte"] = FONTE
+    lin = [("*", "*", "*", "fixa_por_comprador", "S38_DIS", 1.0, False),
+           ("*", "S08:S37|S43|FAM", "*", "somente_distribuicao_e_gas", "", np.nan, False),
+           ("*", "INV", "*", "fixa_por_comprador", "S38_DIS", 1.0, False),
+           ("*", "EXP", "*", "fixa_por_comprador", "S38_DIS", 1.0, False),
+           ("*", "DISCREP", "*", "somente_distribuicao_e_gas", "", np.nan, False)]
+    regras_linha = pd.DataFrame(lin, columns=["regiao", "comprador", "regiao_comprador", "regra", "subsetor", "valor",
+                                              "fixar_no_ras"])
+    regras_linha["fonte"] = FONTE
+    pri = [("*", "*", "proporcional_vbp", "", np.nan),
+           ("*", "importacoes", "fixa", "S38_DIS", 0.7), ("*", "importacoes", "fixa", "S38_GAS", 0.3)]
+    pri += [("*", it, "proporcional_ci", "", np.nan) for it in ("ipi", "icms", "outros_impostos")]
+    ind_rem = {"S38_TRA": 1.5, "S38_DIS": 1.2, "S38_GAS": 1.0} | {c: 1.0 for c in GERACAO_11}
+    pri += [("*", "remuneracoes", "indicador", c, v) for c, v in ind_rem.items()]
+    term = {"S38_CAR": 5.0, "S38_GN": 3.0, "S38_BIO": 2.0, "S38_PET": 4.0, "S38_NUC": 5.0}
+    for it in ("energia", "agua"):
+        pri += [("*", it, "indicador", c, term.get(c, 0.0)) for c, _, _ in SUBSETORES_11]
+    ind_ocup = {"S38_TRA": 2.0, "S38_DIS": 3.0, "S38_GAS": 1.0} | {c: 1.0 for c in GERACAO_11}
+    pri += [("*", "ocupacoes", "indicador", c, v) for c, v in ind_ocup.items()]
+    for r, niv in (niveis or NIVEIS_CO2E_FICT).items():
+        pri += [(r, "co2e", "niveis", c, v) for c, v in niv.items()]
+    regras_primarios = pd.DataFrame(pri, columns=["regiao", "item", "regra", "subsetor", "valor"])
+    regras_primarios["fonte"] = FONTE
+    latentes = pd.DataFrame([("RS", "S38_SOL", "RB", FONTE), ("RS", "S38_PET", "RB", FONTE)],
+                            columns=["regiao", "subsetor", "regiao_espelho", "fonte"])
+    return Especificacao(
+        nome="11 subsetores (fictícia)", setor_alvo="S38", regioes=["RS", "RB"], subsetores=subs,
+        participacoes=part, bloco="roteamento_por_componentes", modo_vbp="ancora_componentes",
+        regras_coluna=regras_coluna, regras_linha=regras_linha, regras_primarios=regras_primarios,
+        latentes_espelho=latentes, componentes=comp,
+        niveis={"co2e": {"modo": modo_niveis, "residuo_para": ["S38_DIS", "S38_GAS"]}},
+        subsetor_termica_gas="S38_GN",
+    )

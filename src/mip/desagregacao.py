@@ -6,12 +6,16 @@ cada célula da original), mais o mapa de setores, os pesos usados e as checagen
 
 Blocos da nova matriz (t = setor-alvo; "fora do bloco" = setores ≠ t e colunas de demanda final):
 - fora × fora ......................... cópia da original
-- fornecedor fora → subsetores (coluna) .... regras de coluna: proporcional_vbp | fixa | indicador
+- fornecedor fora → subsetores (coluna) .... regras de coluna: proporcional_vbp | fixa | indicador | fixa_com_teto
 - subsetores → comprador fora (linha) ...... regras de linha: proporcional_vbp | somente_rede_e_gas
-                                             | fixa_por_comprador (+ RAS para fechar as linhas)
-- subsetores → subsetores (bloco t→t) ...... proporcional | geracao_vende_para_rede
-- insumos primários e contas satélite ...... proporcional_vbp | fixa | indicador; EOB = resíduo
+                                             (= somente_distribuicao_e_gas) | fixa_por_comprador (+ RAS)
+- subsetores → subsetores (bloco t→t) ...... proporcional | geracao_vende_para_rede | roteamento_por_componentes
+- insumos primários e contas satélite ...... proporcional_vbp | fixa | indicador | proporcional_ci | niveis;
+                                             EOB = resíduo
 - subsetores latentes ...................... produção-base zero + coluna de coeficientes dada à parte
+                                             (explícita ou "espelho" do mesmo subsetor em outra região)
+
+VBP dos subsetores (modo_vbp): participacoes | ancora_bloco | ancora_componentes.
 
 Regiões não desagregadas ficam com o setor agregado (tratado como um grupo de um único "subsetor").
 """
@@ -33,12 +37,22 @@ from .estrutura import (
 )
 from .modelo import ModeloLeontief
 
-TIPOS_SUBSETOR = ("geracao", "rede", "gas_utilidades")
-REGRAS_COLUNA = ("proporcional_vbp", "fixa", "indicador")
-REGRAS_LINHA = ("proporcional_vbp", "somente_rede_e_gas", "fixa_por_comprador")
-REGRAS_PRIMARIOS = ("proporcional_vbp", "fixa", "indicador")
-OPCOES_BLOCO = ("proporcional", "geracao_vende_para_rede")
-MODOS_VBP = ("participacoes", "ancora_bloco")
+# 'rede' (Rodada 01) equivale a 'distribuicao'
+TIPOS_SUBSETOR = ("geracao", "transmissao", "distribuicao", "gas_utilidades", "rede")
+REGRAS_COLUNA = ("proporcional_vbp", "fixa", "indicador", "fixa_com_teto")
+REGRAS_LINHA = ("proporcional_vbp", "somente_rede_e_gas", "somente_distribuicao_e_gas", "fixa_por_comprador")
+REGRAS_PRIMARIOS = ("proporcional_vbp", "fixa", "indicador", "proporcional_ci", "niveis")
+OPCOES_BLOCO = ("proporcional", "geracao_vende_para_rede", "roteamento_por_componentes")
+MODOS_VBP = ("participacoes", "ancora_bloco", "ancora_componentes")
+MODOS_NIVEIS = ("residuo", "proporcional", "sem_residuo")
+DESTINOS_EXCEDENTE = ("demais_vbp", "sem_teto")
+# componentes do bloco (roteamento_por_componentes / ancora_componentes), em R$ milhões, por região
+COMPONENTES = {
+    "vbp_transmissao": None,  # T_r: VBP do subsetor de transmissão (obrigatório no roteamento)
+    "vbp_gas": None,  # VBP do subsetor de gás canalizado (obrigatório em ancora_componentes)
+    "gas_termicas": 0.0,  # G_r: gás vendido pelas distribuidoras às térmicas dentro do bloco
+    "fracao_transmissao_distribuicao": 0.5,  # parte de T_r paga pela distribuição (resto: geração)
+}
 # Itens repartidos por regra; EOB é o resíduo e VA = remunerações + EOB + impostos sobre a produção
 ITENS_PRIMARIOS_REPARTIVEIS = ["importacoes", "ipi", "icms", "outros_impostos", "remuneracoes", "impostos_producao"]
 ITENS_REPARTIVEIS = ITENS_PRIMARIOS_REPARTIVEIS + ITENS_SATELITE
@@ -48,10 +62,18 @@ TOL_REAGREGACAO = 1e-6
 
 COLS_SUBSETORES = ["codigo", "nome", "tipo"]
 COLS_PARTICIPACOES = ["regiao", "subsetor", "participacao", "fonte"]
-COLS_REGRAS_COLUNA = ["regiao", "fornecedor", "regiao_fornecedor", "regra", "subsetor", "valor", "fonte"]
+COLS_REGRAS_COLUNA = ["regiao", "fornecedor", "regiao_fornecedor", "regra", "subsetor", "valor", "teto_vbp",
+                      "destino_excedente", "fonte"]
 COLS_REGRAS_LINHA = ["regiao", "comprador", "regiao_comprador", "regra", "subsetor", "valor", "fixar_no_ras", "fonte"]
 COLS_REGRAS_PRIMARIOS = ["regiao", "item", "regra", "subsetor", "valor", "fonte"]
 COLS_COEF_LATENTES = ["regiao", "subsetor", "tipo_linha", "regiao_linha", "codigo_linha", "coeficiente", "fonte"]
+COLS_LATENTES_ESPELHO = ["regiao", "subsetor", "regiao_espelho", "fonte"]
+COLS_COMPONENTES = ["regiao", "componente", "valor", "fonte"]
+
+
+def tipo_canonico(tipo: str) -> str:
+    """'rede' (nome da Rodada 01) equivale a 'distribuicao'."""
+    return "distribuicao" if tipo == "rede" else tipo
 
 
 class EspecificacaoInvalida(ValueError):
@@ -73,7 +95,7 @@ def _tabela(df: pd.DataFrame | None, colunas: list[str]) -> pd.DataFrame:
     for c in colunas:
         if c not in df.columns:
             df[c] = np.nan
-    numericas = {"participacao", "valor", "coeficiente"}
+    numericas = {"participacao", "valor", "coeficiente", "teto_vbp"}
     for c in colunas:
         if c in numericas:
             df[c] = pd.to_numeric(df[c].replace("", np.nan), errors="raise")
@@ -102,6 +124,10 @@ class Especificacao:
     regras_linha: pd.DataFrame | None = None
     regras_primarios: pd.DataFrame | None = None
     coef_latentes: pd.DataFrame | None = None
+    latentes_espelho: pd.DataFrame | None = None
+    componentes: pd.DataFrame | None = None
+    niveis: dict = field(default_factory=dict)  # {item: {"modo": ..., "residuo_para": [...]}}
+    subsetor_termica_gas: str | None = None  # comprador do gás G_r no roteamento (ex.: S38_GN)
     ras_tolerancia: float = 1e-8
     ras_max_iter: int = 10000
     aviso: str | None = None
@@ -117,6 +143,26 @@ class Especificacao:
         self.regras_primarios = _tabela(self.regras_primarios, COLS_REGRAS_PRIMARIOS)
         if self.coef_latentes is not None:
             self.coef_latentes = _tabela(self.coef_latentes, COLS_COEF_LATENTES)
+        self.latentes_espelho = _tabela(self.latentes_espelho, COLS_LATENTES_ESPELHO)
+        self.componentes = _tabela(self.componentes, COLS_COMPONENTES)
+        self.niveis = dict(self.niveis or {})
+
+    def componente(self, regiao: str, nome: str) -> float | None:
+        """Valor de um componente do bloco para a região (linha da região vence a linha '*')."""
+        c = self.componentes
+        m = c[(c["componente"] == nome) & (c["regiao"] == regiao)]
+        if not len(m):
+            m = c[(c["componente"] == nome) & c["regiao"].isin([CURINGA, ""])]
+        if len(m) > 1:
+            raise EspecificacaoInvalida(f"componentes: '{nome}' repetido para a região {regiao}")
+        if len(m):
+            return float(m["valor"].iloc[0])
+        return COMPONENTES.get(nome)
+
+    def fonte_componente(self, regiao: str, nome: str) -> str:
+        c = self.componentes
+        m = c[(c["componente"] == nome) & c["regiao"].isin([regiao, CURINGA, ""])]
+        return "; ".join(dict.fromkeys(f for f in m["fonte"] if f)) or "padrão do motor"
 
 
 def _relativo(caminho: Path) -> str:
@@ -155,6 +201,10 @@ def ler_especificacao(caminho_yaml: str | Path) -> Especificacao:
         regras_linha=ler("regras_linha"),
         regras_primarios=ler("regras_primarios"),
         coef_latentes=ler("coef_latentes"),
+        latentes_espelho=ler("latentes_espelho"),
+        componentes=ler("componentes"),
+        niveis=cfg.get("niveis") or {},
+        subsetor_termica_gas=cfg.get("subsetor_termica_gas"),
         ras_tolerancia=float(ras.get("tolerancia", 1e-8)),
         ras_max_iter=int(ras.get("max_iter", 10000)),
         aviso=cfg.get("aviso"),
@@ -189,21 +239,65 @@ def validar_especificacao(espec: Especificacao, mip: MIP) -> None:
         erros.append(f"modo_vbp inválido: {espec.modo_vbp} (válidos: {MODOS_VBP})")
     if espec.modo_vbp == "ancora_bloco" and espec.bloco != "geracao_vende_para_rede":
         erros.append("modo_vbp = ancora_bloco exige bloco_intrassetorial = geracao_vende_para_rede")
+    if espec.modo_vbp == "ancora_componentes" and espec.bloco != "roteamento_por_componentes":
+        erros.append("modo_vbp = ancora_componentes exige bloco_intrassetorial = roteamento_por_componentes")
+    tipos = subs["tipo"].map(tipo_canonico)
+    n_ger, n_tra, n_dis, n_gas = (int((tipos == x).sum()) for x in ("geracao", "transmissao", "distribuicao", "gas_utilidades"))
     if espec.bloco == "geracao_vende_para_rede":
-        if (subs["tipo"] == "rede").sum() != 1:
-            erros.append("geracao_vende_para_rede exige exatamente um subsetor do tipo 'rede'")
-        if (subs["tipo"] == "geracao").sum() < 1:
+        if n_dis != 1:
+            erros.append("geracao_vende_para_rede exige exatamente um subsetor do tipo 'distribuicao' (ou 'rede')")
+        if n_ger < 1:
             erros.append("geracao_vende_para_rede exige ao menos um subsetor do tipo 'geracao'")
-    # participações: uma por (região, subsetor), não negativas, somando 1 em cada região
-    p = espec.participacoes
+    if espec.bloco == "roteamento_por_componentes":
+        if n_tra != 1 or n_dis != 1 or n_ger < 1:
+            erros.append("roteamento_por_componentes exige exatamente um subsetor 'transmissao', exatamente um "
+                         "'distribuicao' e ao menos um 'geracao'")
     codigos = set(subs["codigo"])
+    # componentes do bloco
+    comp = espec.componentes
+    inv = set(comp["componente"]) - set(COMPONENTES)
+    if inv:
+        erros.append(f"componentes inválidos: {sorted(inv)} (válidos: {sorted(COMPONENTES)})")
+    if comp["valor"].isna().any():
+        erros.append("componentes: há valores vazios")
+    if espec.bloco == "roteamento_por_componentes" and not inv:
+        for r in espec.regioes:
+            T = espec.componente(r, "vbp_transmissao")
+            if T is None or T < 0:
+                erros.append(f"componentes: vbp_transmissao da região {r} ausente ou negativo")
+            G = espec.componente(r, "gas_termicas")
+            if G is None or G < 0:
+                erros.append(f"componentes: gas_termicas da região {r} negativo")
+            elif G > 0:
+                if n_gas != 1:
+                    erros.append("gas_termicas > 0 exige exatamente um subsetor 'gas_utilidades'")
+                st = espec.subsetor_termica_gas
+                if not st or st not in codigos or tipo_canonico(subs.set_index("codigo").loc[st, "tipo"]) != "geracao":
+                    erros.append("gas_termicas > 0 exige subsetor_termica_gas = código de um subsetor de geração")
+            a = espec.componente(r, "fracao_transmissao_distribuicao")
+            if a is None or not 0 <= a <= 1:
+                erros.append(f"componentes: fracao_transmissao_distribuicao da região {r} fora de [0, 1]")
+            if espec.modo_vbp == "ancora_componentes":
+                vg = espec.componente(r, "vbp_gas")
+                if vg is None or vg < 0:
+                    erros.append(f"componentes: vbp_gas da região {r} ausente ou negativo")
+                if vg and n_gas != 1:
+                    erros.append("vbp_gas > 0 exige exatamente um subsetor 'gas_utilidades'")
+    # participações: uma por (região, subsetor), não negativas
+    p = espec.participacoes
     for r in espec.regioes:
         pr = p[p["regiao"] == r]
         if set(pr["subsetor"]) != codigos or pr["subsetor"].duplicated().any():
             erros.append(f"participações da região {r}: é preciso exatamente uma linha por subsetor")
             continue
-        if (pr["participacao"] < 0).any():
-            erros.append(f"participações negativas na região {r}")
+        if espec.modo_vbp == "ancora_componentes":
+            # só os pesos da geração importam (MWh × preço); os demais VBPs vêm dos componentes
+            pg = pr[pr["subsetor"].map(subs.set_index("codigo")["tipo"]).map(tipo_canonico) == "geracao"]["participacao"]
+            if pg.isna().any() or (pg < 0).any() or pg.sum() <= 0:
+                erros.append(f"participações da geração na região {r}: precisam ser ≥ 0, sem vazios, com soma > 0")
+            continue
+        if pr["participacao"].isna().any() or (pr["participacao"] < 0).any():
+            erros.append(f"participações vazias ou negativas na região {r}")
         if abs(pr["participacao"].sum() - 1) > TOL_SOMA:
             erros.append(f"participações da região {r} somam {pr['participacao'].sum():.12f} (≠ 1)")
     if set(p["regiao"]) - set(espec.regioes):
@@ -220,6 +314,29 @@ def validar_especificacao(espec: Especificacao, mip: MIP) -> None:
         subs_inv = set(tab["subsetor"]) - codigos - {""}
         if subs_inv:
             erros.append(f"{nome}: subsetores inexistentes {sorted(subs_inv)}")
+    dest_inv = set(espec.regras_coluna["destino_excedente"]) - set(DESTINOS_EXCEDENTE) - {""}
+    if dest_inv:
+        erros.append(f"regras_coluna: destino_excedente inválido {sorted(dest_inv)} (válidos: {DESTINOS_EXCEDENTE})")
+    if (espec.regras_coluna["teto_vbp"] < 0).any():
+        erros.append("regras_coluna: teto_vbp negativo")
+    # níveis absolutos (ex.: emissões do SEEG): modo e destinatários do resíduo
+    itens_niveis = set(espec.regras_primarios.loc[espec.regras_primarios["regra"] == "niveis", "item"])
+    if CURINGA in itens_niveis or "" in itens_niveis:
+        erros.append("regras_primarios: a regra 'niveis' exige item explícito (não '*')")
+    for item in itens_niveis - {CURINGA, ""}:
+        cfg = espec.niveis.get(item)
+        if not cfg or cfg.get("modo") not in MODOS_NIVEIS:
+            erros.append(f"niveis: configure o modo de '{item}' no YAML (niveis.{item}.modo ∈ {MODOS_NIVEIS})")
+        elif cfg["modo"] == "residuo":
+            rp = cfg.get("residuo_para") or []
+            if not rp or set(rp) - codigos:
+                erros.append(f"niveis.{item}.residuo_para precisa listar subsetores existentes (tem {rp})")
+    # latentes por espelho
+    for le in espec.latentes_espelho.itertuples(index=False):
+        if le.regiao not in espec.regioes or le.regiao_espelho not in espec.regioes or le.regiao == le.regiao_espelho:
+            erros.append(f"latentes_espelho: {le.regiao} {le.subsetor} ← {le.regiao_espelho}: regiões inválidas")
+        if le.subsetor not in codigos:
+            erros.append(f"latentes_espelho: subsetor {le.subsetor} inexistente")
     itens_inv = set(espec.regras_primarios["item"]) - set(ITENS_REPARTIVEIS) - {CURINGA}
     if itens_inv:
         erros.append(
@@ -253,6 +370,8 @@ class _Grupo:
     valores: dict
     fonte: str
     fixar: bool = False
+    tetos: dict = field(default_factory=dict)  # subsetor → teto como fração do VBP (fixa_com_teto)
+    destino: str = "demais_vbp"  # destino do excedente dos tetos
 
 
 def _agrupar(tab: pd.DataFrame, chave_cols: list[str], nome: str) -> list[_Grupo]:
@@ -264,15 +383,20 @@ def _agrupar(tab: pd.DataFrame, chave_cols: list[str], nome: str) -> list[_Grupo
         regras = g["regra"].unique()
         if len(regras) != 1:
             raise EspecificacaoInvalida(f"{nome}: chave {chave} com mais de uma regra: {list(regras)}")
-        valores = {}
-        for s, v in zip(g["subsetor"], g["valor"]):
+        valores, tetos = {}, {}
+        for k, (s, v) in enumerate(zip(g["subsetor"], g["valor"])):
             if s:
                 if s in valores:
                     raise EspecificacaoInvalida(f"{nome}: chave {chave}: subsetor {s} repetido")
                 valores[s] = float(v)
+                if "teto_vbp" in g and pd.notna(g["teto_vbp"].iloc[k]):
+                    tetos[s] = float(g["teto_vbp"].iloc[k])
         fontes = "; ".join(dict.fromkeys(f for f in g["fonte"] if f))
         fixar = bool(g["fixar_no_ras"].any()) if "fixar_no_ras" in g else False
-        grupos.append(_Grupo(chave, regras[0], valores, fontes, fixar))
+        destinos = {d for d in g["destino_excedente"] if d} if "destino_excedente" in g else set()
+        if len(destinos) > 1:
+            raise EspecificacaoInvalida(f"{nome}: chave {chave} com mais de um destino_excedente: {sorted(destinos)}")
+        grupos.append(_Grupo(chave, regras[0], valores, fontes, fixar, tetos, destinos.pop() if destinos else "demais_vbp"))
     return grupos
 
 
@@ -298,6 +422,40 @@ def _escolher(grupos: list[_Grupo], pontuar, descricao: str) -> _Grupo | None:
 
 def _casa(valor_regra: str, *aceitos) -> bool:
     return valor_regra in (CURINGA, "") or valor_regra in aceitos
+
+
+def _num_codigo(cod: str) -> int | None:
+    digitos = "".join(ch for ch in str(cod) if ch.isdigit())
+    return int(digitos) if digitos and str(cod).upper().startswith("S") else None
+
+
+def _pontua_comprador(regra: str, codigo: str, tipo_df: str | None = None) -> int | None:
+    """Pontuação de especificidade do campo `comprador` de uma regra de linha (None = não casa).
+
+    Aceita: '*' (0); 'CI' — todos os setores (1); 'DF' — todas as colunas de demanda final (1);
+    tipo de coluna de DF, ex. 'FAM' (2); faixa de setores 'S08:S37' (2); lista 'S08:S37|S43|FAM' (2);
+    código exato do setor ou da coluna de DF (3).
+    """
+    eh_df = tipo_df is not None
+    if regra in (CURINGA, ""):
+        return 0
+    if regra == codigo:
+        return 3
+    if "|" in regra:
+        partes = [_pontua_comprador(x.strip(), codigo, tipo_df) for x in regra.split("|") if x.strip()]
+        return 2 if any(p is not None and p > 0 for p in partes) else None
+    if regra == "CI":
+        return None if eh_df else 1
+    if regra == "DF":
+        return 1 if eh_df else None
+    if eh_df and regra == tipo_df:
+        return 2
+    if ":" in regra and not eh_df:
+        a, b = (_num_codigo(x) for x in regra.split(":", 1))
+        n = _num_codigo(codigo)
+        if a is not None and b is not None and n is not None and a <= n <= b:
+            return 2
+    return None
 
 
 @dataclass
@@ -337,12 +495,20 @@ def _pesos(grupo: _Grupo | None, ga: _GrupoAlvo, descricao: str) -> tuple[np.nda
         if base.sum() <= 0:
             raise EspecificacaoInvalida(f"{descricao}: Σ VBP × indicador = 0")
         w = base / base.sum()
-    elif regra == "somente_rede_e_gas":
-        m = np.isin(ga.tipos, ["rede", "gas_utilidades"])
+    elif regra in ("somente_rede_e_gas", "somente_distribuicao_e_gas"):
+        m = np.isin([tipo_canonico(t) for t in ga.tipos], ["distribuicao", "gas_utilidades"])
         base = np.where(m, s, 0.0)
         if base.sum() <= 0:
-            raise EspecificacaoInvalida(f"{descricao}: somente_rede_e_gas, mas rede e gás têm VBP zero")
+            raise EspecificacaoInvalida(f"{descricao}: {regra}, mas distribuição e gás têm VBP zero")
         w = base / base.sum()
+    elif regra == "fixa_com_teto":  # participações-base; os tetos são aplicados em _alocar_com_teto
+        w = np.array([grupo.valores.get(c, 0.0) for c in ga.codigos])
+        if (w < 0).any() or abs(w.sum() - 1) > TOL_SOMA:
+            raise EspecificacaoInvalida(f"{descricao}: participações fixas devem ser ≥ 0 e somar 1 (soma = {w.sum()})")
+        semteto = [c for c, wk, sk in zip(ga.codigos, w, s) if wk > 0 and sk == 0 and c not in grupo.tetos]
+        if semteto:
+            raise EspecificacaoInvalida(f"{descricao}: fixa_com_teto dá valor sem teto a subsetor com produção zero: {semteto}")
+        return w, regra, fonte
     else:  # pragma: no cover - validado antes
         raise EspecificacaoInvalida(f"{descricao}: regra desconhecida {regra}")
     if ((w > 0) & (s == 0)).any():
@@ -351,6 +517,38 @@ def _pesos(grupo: _Grupo | None, ga: _GrupoAlvo, descricao: str) -> tuple[np.nda
             f"{descricao}: regra '{regra}' atribui valor a subsetor com produção zero: {zerados}"
         )
     return w, regra, fonte
+
+
+def _alocar_com_teto(grupo: _Grupo, ga: _GrupoAlvo, valor: float, X_sub: np.ndarray,
+                     descricao: str) -> tuple[np.ndarray, list[dict]]:
+    """Reparte `valor` pelas participações fixas, limitando cada subsetor com teto a teto × VBP.
+
+    O excedente vai para os "demais" subsetores (os que não têm teto nesta regra), na proporção do VBP
+    (destino 'demais_vbp'), ou para os subsetores da regra sem teto, na proporção das participações
+    (destino 'sem_teto'). Devolve a alocação e a lista dos tetos atingidos.
+    """
+    w, _, _ = _pesos(grupo, ga, descricao)
+    aloc = w * valor
+    atingidos = []
+    if valor <= 0:  # valores negativos ou nulos não são limitados
+        return aloc, atingidos
+    for k, c in enumerate(ga.codigos):
+        if c in grupo.tetos:
+            lim = grupo.tetos[c] * X_sub[k]
+            if aloc[k] > lim + 1e-12:
+                atingidos.append({"subsetor": c, "valor_pela_regra": aloc[k], "teto": lim,
+                                  "teto_fracao_vbp": grupo.tetos[c], "excedente": aloc[k] - lim})
+                aloc[k] = lim
+    exced = valor - aloc.sum()
+    if exced > 1e-12:
+        if grupo.destino == "sem_teto":
+            base = np.array([w[k] if c not in grupo.tetos else 0.0 for k, c in enumerate(ga.codigos)])
+        else:
+            base = np.array([X_sub[k] if c not in grupo.tetos else 0.0 for k, c in enumerate(ga.codigos)])
+        if base.sum() <= 0:
+            raise EspecificacaoInvalida(f"{descricao}: excedente de teto ({exced:.4f}) sem destinatário ({grupo.destino})")
+        aloc = aloc + exced * base / base.sum()
+    return aloc, atingidos
 
 
 # =============================================================================================
@@ -420,6 +618,7 @@ class ResultadoDesagregacao:
     pesos: pd.DataFrame
     info_ras: pd.DataFrame
     checagens: pd.DataFrame = field(default_factory=pd.DataFrame)
+    extras: dict = field(default_factory=dict)  # tabelas auxiliares (componentes do bloco, tetos, níveis)
 
     @property
     def ok(self) -> bool:
@@ -462,6 +661,8 @@ class ResultadoDesagregacao:
             "checagens": self.checagens,
             "ras": self.info_ras,
         }
+        for nome, tab in self.extras.items():
+            abas[nome] = tab
         if self.mip.coef_latentes is not None and len(self.mip.coef_latentes):
             abas["coef_latentes"] = self.mip.coef_latentes
         sub_ids = list(self.mapa.loc[self.mapa["desagregado"], "id_novo"])
@@ -480,28 +681,65 @@ class ResultadoDesagregacao:
 # =============================================================================================
 # Desagregação
 # =============================================================================================
-def _participacoes_efetivas(espec: Especificacao, mip: MIP, idx_alvo: dict) -> dict[str, np.ndarray]:
-    """Participações no VBP de cada região desagregada (modo 'participacoes' ou 'ancora_bloco')."""
+def _participacoes_efetivas(espec: Especificacao, mip: MIP, idx_alvo: dict) -> tuple[dict[str, np.ndarray], pd.DataFrame]:
+    """Participações no VBP de cada região desagregada e, no roteamento, os componentes do bloco.
+
+    - participacoes: as informadas;
+    - ancora_bloco: VBP da geração = vendas do setor-alvo da região ao setor-alvo de todas as regiões;
+    - ancora_componentes: geração = E_r = F_r − T_r − G_r (repartida pelos pesos da geração); transmissão = T_r;
+      gás = vbp_gas; distribuição = X_r − E_r − T_r − vbp_gas (tem de ser > 0).
+    """
     subs = espec.subsetores
-    tipos = subs["tipo"].to_numpy()
-    saida = {}
+    tipos = subs["tipo"].map(tipo_canonico).to_numpy()
+    ger = tipos == "geracao"
+    saida, comps = {}, []
     for r in espec.regioes:
         p = espec.participacoes[espec.participacoes["regiao"] == r].set_index("subsetor")["participacao"]
         s = p.reindex(subs["codigo"]).to_numpy(dtype=float)
+        i = idx_alvo[r]
+        Xr = mip.X[i]
+        F = float(sum(mip.Z[i, idx_alvo[r2]] for r2 in idx_alvo))  # vendas ao setor-alvo de todas as regiões
         if espec.modo_vbp == "ancora_bloco":
-            i = idx_alvo[r]
-            G = sum(mip.Z[i, idx_alvo[r2]] for r2 in idx_alvo)  # vendas ao setor-alvo de todas as regiões
-            Xr = mip.X[i]
-            ger = tipos == "geracao"
             sg, sn = s[ger].sum(), s[~ger].sum()
-            if (G > 0 and sg <= 0) or (Xr - G > 0 and sn <= 0):
+            if (F > 0 and sg <= 0) or (Xr - F > 0 and sn <= 0):
                 raise EspecificacaoInvalida(f"ancora_bloco na região {r}: grupo sem participação positiva")
             novo = np.zeros_like(s)
-            novo[ger] = (G / Xr) * s[ger] / sg if sg > 0 else 0.0
-            novo[~ger] = ((Xr - G) / Xr) * s[~ger] / sn if sn > 0 else 0.0
+            novo[ger] = (F / Xr) * s[ger] / sg if sg > 0 else 0.0
+            novo[~ger] = ((Xr - F) / Xr) * s[~ger] / sn if sn > 0 else 0.0
             s = novo
+        if espec.bloco == "roteamento_por_componentes":
+            T = espec.componente(r, "vbp_transmissao")
+            G = espec.componente(r, "gas_termicas") or 0.0
+            E = F - T - G
+            tol = 1e-9 * max(1.0, F)
+            if E < -tol:
+                raise EspecificacaoInvalida(
+                    f"roteamento na região {r}: E_r = F_r − T_r − G_r = {F:.4f} − {T:.4f} − {G:.4f} = {E:.4f} < 0 "
+                    "(a transmissão e o gás às térmicas não cabem nas vendas do bloco)"
+                )
+            E = max(E, 0.0)
+            linha = {"regiao": r, "VBP_setor (X_r)": Xr, "F_r (vendas ao bloco)": F, "T_r (transmissão)": T,
+                     "G_r (gás às térmicas)": G, "E_r (energia = VBP da geração)": E,
+                     "fracao_transmissao_distribuicao": espec.componente(r, "fracao_transmissao_distribuicao")}
+            if espec.modo_vbp == "ancora_componentes":
+                Vg = espec.componente(r, "vbp_gas") or 0.0
+                D = Xr - E - T - Vg
+                linha.update({"VBP_gas": Vg, "VBP_distribuicao (resíduo)": D})
+                if D <= 0:
+                    raise EspecificacaoInvalida(
+                        f"ancora_componentes na região {r}: VBP da distribuição = X_r − E_r − T_r − VBP_gas = "
+                        f"{Xr:.4f} − {E:.4f} − {T:.4f} − {Vg:.4f} = {D:.4f} ≤ 0"
+                    )
+                sg = np.where(ger, np.nan_to_num(s), 0.0)
+                novo = np.zeros_like(s)
+                novo[ger] = (E / Xr) * sg[ger] / sg.sum()
+                novo[tipos == "transmissao"] = T / Xr
+                novo[tipos == "gas_utilidades"] = Vg / Xr
+                novo[tipos == "distribuicao"] = D / Xr
+                s = novo
+            comps.append(linha)
         saida[r] = s
-    return saida
+    return saida, pd.DataFrame(comps)
 
 
 def _matriz_agregacao(mapa: pd.DataFrame, n_orig: int, n_novo: int) -> np.ndarray:
@@ -528,6 +766,151 @@ def agregar(mip_novo: MIP, mapa: pd.DataFrame, setores_originais: pd.DataFrame) 
     )
 
 
+def _celulas_roteamento(espec: Especificacao, gv: _GrupoAlvo, gc: _GrupoAlvo, B: float, Fr: float) -> np.ndarray:
+    """Bloco vendedor gv → comprador gc no roteamento por componentes (Seção 6.2 da Rodada 02).
+
+    Para a região vendedora r: F_r = vendas ao setor-alvo de todas as regiões; T_r = VBP da transmissão;
+    G_r = gás às térmicas; E_r = F_r − T_r − G_r (energia). Cada componente vai à região compradora q na
+    proporção F_rq / F_r. Energia: geração de r (∝ VBP) → distribuição de q. Transmissão: TRA de r →
+    fração α à distribuição de q e (1 − α) à geração de q (∝ VBP). Gás: GAS de r → térmica a gás de q.
+    Vendedor não desagregado: o fluxo vai ao grupo comprador na proporção do VBP.
+    """
+    if not gv.desagregado:
+        return np.outer(np.ones(1), gc.s / gc.s.sum()) * B
+    frac = B / Fr if Fr else 0.0
+    r = gv.regiao
+    T = espec.componente(r, "vbp_transmissao")
+    G = espec.componente(r, "gas_termicas") or 0.0
+    E = max(Fr - T - G, 0.0)
+    alfa = espec.componente(r, "fracao_transmissao_distribuicao")
+    tv = np.array(gv.tipos)
+    ger_v = tv == "geracao"
+    sg = gv.s[ger_v].sum()
+    if E * frac > 0 and sg <= 0:
+        raise EspecificacaoInvalida(f"roteamento: {r} vende energia ({E * frac:.4f}), mas a geração de {r} tem VBP zero")
+    w_ger_v = np.where(ger_v, gv.s / sg, 0.0) if sg > 0 else np.zeros(len(tv))
+    w_tra_v = (tv == "transmissao").astype(float)
+    w_gas_v = (tv == "gas_utilidades").astype(float)
+    if gc.desagregado:
+        tc = np.array(gc.tipos)
+        w_dis_c = (tc == "distribuicao").astype(float)
+        ger_c = tc == "geracao"
+        sgc = gc.s[ger_c].sum()
+        if (1 - alfa) * T * frac > 0 and sgc <= 0:
+            raise EspecificacaoInvalida(f"roteamento: a geração de {gc.regiao} tem VBP zero e não pode pagar transmissão")
+        w_ger_c = np.where(ger_c, gc.s / sgc, 0.0) if sgc > 0 else np.zeros(len(tc))
+        w_gn_c = (np.array(gc.codigos) == espec.subsetor_termica_gas).astype(float)
+    else:
+        w_dis_c = w_ger_c = w_gn_c = np.ones(1)
+    cel = np.outer(w_ger_v, w_dis_c) * E * frac
+    cel += np.outer(w_tra_v, w_dis_c) * alfa * T * frac
+    cel += np.outer(w_tra_v, w_ger_c) * (1 - alfa) * T * frac
+    if G > 0:
+        cel += np.outer(w_gas_v, w_gn_c) * G * frac
+    return cel
+
+
+def _repartir_niveis(espec: Especificacao, item: str, grupo: _Grupo, ga: _GrupoAlvo, total: float,
+                     X_sub: np.ndarray, descricao: str) -> tuple[np.ndarray, dict]:
+    """Níveis absolutos por subsetor (ex.: emissões do SEEG) e tratamento do resíduo em relação ao total da base.
+
+    Modos (YAML niveis.<item>.modo): 'residuo' (E1) — níveis + resíduo (total − Σ níveis) aos subsetores de
+    `residuo_para`, na proporção do VBP; resíduo negativo reduz os níveis proporcionalmente (sinalizado);
+    'proporcional' (E2) — total da base repartido na proporção dos níveis; 'sem_residuo' (E3) — só os níveis
+    (NÃO preserva o total da base).
+    """
+    L = np.array([grupo.valores.get(c, 0.0) for c in ga.codigos], dtype=float)
+    if (L < 0).any() or np.isnan(L).any():
+        raise EspecificacaoInvalida(f"{descricao}: níveis negativos ou vazios")
+    zerados = [c for c, lk, xk in zip(ga.codigos, L, X_sub) if lk > 0 and xk == 0]
+    if zerados:
+        raise EspecificacaoInvalida(f"{descricao}: nível positivo em subsetor com produção zero: {zerados}")
+    cfg = espec.niveis[item]
+    modo = cfg["modo"]
+    soma = L.sum()
+    info = {"regiao": ga.regiao, "item": item, "modo": modo, "total_base": total, "identificado": soma,
+            "residuo": total - soma, "fator_reducao_identificados": 1.0, "preserva_total": modo != "sem_residuo",
+            "observacao": ""}
+    if modo == "residuo":
+        R = total - soma
+        if R >= 0:
+            m = np.isin(ga.codigos, cfg["residuo_para"])
+            base = np.where(m, X_sub, 0.0)
+            if R > 0 and base.sum() <= 0:
+                raise EspecificacaoInvalida(f"{descricao}: resíduo {R:.4f} sem destinatário com VBP > 0")
+            vals = L + (R * base / base.sum() if R > 0 else 0.0)
+        else:
+            f = total / soma
+            vals = L * f
+            info["fator_reducao_identificados"] = f
+            info["observacao"] = f"resíduo negativo ({R:.4f}): níveis identificados reduzidos pelo fator {f:.6f}"
+    elif modo == "proporcional":
+        if soma <= 0:
+            raise EspecificacaoInvalida(f"{descricao}: modo proporcional com Σ níveis = 0")
+        vals = total * L / soma
+    else:  # sem_residuo
+        vals = L.copy()
+        info["observacao"] = f"NÃO PRESERVA o total da base: diferença = {soma - total:.4f}"
+    return vals, info
+
+
+def _latentes_por_espelho(espec: Especificacao, mip: MIP, grupos: dict, setores2: pd.DataFrame,
+                          Z2: np.ndarray, X2: np.ndarray, S2: np.ndarray) -> pd.DataFrame:
+    """Coluna de coeficientes de um subsetor latente copiada do mesmo subsetor em outra região (Seção 6.5).
+
+    Para cada fornecedor (código), soma o coeficiente das duas origens na coluna do espelho; reparte entre
+    as origens pela participação de cada origem nas compras desse insumo na coluna ORIGINAL do setor-alvo da
+    região do latente. Para fornecedores que são subsetores do próprio setor-alvo (ex.: transmissão), usa a
+    participação das origens no bloco alvo→alvo dessa região. Se o setor-alvo original não compra o insumo,
+    usa a participação das origens no total das compras fora do bloco (fallback, registrado na fonte).
+    Intensidades satélite: as do espelho.
+    """
+    linhas = []
+    t = espec.setor_alvo
+    regs = list(grupos)
+    pares = set(zip(setores2["regiao"], setores2["codigo"]))
+    for le in espec.latentes_espelho.itertuples(index=False):
+        gl, ge = grupos[le.regiao], grupos[le.regiao_espelho]
+        k = gl.codigos.index(le.subsetor)
+        if gl.s[k] != 0:
+            raise EspecificacaoInvalida(f"latente {le.regiao} {le.subsetor}: a produção-base precisa ser zero")
+        m = ge.idx_novo[ge.codigos.index(le.subsetor)]
+        Xm = X2[m]
+        if Xm <= 0:
+            raise EspecificacaoInvalida(f"latente {le.regiao} {le.subsetor}: o espelho {le.regiao_espelho} tem VBP zero")
+        a = Z2[:, m] / Xm
+        a_cod = pd.Series(a, index=setores2["codigo"].to_numpy()).groupby(level=0, sort=False).sum()
+        j0 = gl.idx_orig
+        bloco_in = np.array([mip.Z[grupos[q].idx_orig, j0] for q in regs])
+        fora_reg = {q: mip.Z[(mip.setores["regiao"] == q).to_numpy() & (mip.setores["codigo"] != t).to_numpy(), j0].sum()
+                    for q in regs}
+        tot_fora = sum(fora_reg.values())
+        fonte_base = le.fonte or f"espelho de {le.regiao_espelho} {le.subsetor}"
+        for cod, val in a_cod.items():
+            if val == 0:
+                continue
+            if cod in gl.codigos or cod == t:
+                w = bloco_in / bloco_in.sum() if bloco_in.sum() > 0 else np.full(len(regs), 1 / len(regs))
+                nota = "origens pelo bloco alvo→alvo da região"
+            else:
+                compras = np.array([mip.Z[mip.indice(q, cod), j0] for q in regs])
+                if compras.sum() > 0:
+                    w = compras / compras.sum()
+                    nota = "origens pela coluna original do setor-alvo"
+                else:
+                    w = np.array([fora_reg[q] / tot_fora for q in regs])
+                    nota = "insumo não comprado na coluna original: origens pelo total das compras fora do bloco (fallback)"
+            for q, wq in zip(regs, w):
+                if wq <= 0:
+                    continue
+                cod_q = cod if (q, cod) in pares else t  # região não desagregada: setor agregado
+                linhas.append((le.regiao, le.subsetor, "setor", q, cod_q, float(val * wq), f"{fonte_base}; {nota}"))
+        for kk, item in enumerate(ITENS_SATELITE):
+            linhas.append((le.regiao, le.subsetor, "satelite", "", item, float(S2[kk, m] / Xm),
+                           f"{fonte_base}; intensidade do espelho"))
+    return pd.DataFrame(linhas, columns=COLS_COEF_LATENTES)
+
+
 def desagregar(mip: MIP, espec: Especificacao, estrito: bool = True) -> ResultadoDesagregacao:
     """Desagrega `espec.setor_alvo` em subsetores e verifica o resultado.
 
@@ -539,8 +922,12 @@ def desagregar(mip: MIP, espec: Especificacao, estrito: bool = True) -> Resultad
     regs = mip.lista_regioes
     subs = espec.subsetores
     K = len(subs)
+    tipos_can = [tipo_canonico(x) for x in subs["tipo"]]
     idx_alvo = {r: mip.indice(r, t) for r in regs}
-    s_ef = _participacoes_efetivas(espec, mip, idx_alvo)
+    s_ef, componentes_bloco = _participacoes_efetivas(espec, mip, idx_alvo)
+    extras = {}
+    if len(componentes_bloco):
+        extras["componentes_bloco"] = componentes_bloco
 
     # ---- nova lista de setores e mapa ----------------------------------------------------------
     novos, grupos = [], {}
@@ -550,7 +937,7 @@ def desagregar(mip: MIP, espec: Especificacao, estrito: bool = True) -> Resultad
             for k, sub in enumerate(subs.itertuples(index=False)):
                 novos.append((s.regiao, sub.codigo, sub.nome, i, s.codigo, s.nome, sub.tipo, s_ef[s.regiao][k], True))
             grupos[s.regiao] = _GrupoAlvo(
-                s.regiao, i, list(range(ini, ini + K)), list(subs["codigo"]), list(subs["tipo"]), s_ef[s.regiao], True
+                s.regiao, i, list(range(ini, ini + K)), list(subs["codigo"]), tipos_can, s_ef[s.regiao], True
             )
         else:
             novos.append((s.regiao, s.codigo, s.nome, i, s.codigo, s.nome, "", 1.0, False))
@@ -600,26 +987,42 @@ def desagregar(mip: MIP, espec: Especificacao, estrito: bool = True) -> Resultad
 
     # colunas (insumos de fornecedores fora do bloco)
     g_col = _agrupar(espec.regras_coluna, ["regiao", "fornecedor", "regiao_fornecedor"], "regras_coluna")
+    tetos_reg = []
     for r, ga in grupos.items():
         j = ga.idx_orig
+        X_sub = X2[ga.idx_novo]
         for i, i2 in zip(fora, fora2):
             def pont(ch, r=r, i=i):
                 if not (_casa(ch["regiao"], r) and _casa(ch["fornecedor"], cod_orig[i]) and _casa(ch["regiao_fornecedor"], reg_orig[i])):
                     return None
                 return (ch["regiao"] not in ("", CURINGA)) + 2 * (ch["fornecedor"] not in ("", CURINGA)) + (ch["regiao_fornecedor"] not in ("", CURINGA))
-            g = _escolher(g_col, pont, f"coluna {r} {t} ← {reg_orig[i]} {cod_orig[i]}") if ga.desagregado else None
-            w, regra, fonte = _pesos(g, ga, f"coluna {r} {t} ← {reg_orig[i]} {cod_orig[i]}")
-            Z2[i2, ga.idx_novo] = w * mip.Z[i, j]
+            desc = f"coluna {r} {t} ← {reg_orig[i]} {cod_orig[i]}"
+            g = _escolher(g_col, pont, desc) if ga.desagregado else None
+            z = mip.Z[i, j]
+            if g is not None and g.regra == "fixa_com_teto":
+                aloc, atingidos = _alocar_com_teto(g, ga, z, X_sub, desc)
+                for a in atingidos:
+                    tetos_reg.append({"regiao": r, "fornecedor": f"{reg_orig[i]} {cod_orig[i]}", "valor_total": z, **a,
+                                      "destino_excedente": g.destino, "fonte": g.fonte})
+                Z2[i2, ga.idx_novo] = aloc
+                w, regra, fonte = (aloc / z if z else aloc * 0.0), g.regra, g.fonte
+            else:
+                w, regra, fonte = _pesos(g, ga, desc)
+                Z2[i2, ga.idx_novo] = w * z
             registrar("coluna", ga, f"{reg_orig[i]} {cod_orig[i]}", regra, fonte, w)
+    if tetos_reg:
+        extras["tetos_atingidos"] = pd.DataFrame(tetos_reg)
 
     # bloco intrassetorial
     bloco_linhas = {r: np.zeros(len(ga.idx_novo)) for r, ga in grupos.items()}
+    F_bloco = {r: float(sum(mip.Z[gv.idx_orig, gc.idx_orig] for gc in grupos.values())) for r, gv in grupos.items()}
     for r, gv in grupos.items():
         for r2, gc in grupos.items():
             B = mip.Z[gv.idx_orig, gc.idx_orig]
             if espec.bloco == "proporcional":
                 wv, wc = gv.s, gc.s
-            else:  # geracao_vende_para_rede
+                cel = np.outer(wv, wc) * B
+            elif espec.bloco == "geracao_vende_para_rede":
                 if gv.desagregado:
                     ger = np.array(gv.tipos) == "geracao"
                     sg = gv.s[ger].sum()
@@ -629,12 +1032,19 @@ def desagregar(mip: MIP, espec: Especificacao, estrito: bool = True) -> Resultad
                 else:
                     wv = np.ones(1)
                 if gc.desagregado:
-                    wc = (np.array(gc.tipos) == "rede").astype(float)
+                    wc = (np.array(gc.tipos) == "distribuicao").astype(float)
                     if gc.s[wc == 1].sum() <= 0 and B != 0:
-                        raise EspecificacaoInvalida(f"geracao_vende_para_rede: rede de {r2} com VBP zero não pode comprar {B}")
+                        raise EspecificacaoInvalida(f"geracao_vende_para_rede: distribuição de {r2} com VBP zero não pode comprar {B}")
                 else:
                     wc = np.ones(1)
-            cel = np.outer(wv, wc) * B
+                cel = np.outer(wv, wc) * B
+            else:  # roteamento_por_componentes
+                cel = _celulas_roteamento(espec, gv, gc, B, F_bloco[r])
+            # nenhuma célula do bloco em subsetor com produção zero
+            if gv.desagregado and ((np.abs(cel).sum(axis=1) > 0) & (gv.s == 0)).any():
+                raise EspecificacaoInvalida(f"bloco {r}→{r2}: venda de subsetor com produção zero")
+            if gc.desagregado and ((np.abs(cel).sum(axis=0) > 0) & (gc.s == 0)).any():
+                raise EspecificacaoInvalida(f"bloco {r}→{r2}: compra de subsetor com produção zero")
             Z2[np.ix_(gv.idx_novo, gc.idx_novo)] = cel
             bloco_linhas[r] += cel.sum(axis=1)
             if gv.desagregado:
@@ -659,25 +1069,21 @@ def desagregar(mip: MIP, espec: Especificacao, estrito: bool = True) -> Resultad
         for jj in range(m):
             if jj < len(fora):
                 j = fora[jj]
-                cj, rj = cod_orig[j], reg_orig[j]
-                desc = f"linha {r} {t} → {rj} {cj}"
-
-                def pont(ch, r=r, cj=cj, rj=rj):
-                    if not (_casa(ch["regiao"], r) and _casa(ch["comprador"], cj, "CI") and _casa(ch["regiao_comprador"], rj)):
-                        return None
-                    c = ch["comprador"]
-                    return (ch["regiao"] not in ("", CURINGA)) + (3 if c == cj else 1 if c == "CI" else 0) + (ch["regiao_comprador"] not in ("", CURINGA))
+                cj, rj, tipo_df = cod_orig[j], reg_orig[j], None
                 chave = f"{rj} {cj}"
             else:
                 d = COLUNAS_DF.iloc[jj - len(fora)]
-                desc = f"linha {r} {t} → {d.codigo}"
-
-                def pont(ch, r=r, d=d):
-                    if not (_casa(ch["regiao"], r) and _casa(ch["comprador"], d.codigo, d.tipo, "DF") and _casa(ch["regiao_comprador"], d.regiao)):
-                        return None
-                    c = ch["comprador"]
-                    return (ch["regiao"] not in ("", CURINGA)) + (3 if c == d.codigo else 2 if c == d.tipo else 1 if c == "DF" else 0) + (ch["regiao_comprador"] not in ("", CURINGA))
+                cj, rj, tipo_df = d.codigo, d.regiao, d.tipo
                 chave = d.codigo
+            desc = f"linha {r} {t} → {chave}"
+
+            def pont(ch, r=r, cj=cj, rj=rj, tipo_df=tipo_df):
+                if not (_casa(ch["regiao"], r) and _casa(ch["regiao_comprador"], rj)):
+                    return None
+                pc = _pontua_comprador(ch["comprador"], cj, tipo_df)
+                if pc is None:
+                    return None
+                return (ch["regiao"] not in ("", CURINGA)) + pc + (ch["regiao_comprador"] not in ("", CURINGA))
             g = _escolher(g_lin, pont, desc) if ga.desagregado else None
             w, regra, fonte = _pesos(g, ga, desc)
             M0[:, jj] = w * alvo_col[jj]
@@ -694,13 +1100,13 @@ def desagregar(mip: MIP, espec: Especificacao, estrito: bool = True) -> Resultad
                 raise EspecificacaoInvalida(
                     f"linha de {r} {ga.codigos[k]}: o VBP ({X2[ga.idx_novo[k]]:.4f}) é menor que as vendas já "
                     f"fixadas (bloco {bloco_linhas[r][k]:.4f} + células fixas); resta {resid[k]:.4f} < 0. "
-                    "Ajuste as participações no VBP (ou use modo_vbp = ancora_bloco)."
+                    "Ajuste as participações no VBP (ou use modo_vbp = ancora_bloco / ancora_componentes)."
                 )
             for k in np.flatnonzero((livres <= 0) & (np.abs(resid) > tol_inv)):
                 raise EspecificacaoInvalida(
                     f"linha de {r} {ga.codigos[k]}: o VBP ({X2[ga.idx_novo[k]]:.4f}) menos as vendas no bloco "
                     f"({bloco_linhas[r][k]:.4f}) deixa {resid[k]:.4f} a vender, mas as regras de linha não lhe permitem "
-                    "vender a nenhum comprador fora do bloco. Ajuste as participações (ou use modo_vbp = ancora_bloco)."
+                    "vender a nenhum comprador fora do bloco. Ajuste as participações (ou use modo_vbp = ancora_bloco / ancora_componentes)."
                 )
             tol = max(espec.ras_tolerancia, 1e-14 * mip.X[i])  # piso: precisão numérica das somas
             M, info = ras(M0, alvo_lin, alvo_col, fix, tol=tol, max_iter=espec.ras_max_iter, contexto=f"linhas {r} {t}")
@@ -723,26 +1129,44 @@ def desagregar(mip: MIP, espec: Especificacao, estrito: bool = True) -> Resultad
     g_pri = _agrupar(espec.regras_primarios, ["regiao", "item"], "regras_primarios")
     ip = {it: k for k, it in enumerate(ITENS_PRIMARIOS)}
     isat = {it: k for k, it in enumerate(ITENS_SATELITE)}
+    niveis_reg = []
     for r, ga in grupos.items():
         j = ga.idx_orig
         if not ga.desagregado:
             V2[:, ga.idx_novo[0]] = mip.V[:, j]
             S2[:, ga.idx_novo[0]] = mip.S[:, j]
             continue
-        for item in ITENS_REPARTIVEIS:
+        idx = ga.idx_novo
+        X_sub = X2[idx]
+        for item in ITENS_REPARTIVEIS:  # importações vêm antes dos impostos (proporcional_ci usa as importações)
             def pont(ch, r=r, item=item):
                 if not (_casa(ch["regiao"], r) and _casa(ch["item"], item)):
                     return None
                 return (ch["regiao"] not in ("", CURINGA)) + 2 * (ch["item"] not in ("", CURINGA))
-            g = _escolher(g_pri, pont, f"{item} {r} {t}")
-            w, regra, fonte = _pesos(g, ga, f"{item} {r} {t}")
-            if item in ip:
-                V2[ip[item], ga.idx_novo] = w * mip.V[ip[item], j]
+            desc = f"{item} {r} {t}"
+            g = _escolher(g_pri, pont, desc)
+            total = mip.V[ip[item], j] if item in ip else mip.S[isat[item], j]
+            if g is not None and g.regra == "niveis":
+                vals, info_n = _repartir_niveis(espec, item, g, ga, total, X_sub, desc)
+                niveis_reg.append(info_n)
+                regra, fonte = f"niveis ({info_n['modo']})", g.fonte
+                w = vals / total if total else vals * 0.0
+            elif g is not None and g.regra == "proporcional_ci":
+                base = Z2[:, idx].sum(axis=0) + V2[ip["importacoes"], idx]
+                if base.sum() <= 0:
+                    raise EspecificacaoInvalida(f"{desc}: proporcional_ci com compras intermediárias nulas")
+                w = base / base.sum()
+                vals = w * total
+                regra, fonte = g.regra, g.fonte
             else:
-                S2[isat[item], ga.idx_novo] = w * mip.S[isat[item], j]
+                w, regra, fonte = _pesos(g, ga, desc)
+                vals = w * total
+            if item in ip:
+                V2[ip[item], idx] = vals
+            else:
+                S2[isat[item], idx] = vals
             registrar("primarios_satelite", ga, item, regra, fonte, w)
         # EOB = resíduo da coluna; o resíduo contábil original do setor é repartido pelo VBP
-        idx = ga.idx_novo
 
         def custos(Zc, Vc, cols):
             return (Zc[:, cols].sum(axis=0) + Vc[ip["importacoes"], cols]
@@ -754,17 +1178,26 @@ def desagregar(mip: MIP, espec: Especificacao, estrito: bool = True) -> Resultad
         eps = mip.V[ip["va"], j] - (mip.V[ip["remuneracoes"], j] + mip.V[ip["eob"], j] + mip.V[ip["impostos_producao"], j])
         V2[ip["va"], idx] = V2[ip["remuneracoes"], idx] + V2[ip["eob"], idx] + V2[ip["impostos_producao"], idx] + ga.s * eps
         registrar("primarios_satelite", ga, "eob", "residuo", "fecha a coluna", V2[ip["eob"], idx] / mip.V[ip["eob"], j] if mip.V[ip["eob"], j] else V2[ip["eob"], idx] * 0)
+    if niveis_reg:
+        extras["niveis"] = pd.DataFrame(niveis_reg)
 
     # ---- coeficientes latentes ---------------------------------------------------------------
-    coef_lat = None
+    partes = []
     if espec.coef_latentes is not None and len(espec.coef_latentes):
-        coef_lat = espec.coef_latentes.copy()
+        partes.append(espec.coef_latentes.copy())
+    if len(espec.latentes_espelho):
+        partes.append(_latentes_por_espelho(espec, mip, grupos, setores2, Z2, X2, S2))
+    coef_lat = pd.concat(partes, ignore_index=True) if partes else None
+    if coef_lat is not None:
         ids2 = set(zip(setores2["regiao"], setores2["codigo"]))
         for rr in coef_lat.itertuples(index=False):
             if rr.tipo_linha == "setor" and (rr.regiao_linha, rr.codigo_linha) not in ids2:
                 raise EspecificacaoInvalida(f"coef_latentes: linha {rr.regiao_linha} {rr.codigo_linha} não existe na MIP desagregada")
             if rr.tipo_linha == "satelite" and rr.codigo_linha not in ITENS_SATELITE:
                 raise EspecificacaoInvalida(f"coef_latentes: item satélite {rr.codigo_linha} inválido")
+        dup = coef_lat.duplicated(["regiao", "subsetor", "tipo_linha", "regiao_linha", "codigo_linha"])
+        if dup.any():
+            raise EspecificacaoInvalida(f"coef_latentes: linhas repetidas: {coef_lat[dup].to_dict('records')[:5]}")
         for (r, s) in coef_lat[["regiao", "subsetor"]].drop_duplicates().itertuples(index=False):
             k = list(grupos[r].codigos).index(s)
             if grupos[r].s[k] != 0:
@@ -786,7 +1219,7 @@ def desagregar(mip: MIP, espec: Especificacao, estrito: bool = True) -> Resultad
     )
     pesos = pd.DataFrame(pesos_reg)
     info_ras = pd.DataFrame([vars(x) for x in infos])
-    res = ResultadoDesagregacao(mip2, mip, espec, mapa, pesos, info_ras)
+    res = ResultadoDesagregacao(mip2, mip, espec, mapa, pesos, info_ras, extras=extras)
     res.checagens = verificar(res)
     if estrito and not res.ok:
         falhas = res.checagens[res.checagens["status"] == "FALHA"]
@@ -806,11 +1239,21 @@ def verificar(res: ResultadoDesagregacao) -> pd.DataFrame:
         status = "OK" if ok else ("ALERTA" if alerta else "FALHA")
         linhas.append((nome, status, valor, tol, detalhe))
 
+    # itens satélite que, por especificação, não preservam o total da base (níveis sem resíduo, variante E3)
+    niv = res.extras.get("niveis")
+    nao_preserva = set(niv.loc[~niv["preserva_total"].astype(bool), "item"]) if niv is not None and len(niv) else set()
+
     # 1) re-agregação
     ag = agregar(m2, mapa, m1.setores)
     for nome in ["Z", "F", "X", "total_linha", "V", "S", "V_df", "X_df"]:
-        d = float(np.abs(getattr(ag, nome) - getattr(m1, nome)).max())
-        add(f"reagregacao_{nome}", d <= TOL_REAGREGACAO, d, TOL_REAGREGACAO, "máx |Σ subsetores − original|")
+        A, B = getattr(ag, nome), getattr(m1, nome)
+        detalhe = "máx |Σ subsetores − original|"
+        if nome == "S" and nao_preserva:
+            manter = [k for k, it in enumerate(ITENS_SATELITE) if it not in nao_preserva]
+            A, B = A[manter], B[manter]
+            detalhe += f" (exceto {sorted(nao_preserva)}: variante que não preserva o total da base)"
+        d = float(np.abs(A - B).max()) if np.size(A) else 0.0
+        add(f"reagregacao_{nome}", d <= TOL_REAGREGACAO, d, TOL_REAGREGACAO, detalhe)
     d = max((abs(m2.totais_ev[k] - m1.totais_ev[k]) for k in m1.totais_ev), default=0.0)
     add("reagregacao_totais_EV", d <= TOL_REAGREGACAO, d, TOL_REAGREGACAO)
 
@@ -867,8 +1310,19 @@ def verificar(res: ResultadoDesagregacao) -> pd.DataFrame:
 
     # 4) totais das contas satélite preservados (por região e setor original)
     for k, it in enumerate(ITENS_SATELITE):
-        d = float(np.abs(m2.S[k] @ _matriz_agregacao(mapa, m1.n, m2.n).T - m1.S[k]).max())
-        add(f"satelite_{it}_preservado", d <= TOL_REAGREGACAO, d, TOL_REAGREGACAO)
+        dif = m2.S[k] @ _matriz_agregacao(mapa, m1.n, m2.n).T - m1.S[k]
+        d = float(np.abs(dif).max())
+        if it in nao_preserva:
+            add(f"satelite_{it}_preservado", False, d, TOL_REAGREGACAO,
+                f"NÃO PRESERVA O TOTAL DA BASE (níveis sem resíduo): diferença total = {dif.sum():.4f}", alerta=True)
+        else:
+            add(f"satelite_{it}_preservado", d <= TOL_REAGREGACAO, d, TOL_REAGREGACAO)
+    if niv is not None and len(niv):
+        neg_res = niv[niv["fator_reducao_identificados"] < 1]
+        add("niveis_residuo_nao_negativo", not len(neg_res), len(neg_res), 0,
+            "; ".join(f"{a.regiao} {a.item}: {a.observacao}" for a in neg_res.itertuples()) or
+            "; ".join(f"{a.regiao} {a.item} ({a.modo}): identificado {a.identificado:.4f}, resíduo {a.residuo:.4f}"
+                      for a in niv.itertuples()), alerta=True)
 
     # 5) EOB ≥ 0 em todos os subsetores com produção (sinalizado, não corrigido)
     eob = m2.V[ip["eob"]]
@@ -899,7 +1353,55 @@ def verificar(res: ResultadoDesagregacao) -> pd.DataFrame:
                       f"{'convergiu' if r.convergiu else 'NÃO convergiu'} em {r.iteracoes} iterações, "
                       f"erro {r.erro_max:.2e} (inicial {r.erro_inicial:.2e})" for r in res.info_ras.itertuples()))
 
-    # 9) latentes
+    # 9) roteamento por componentes: energia, transmissão, fração da transmissão e fluxos regionais
+    comp = res.extras.get("componentes_bloco")
+    if comp is not None and len(comp) and res.especificacao.bloco == "roteamento_por_componentes":
+        tipo = dict(zip(mapa["id_novo"], mapa["tipo_subsetor"].map(tipo_canonico)))
+        ids = list(m2.setores["id"])
+        bloco_novo = [k for k in sub]
+        erros_e, erros_t, erros_a = [], [], []
+        for c in comp.to_dict("records"):
+            r = c["regiao"]
+            linhas_r = [k for k in bloco_novo if m2.setores["regiao"][k] == r]
+            ger = [k for k in linhas_r if tipo[ids[k]] == "geracao"]
+            tra = [k for k in linhas_r if tipo[ids[k]] == "transmissao"]
+            dis_todas = [k for k in bloco_novo if tipo[ids[k]] == "distribuicao"]
+            ger_todas = [k for k in bloco_novo if tipo[ids[k]] == "geracao"]
+            E, T = c["E_r (energia = VBP da geração)"], c["T_r (transmissão)"]
+            vend_ger = m2.Z[ger].sum() + m2.F[ger].sum()  # tudo o que a geração vende (deve ser só no bloco)
+            vend_tra = m2.Z[tra].sum() + m2.F[tra].sum()
+            erros_e.append(abs(vend_ger - E))
+            erros_t.append(abs(vend_tra - T))
+            if T > 0:
+                a = m2.Z[np.ix_(tra, dis_todas)].sum() / T
+                alfa = res.especificacao.componente(r, "fracao_transmissao_distribuicao")
+                erros_a.append(abs(a - alfa))
+                if ger_todas:
+                    erros_a.append(abs(m2.Z[np.ix_(tra, ger_todas)].sum() / T - (1 - alfa)))
+        add("roteamento_vendas_geracao_igual_E", max(erros_e) <= TOL_REAGREGACAO, max(erros_e), TOL_REAGREGACAO,
+            "Σ vendas da geração de r = E_r = F_r − T_r − G_r")
+        add("roteamento_vendas_transmissao_igual_T", max(erros_t) <= TOL_REAGREGACAO, max(erros_t), TOL_REAGREGACAO,
+            "Σ vendas da transmissão de r = T_r (todas dentro do bloco)")
+        add("roteamento_fracao_transmissao", max(erros_a, default=0.0) <= 1e-9, max(erros_a, default=0.0), 1e-9,
+            "fração da transmissão paga pela distribuição (e o restante pela geração)")
+    if res.especificacao.bloco != "proporcional":
+        grupos_idx = {}
+        for k, row in mapa.iterrows():
+            if row["codigo_original"] == res.especificacao.setor_alvo:
+                grupos_idx.setdefault(row["regiao"], []).append(row["indice_novo"])
+        dmax = 0.0
+        for a, la in grupos_idx.items():
+            for b, lb in grupos_idx.items():
+                dmax = max(dmax, abs(m2.Z[np.ix_(la, lb)].sum() - m1.Z[m1.indice(a, res.especificacao.setor_alvo),
+                                                                          m1.indice(b, res.especificacao.setor_alvo)]))
+        add("bloco_fluxos_regionais_preservados", dmax <= TOL_REAGREGACAO, dmax, TOL_REAGREGACAO,
+            "os fluxos alvo→alvo entre as regiões (ex.: RS→RS, RS→RB, RB→RS, RB→RB) são os da original")
+    tet = res.extras.get("tetos_atingidos")
+    if tet is not None:
+        add("tetos_atingidos", True, len(tet), 0, "; ".join(
+            f"{x.regiao} {x.fornecedor}→{x.subsetor}: excedente {x.excedente:.4f}" for x in tet.itertuples()))
+
+    # 10) latentes
     if m2.coef_latentes is not None and len(m2.coef_latentes):
         lat = m2.coef_latentes[["regiao", "subsetor"]].drop_duplicates()
         add("subsetores_latentes", True, len(lat), 0,

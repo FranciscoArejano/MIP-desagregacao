@@ -22,8 +22,10 @@ res.exportar("saida.xlsx", "saida_longo.csv")
 | `nome`, `descricao`, `aviso` | texto | identificação; `aviso` vai no topo da aba principal e no LEIAME |
 | `setor_alvo` | ex.: `S38` | setor a desagregar |
 | `regioes` | ex.: `[RS, RB]` ou `[RS]` | regiões onde o setor é desagregado (D2) |
-| `bloco_intrassetorial` | `proporcional` \| `geracao_vende_para_rede` | regra do bloco S38→S38 (D4) |
-| `modo_vbp` | `participacoes` \| `ancora_bloco` | `participacoes`: VBP de cada subsetor = participação × VBP do S38. `ancora_bloco` (só com `geracao_vende_para_rede`): o VBP total da geração de cada região é igual às vendas do S38 da região ao S38 das duas regiões; as participações informadas só repartem a geração entre fontes e o restante entre rede e gás (D3) |
+| `bloco_intrassetorial` | `proporcional` \| `geracao_vende_para_rede` \| `roteamento_por_componentes` | regra do bloco S38→S38 (D4) |
+| `modo_vbp` | `participacoes` \| `ancora_bloco` \| `ancora_componentes` | `participacoes`: VBP de cada subsetor = participação × VBP do S38. `ancora_bloco` (só com `geracao_vende_para_rede`): o VBP total da geração de cada região é igual às vendas do S38 da região ao S38 das duas regiões; as participações informadas só repartem a geração entre fontes e o restante entre rede e gás. `ancora_componentes` (só com `roteamento_por_componentes`, Rodada 02): geração = E_r = F_r − T_r − G_r, repartida pelos pesos da geração (MWh × preço); transmissão = T_r; gás = `vbp_gas`; distribuição = resíduo X_r − E_r − T_r − VBP_gas (tem de ser > 0) |
+| `subsetor_termica_gas` | ex.: `S38_GN` | comprador do gás G_r no roteamento (obrigatório se algum G_r > 0) |
+| `niveis` | `{co2e: {modo: residuo \| proporcional \| sem_residuo, residuo_para: [S38_DIS, S38_GAS]}}` | tratamento dos níveis absolutos (regra `niveis`, ex.: emissões do SEEG): `residuo` (E1) = níveis + resíduo (total da base − Σ níveis) aos subsetores de `residuo_para`, na proporção do VBP; resíduo negativo reduz os níveis proporcionalmente (ALERTA). `proporcional` (E2) = total da base na proporção dos níveis. `sem_residuo` (E3) = só os níveis; **não preserva o total da base** (ALERTA) |
 | `arquivos` | nomes dos CSVs | relativos à pasta do YAML |
 | `ras.tolerancia`, `ras.max_iter` | número | conciliação biproporcional das linhas |
 
@@ -33,8 +35,24 @@ Em todas as regras, `*` (ou vazio) é curinga. Quando mais de uma regra se aplic
 específica**; empate entre regras diferentes é erro. Sem regra aplicável, vale `proporcional_vbp`.
 A coluna `fonte` é obrigatória na prática: tudo o que não for fictício precisa de fonte (regra 4).
 
-**`subsetores`**: `codigo, nome, tipo` — tipo ∈ `geracao | rede | gas_utilidades`. A mesma lista vale
-para todas as regiões desagregadas. `geracao_vende_para_rede` exige exatamente um subsetor `rede`.
+**`subsetores`**: `codigo, nome, tipo` — tipo ∈ `geracao | transmissao | distribuicao | gas_utilidades`
+(`rede`, da Rodada 01, equivale a `distribuicao`). A mesma lista vale para todas as regiões desagregadas.
+`geracao_vende_para_rede` exige exatamente um subsetor `distribuicao`; `roteamento_por_componentes` exige
+exatamente um `transmissao`, exatamente um `distribuicao` e ao menos um `geracao`.
+
+**`componentes`** (Rodada 02): `regiao, componente, valor, fonte` — valores em R$ milhões por região (ou `*`):
+`vbp_transmissao` (T_r), `vbp_gas`, `gas_termicas` (G_r, padrão 0) e `fracao_transmissao_distribuicao`
+(parte de T_r paga pela distribuição; padrão 0.5 — metodologia da TUST). Roteamento por componentes: para a
+região vendedora r, F_r = vendas do S38-r ao S38 de todas as regiões; E_r = F_r − T_r − G_r (≥ 0). Cada
+componente vai à região compradora q na proporção F_rq / F_r: energia (geração de r, ∝ VBP) → distribuição de q;
+transmissão (TRA de r) → fração α à distribuição de q e 1 − α à geração de q (∝ VBP, sem latentes e zerados);
+gás (GAS de r) → `subsetor_termica_gas` de q.
+
+**`latentes_espelho`** (Rodada 02): `regiao, subsetor, regiao_espelho, fonte` — subsetor latente (produção zero)
+cuja coluna de coeficientes copia a do mesmo subsetor em outra região: para cada fornecedor, soma as duas
+origens na coluna do espelho e reparte entre as origens pela participação de cada origem nas compras desse
+insumo na coluna original do S38 da região do latente (para subsetores do próprio S38, pela participação das
+origens no bloco S38→S38 da região). Intensidades satélite: as do espelho.
 
 **`participacoes_vbp`**: `regiao, subsetor, participacao, fonte` — uma linha por região e subsetor;
 somam 1 em cada região. Participação zero = subsetor com produção zero (permitido).
@@ -44,15 +62,20 @@ somam 1 em cada região. Participação zero = subsetor com produção zero (per
 - `regiao`: região do S38 que compra; `fornecedor`: código do setor fornecedor (ex.: `S04`);
   `regiao_fornecedor`: região do fornecedor.
 - `regra`: `proporcional_vbp` (uma linha, sem subsetor) | `fixa` (uma linha por subsetor, `valor` =
-  participação, somando 1) | `indicador` (uma linha por subsetor, `valor` = indicador; peso ∝ VBP × indicador).
+  participação, somando 1) | `indicador` (uma linha por subsetor, `valor` = indicador; peso ∝ VBP × indicador) |
+  `fixa_com_teto` (como `fixa`, com coluna `teto_vbp` = teto como fração do VBP do subsetor; o excedente vai,
+  conforme `destino_excedente`, aos `demais_vbp` — subsetores sem teto na regra, na proporção do VBP — ou aos
+  subsetores da regra `sem_teto`, na proporção das participações). Todo teto atingido é registrado (aba
+  `tetos_atingidos`).
 
 **`regras_linha`** (repartição das vendas a cada comprador fora do bloco S38 e a cada coluna da demanda final):
 `regiao, comprador, regiao_comprador, regra, subsetor, valor, fixar_no_ras, fonte`
 - `regiao`: região do S38 que vende; `comprador`: código do setor (`S01`…), código da coluna de demanda
   final (`INV_RS`, `FAM_RB`, `EXP_RS`, `DISCREP`…), tipo da coluna (`INV`, `FAM`, `GOV`, `ISFLSF`, `EXP`,
-  `DISCREP`), `CI` (todos os setores) ou `DF` (todas as colunas de demanda final).
-- `regra`: `proporcional_vbp` | `somente_rede_e_gas` (geração não vende fora do bloco; rede e gás ∝ VBP) |
-  `fixa_por_comprador` (uma linha por subsetor, `valor` = participação).
+  `DISCREP`), faixa de setores (`S08:S37`), lista separada por `|` (`S08:S37|S43|FAM`), `CI` (todos os setores)
+  ou `DF` (todas as colunas de demanda final). Especificidade: código exato 3; faixa, lista ou tipo 2; `CI`/`DF` 1.
+- `regra`: `proporcional_vbp` | `somente_rede_e_gas` = `somente_distribuicao_e_gas` (geração e transmissão não
+  vendem fora do bloco; distribuição e gás ∝ VBP) | `fixa_por_comprador` (uma linha por subsetor, `valor` = participação).
 - `fixar_no_ras` (`sim`/`nao`): mantém fixas as células dessa regra na conciliação RAS. As células do
   bloco S38→S38 e as de valor negativo (discrepância estatística) são sempre fixas.
 - Se as regras de linha não fecharem o VBP de cada subsetor, o motor aplica RAS (reporta convergência e
@@ -61,7 +84,9 @@ somam 1 em cada região. Participação zero = subsetor com produção zero (per
 
 **`regras_primarios`** (insumos primários e contas satélite): `regiao, item, regra, subsetor, valor, fonte`
 - `item` ∈ `importacoes, ipi, icms, outros_impostos, remuneracoes, impostos_producao, ocupacoes, co2e, agua, energia` (ou `*`).
-- `regra`: `proporcional_vbp` | `fixa` | `indicador`, como nas colunas.
+- `regra`: `proporcional_vbp` | `fixa` | `indicador`, como nas colunas; `proporcional_ci` (impostos sobre produtos:
+  na proporção das compras intermediárias totais — domésticas + importadas — de cada subsetor); `niveis` (uma linha
+  por subsetor com o nível absoluto, ex.: t CO₂e do SEEG; o resíduo segue o `modo` do YAML).
 - **EOB é o resíduo** que fecha a coluna de cada subsetor (o pequeno resíduo contábil da original é repartido
   pelo VBP); VA = remunerações + EOB + impostos sobre a produção. EOB negativo é **sinalizado** (ALERTA), nunca corrigido.
 
