@@ -1,0 +1,7 @@
+tabela,Carvão mineral sem especificação,Alcatrão,Gás natural seco,Gás natural úmido,Diesel de petróleo,Óleo combustível,Gás de refinaria,Outros energéticos de petróleo,Biodiesel,Biogás,Lenha,Outras biomassas,regiao,S38_CAR,S38_GN,S38_PET,S38_BIO,valor
+por_combustivel_mil_t,3749.643,0.0,75.07353,0.0,8.60229,9.231309,0.0,0.0,0.003375718,0.0,0.0,0.0,,,,,,
+por_combustivel_mil_t,9708.245,0.0,20513.045650000004,0.0,3102.8047564999997,855.812125,0.0,0.0,1.217605047059,0.0,0.0,0.0,,,,,,
+por_combustivel_mil_t,0.0,0.0,0.0,0.0,0.0,0.0,333.009,0.0,0.0,0.4645282,6.481248,4.032674,,,,,,
+por_subsetor_mil_t_(PET_RS_realocado),,,,,,,,,,,,,RS,3766.3647018794445,76.18542712055545,0.0,0.003375718,
+por_subsetor_mil_t_(PET_RS_realocado),,,,,,,,,,,,,RB,9708.245,20513.045650000004,4291.6258815,12.196055247059,
+sf6_nacional_mil_t,,,,,,,,,,,,,Brasil,,,,,323.09689968909

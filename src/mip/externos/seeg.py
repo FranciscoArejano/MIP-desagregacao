@@ -137,6 +137,8 @@ COMBUSTIVEIS_SUBSETOR: tuple[tuple[str, str], ...] = (
 # Variações de grafia aceitas (mesmo combustível, mesmo subsetor). Nada além disso é mapeado:
 # o que não casar aparece em 'nao_mapeados' para decisão explícita.
 VARIANTES_COMBUSTIVEL: dict[str, str] = {
+    # rótulo do SEEG 13.0 (conferido no arquivo real, Rodada 02b): "Carvão mineral sem especificação"
+    "carvao mineral sem especificacao": "Carvão mineral",
     "gas natural": "Gás natural seco",  # rótulo genérico → GN
     "oleo diesel": "Diesel de petróleo",
     "outros energeticos do petroleo": "Outros energéticos de petróleo",

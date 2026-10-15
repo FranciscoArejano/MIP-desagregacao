@@ -1,0 +1,13 @@
+# Registro de download — gerado por scripts/rodada02_coleta.py (não editar à mão).
+# Este arquivo vai para o git mesmo quando o bruto (> 20 MB, em dados/externos/brutos/) não vai.
+# Para conferir um bruto baixado de novo, compare o SHA-256 abaixo.
+fonte: siga
+descricao: ANEEL — SIGA, empreendimentos de geração (Seção 5.2)
+url: https://dadosabertos.aneel.gov.br/dataset/6d90b77c-c5f5-4d81-bdec-7bc619494bb9/resource/11ec447d-698d-4ab8-977f-b424d5deee6a/download/siga-empreendimentos-geracao.csv
+data_acesso_utc: 2026-10-15T19:27:52Z
+origem_data_acesso: download feito nesta execução
+bytes: 8418652
+sha256: 60de2b32e25a67bc8708f649f3848b13ba602f6edc3823a5483405f07a0a5540
+arquivo: dados/externos/siga/siga-empreendimentos-geracao.csv
+versionado_no_git: sim (até 20 MB)
+user_agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36

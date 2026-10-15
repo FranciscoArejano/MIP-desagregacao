@@ -35,6 +35,7 @@ MAPA_COMBUSTIVEL = {
     "nuclear": "S38_NUC",
 }
 PENDENTE = "PENDENTE"
+FORA_S38 = "FORA_S38"  # usinas de autoprodução industrial (Rodada 02b, Seção 2): saem da geração do S38
 ORDEM_SUBSETORES_GERACAO = ["S38_HID", "S38_EOL", "S38_SOL", "S38_BIO", "S38_CAR", "S38_GN", "S38_PET", "S38_NUC"]
 
 # Valores de referência das instruções da Rodada 02, Seção 5.1 (GWh; tolerância 0.5) — só para comparação.
@@ -44,6 +45,12 @@ REFERENCIA_RB_ROTULO_ONS = {"Hidráulica": 370796.7, "Eólica": 48122.9, "Carvã
                             "Biomassa": 9271.9, "Óleo (diesel + combustível)": 1974.3, "Fotovoltaica": 4384.6,
                             "Nuclear": 16128.8, "Resíduos Industriais": 9440.4, "Total": 517932.3}
 REFERENCIA_ITAIPU_IMPORTACAO = 24402.2
+# Rodada 02b, Seção 2: sem as 7 usinas de "Resíduos Industriais" (GWh; tolerância 0.5)
+REFERENCIA_02B_RS = {"S38_HID": 14542.6, "S38_EOL": 5266.9, "S38_CAR": 2625.2, "S38_GN": 174.6, "S38_BIO": 68.2,
+                     "S38_PET": 0.0, "S38_SOL": 0.0, "S38_NUC": 0.0, "Total": 22677.5}
+REFERENCIA_02B_RB_SIN = {"S38_HID": 370796.7, "S38_EOL": 48122.9, "S38_CAR": 11338.7, "S38_GN": 46474.0,
+                         "S38_BIO": 9271.9, "S38_PET": 1974.3, "S38_SOL": 4384.6, "S38_NUC": 16128.8,
+                         "Total": 508491.9}
 REFERENCIA_RESIDUOS_RB = {"Do Atlântico": 2758.4, "Klabin Celulose": 1777.1, "CSP": 1611.8,
                           "Suzano Maranhão": 1255.4, "CST": 1198.5, "Sol": 839.2}
 
@@ -69,8 +76,14 @@ def ler_ons(caminho: str | Path) -> pd.DataFrame:
 
 
 def ler_reclassificacao(caminho: str | Path) -> pd.DataFrame:
-    """Tabela de reclassificação: nom_usina, id_estado, ceg, subsetor, justificativa, fonte."""
+    """Tabela de reclassificação: nom_usina, id_estado, ceg, subsetor, tratamento, justificativa, fonte.
+
+    tratamento: 'reclassificar' (troca o subsetor) ou 'excluir_autoproducao' (sai da geração do S38;
+    subsetor = FORA_S38). Sem a coluna, vale 'reclassificar'.
+    """
     tab = pd.read_csv(caminho, dtype=str, keep_default_na=False, comment="#")
+    if "tratamento" not in tab.columns:
+        tab["tratamento"] = "reclassificar"
     obrig = {"nom_usina", "id_estado", "subsetor", "justificativa", "fonte"}
     if obrig - set(tab.columns):
         raise ValueError(f"reclassificação sem colunas {sorted(obrig - set(tab.columns))}; tem {list(tab.columns)}")
@@ -114,7 +127,9 @@ def geracao_por_usina(df: pd.DataFrame, reclassificacao: pd.DataFrame | None = N
         k = _norm_serie(g["nom_usina"]) + "|" + g["id_estado"]
         m = k.isin(mapa.index)
         g.loc[m, "subsetor"] = k[m].map(mapa["subsetor"])
-        g.loc[m, "regra"] = "reclassificação: " + k[m].map(mapa["justificativa"])
+        trat = k[m].map(mapa["tratamento"]) if "tratamento" in mapa else pd.Series("reclassificar", index=k[m].index)
+        g.loc[m, "regra"] = np.where(trat == "excluir_autoproducao", "fora do S38 (autoprodução): ", "reclassificação: ") \
+            + k[m].map(mapa["justificativa"])
         faltam = set(mapa.index) - set(k)
         if faltam:
             raise ValueError(f"usinas da tabela de reclassificação não encontradas no ONS: {sorted(faltam)}")
@@ -135,15 +150,42 @@ def geracao_por_regiao_subsetor(usinas: pd.DataFrame) -> pd.DataFrame:
     """Tabela regiao × subsetor (GWh), incluindo a importação de Itaipu 50 Hz e os pendentes."""
     t = usinas.pivot_table(index="regiao", columns="subsetor", values="gwh", aggfunc="sum", fill_value=0.0)
     cols = [c for c in ORDEM_SUBSETORES_GERACAO + [PENDENTE] if c in t.columns]
+    fora = t[FORA_S38] if FORA_S38 in t.columns else None
     t = t.reindex(columns=cols, fill_value=0.0)
-    t["Total"] = t.sum(axis=1)
+    t["Total"] = t.sum(axis=1)  # geração do S38 (sem as usinas de autoprodução excluídas)
+    if fora is not None:
+        t[FORA_S38] = fora
     return t.reindex([r for r in ["RS", "RB", "IMPORTACAO"] if r in t.index]).reset_index()
 
 
-def comparar_com_referencia(usinas: pd.DataFrame) -> pd.DataFrame:
-    """Esperado × obtido × diferença para as referências da Seção 5.1 (tolerância 0.5 GWh)."""
+def comparar_com_referencia_02b(usinas: pd.DataFrame) -> pd.DataFrame:
+    """Esperado × obtido × diferença para as referências da Rodada 02b, Seção 2 (sem autoprodução; 0.5 GWh)."""
     linhas = []
-    rs = usinas[usinas["regiao"] == "RS"].groupby("subsetor")["gwh"].sum()
+    for grupo, reg, ref in (("RS (02b)", "RS", REFERENCIA_02B_RS), ("RB SIN (02b)", "RB", REFERENCIA_02B_RB_SIN)):
+        g = usinas[(usinas["regiao"] == reg) & ~usinas["subsetor"].isin([FORA_S38, PENDENTE])].groupby("subsetor")["gwh"].sum()
+        for sub, esp in ref.items():
+            obt = float(g.sum()) if sub == "Total" else float(g.get(sub, 0.0))
+            linhas.append((grupo, sub, esp, obt))
+    excl = usinas[usinas["subsetor"] == FORA_S38]
+    linhas.append(("Excluídas (autoprodução)", "RS", 72.7, float(excl.loc[excl["regiao"] == "RS", "gwh"].sum())))
+    linhas.append(("Excluídas (autoprodução)", "RB", 9440.4, float(excl.loc[excl["regiao"] == "RB", "gwh"].sum())))
+    out = pd.DataFrame(linhas, columns=["grupo", "item", "esperado_gwh", "obtido_gwh"])
+    out["diferenca"] = out["obtido_gwh"] - out["esperado_gwh"]
+    out["tolerancia"] = 0.5
+    out["confere"] = out["diferenca"].abs() <= out["tolerancia"]
+    return out
+
+
+def comparar_com_referencia(usinas: pd.DataFrame) -> pd.DataFrame:
+    """Esperado × obtido × diferença para as referências da Seção 5.1 da Rodada 02 (tolerância 0.5 GWh).
+
+    As referências por rótulo do ONS independem da reclassificação; as do RS são as da Rodada 02 (com a CMPC
+    na BIO): para a versão sem autoprodução, use comparar_com_referencia_02b.
+    """
+    linhas = []
+    u_rs = usinas[usinas["regiao"] == "RS"].copy()
+    u_rs.loc[u_rs["nom_usina"] == "CMPC", "subsetor"] = "S38_BIO"  # referência da Rodada 02 (antes da exclusão)
+    rs = u_rs.groupby("subsetor")["gwh"].sum()
     for sub, esp in REFERENCIA_RS.items():
         obt = float(rs.sum()) if sub == "Total" else float(rs.get(sub, 0.0))
         linhas.append(("RS (com exceções)", sub, esp, obt))

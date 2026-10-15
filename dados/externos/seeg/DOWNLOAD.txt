@@ -1,0 +1,13 @@
+# Registro de download — gerado por scripts/rodada02_coleta.py (não editar à mão).
+# Este arquivo vai para o git mesmo quando o bruto (> 20 MB, em dados/externos/brutos/) não vai.
+# Para conferir um bruto baixado de novo, compare o SHA-256 abaixo.
+fonte: seeg
+descricao: SEEG 13.0 — dados nacionais (Seção 5.7)
+url: https://seeg.eco.br/wp-content/uploads/2025/12/Dados-nacionais-13.0.xlsx
+data_acesso_utc: 2026-10-15T19:27:57Z
+origem_data_acesso: download feito nesta execução
+bytes: 184691356
+sha256: 21fc49654828cdb2eb63c104f06ba19d08b7dd81229fd9bf8972d80834aff350
+arquivo: dados/externos/brutos/seeg/Dados-nacionais-13.0.xlsx
+versionado_no_git: não (mais de 20 MB; dados/externos/brutos/ está no .gitignore)
+user_agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36

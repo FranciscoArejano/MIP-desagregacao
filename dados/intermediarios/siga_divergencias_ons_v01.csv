@@ -1,0 +1,8 @@
+nom_usina,ceg,nucleo_ceg,id_estado,regiao,cod_modalidadeoperacao,nom_tipocombustivel,subsetor,regra,horas,gwh,subsetor_siga,regra_siga
+Veracel,UTE.FL.BA.029014-9.01,029014,BA,RB,TIPO II-B,Gás,S38_GN,rótulo nom_tipocombustivel do ONS,8760,953.032835,S38_BIO,DscFonteCombustivel='Floresta' (palavra-chave 'florest') -> S38_BIO
+Cristiano Rocha,UTE.PE.AM.029499-3.01,029499,AM,RB,TIPO I,Gás,S38_GN,rótulo nom_tipocombustivel do ONS,8760,588.966416,S38_PET,DscFonteCombustivel='Petróleo' (palavra-chave 'petroleo') -> S38_PET
+Tambaqui,UTE.PE.AM.029276-1.01,029276,AM,RB,TIPO I,Gás,S38_GN,rótulo nom_tipocombustivel do ONS,8760,503.09922700000004,S38_PET,DscFonteCombustivel='Petróleo' (palavra-chave 'petroleo') -> S38_PET
+Berneck,UTE.FL.PR.029993-6.01,029993,PR,RB,TIPO II-B,Gás,S38_GN,rótulo nom_tipocombustivel do ONS,8760,58.536277,S38_BIO,DscFonteCombustivel='Floresta' (palavra-chave 'florest') -> S38_BIO
+Termocabo,UTE.GN.PE.028326-6.01,028326,PE,RB,TIPO I,Óleo Combustível,S38_PET,rótulo nom_tipocombustivel do ONS,8760,24.695438,S38_GN,DscFonteCombustivel='Gás natural' (palavra-chave 'gas natural') -> S38_GN
+Piratininga,UTE.PE.SP.002082-6.01,002082,SP,RB,TIPO I,Gás,S38_GN,rótulo nom_tipocombustivel do ONS,8760,0.0,S38_PET,DscFonteCombustivel='Petróleo' (palavra-chave 'petroleo') -> S38_PET
+Termo Norte II,UTE.GN.RO.028033-0.01,028033,RO,RB,TIPO I,Óleo Diesel,S38_PET,rótulo nom_tipocombustivel do ONS,8760,0.0,S38_GN,DscFonteCombustivel='Gás natural' (palavra-chave 'gas natural') -> S38_GN

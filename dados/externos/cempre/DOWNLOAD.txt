@@ -1,0 +1,13 @@
+# Registro de download — gerado por scripts/rodada02_coleta.py (não editar à mão).
+# Este arquivo vai para o git mesmo quando o bruto (> 20 MB, em dados/externos/brutos/) não vai.
+# Para conferir um bruto baixado de novo, compare o SHA-256 abaixo.
+fonte: cempre
+descricao: IBGE SIDRA — tabela 6450, CEMPRE 2019, Brasil e RS (Seção 5.8)
+url: https://apisidra.ibge.gov.br/values/t/6450/n1/all/n3/43/v/707,662/p/2019/c12762/117297,117298,117299,117300,117301,117302,117303,117304,117305,117306
+data_acesso_utc: 2026-10-15T19:28:01Z
+origem_data_acesso: download feito nesta execução
+bytes: 14954
+sha256: 21765f03657d53a231b27973b55e6f2a70e2fc54e85bfebaf1d2da95eba98d0e
+arquivo: dados/externos/cempre/cempre_6450.json
+versionado_no_git: sim (até 20 MB)
+user_agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36

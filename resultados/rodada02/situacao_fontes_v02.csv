@@ -1,0 +1,7 @@
+fonte,secao,obrigatoria,arquivo,disponivel
+ons,5.1,True,dados/externos/brutos/ons/GERACAO_USINA-2_2019.parquet,True
+siga,5.2,False,dados/externos/siga/siga-empreendimentos-geracao.csv,True
+leiloes,5.4,True,dados/externos/leiloes/resultado-leiloes-geracao.csv,True
+ipca,5.4,True,dados/externos/ipca/ipca_1737.json,True
+seeg,5.7,True,dados/externos/brutos/seeg/Dados-nacionais-13.0.xlsx,True
+cempre,5.8,True,dados/externos/cempre/cempre_6450.json,True

@@ -1,0 +1,527 @@
+nom_usina,ceg,nucleo_ceg,id_estado,regiao,cod_modalidadeoperacao,nom_tipocombustivel,subsetor,regra,horas,gwh
+Itaipu 50 Hz,UHE.PH.PR.001161-4.01,001161,I,IMPORTACAO,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,24402.229554999998
+Do Atlântico,UTE.PE.RJ.029587-6.01,029587,RJ,RB,TIPO I,Resíduos Industriais,FORA_S38,fora do S38 (autoprodução): gases siderúrgicos: autoprodução da siderurgia (S27); fora da geração do S38 — 2758.4 GWh,8760,2758.361857
+Klabin Celulose,UTE.FL.PR.031098-0.01,031098,PR,RB,TIPO II-C,Resíduos Industriais,FORA_S38,fora do S38 (autoprodução): licor negro (celulose): autoprodução da indústria (S17); fora da geração do S38 — 1777.1 GWh,8760,1777.130273
+CSP,UTE.CM.CE.031241-0.02,031241,CE,RB,TIPO II-B,Resíduos Industriais,FORA_S38,fora do S38 (autoprodução): gases siderúrgicos: autoprodução da siderurgia (S27); fora da geração do S38 — 1611.8 GWh,8760,1611.780145
+Suzano Maranhão,UTE.FL.MA.030959-1.01,030959,MA,RB,TIPO II-B,Resíduos Industriais,FORA_S38,fora do S38 (autoprodução): licor negro (celulose): autoprodução da indústria (S17); fora da geração do S38 — 1255.4 GWh,8760,1255.394776
+CST,UTE.PE.ES.027054-7.01,027054,ES,RB,TIPO III,Resíduos Industriais,FORA_S38,fora do S38 (autoprodução): gases siderúrgicos: autoprodução da siderurgia (S27); fora da geração do S38 — 1198.5 GWh,8760,1198.488
+Sol,UTE.OF.ES.029273-7.01,029273,ES,RB,TIPO III,Resíduos Industriais,FORA_S38,"fora do S38 (autoprodução): calor de processo siderúrgico (ArcelorMittal, PIE): autoprodução da siderurgia (S27); fora da geração do S38 — 839.2 GWh",8760,839.22658
+Conj. Fíbria,-,,MS,RB,Conjunto de Usinas,Resíduos Industriais,PENDENTE,sem classificação (pendente: SIGA indisponível ou usina não casada),8760,0.0
+Conj. Chapadão,-,,MS,RB,Conjunto de Usinas,Biomassa,S38_BIO,rótulo nom_tipocombustivel do ONS,8760,1262.446973
+Conj. Jataí,-,,GO,RB,Conjunto de Usinas,Biomassa,S38_BIO,rótulo nom_tipocombustivel do ONS,8760,806.691957
+PEQUENAS CENTRAIS TERMELETRICAS NA SE MARINGA,-,,PR,RB,Pequenas Usinas (Tipo III),Biomassa,S38_BIO,rótulo nom_tipocombustivel do ONS,8760,770.713002
+Vale do Rosário,UTE.AI.SP.002958-0.01,002958,SP,RB,TIPO III,Biomassa,S38_BIO,rótulo nom_tipocombustivel do ONS,8760,524.65605
+Conj. Rio Brilhante,-,,MS,RB,Conjunto de Usinas,Biomassa,S38_BIO,rótulo nom_tipocombustivel do ONS,8760,459.53881199999995
+Caçú I,UTE.AI.GO.030025-0.01,030025,GO,RB,TIPO II-B,Biomassa,S38_BIO,rótulo nom_tipocombustivel do ONS,8760,439.449771
+Amandina,UTE.AI.MS.030115-9.01,030115,MS,RB,TIPO II-C,Biomassa,S38_BIO,rótulo nom_tipocombustivel do ONS,8760,428.066542
+Cocal II,UTE.AI.SP.029713-5.01,029713,SP,RB,TIPO III,Biomassa,S38_BIO,rótulo nom_tipocombustivel do ONS,8760,405.670202
+Conj. Cachoeira Dourada,-,,GO,RB,Conjunto de Usinas,Biomassa,S38_BIO,rótulo nom_tipocombustivel do ONS,8760,379.04481699999997
+Angélica,UTE.AI.MS.029670-8.01,029670,MS,RB,TIPO III,Biomassa,S38_BIO,rótulo nom_tipocombustivel do ONS,8760,363.027206
+Conj. Quirinópolis,-,,GO,RB,Conjunto de Usinas,Biomassa,S38_BIO,rótulo nom_tipocombustivel do ONS,8760,358.351115
+Ipaussu Bioenergia,UTE.AI.SP.030199-0.01,030199,SP,RB,TIPO II-B,Biomassa,S38_BIO,rótulo nom_tipocombustivel do ONS,8760,331.347599
+Conj. Edéia,-,,GO,RB,Conjunto de Usinas,Biomassa,S38_BIO,rótulo nom_tipocombustivel do ONS,8760,309.260661
+PEQUENAS CENTRAIS TERMELETRICAS NA SE LONDRINA,-,,PR,RB,Pequenas Usinas (Tipo III),Biomassa,S38_BIO,rótulo nom_tipocombustivel do ONS,8760,295.45773599999995
+Caarapó,UTE.AI.MS.030104-3.01,030104,MS,RB,TIPO III,Biomassa,S38_BIO,rótulo nom_tipocombustivel do ONS,8760,268.270086
+Alta Mogiana,UTE.AI.SP.000060-4.01,000060,SP,RB,TIPO III,Biomassa,S38_BIO,rótulo nom_tipocombustivel do ONS,8760,253.583756
+LDC Bioen Rio Brilhante,UTE.AI.MS.029718-6.01,029718,MS,RB,TIPO III,Biomassa,S38_BIO,rótulo nom_tipocombustivel do ONS,8760,215.110646
+Guaíra Energética,UTE.AI.SP.030026-8.01,030026,SP,RB,TIPO III,Biomassa,S38_BIO,rótulo nom_tipocombustivel do ONS,8760,209.86242000000001
+Colorado,UTE.AI.SP.028094-1.01,028094,SP,RB,TIPO III,Biomassa,S38_BIO,rótulo nom_tipocombustivel do ONS,8760,183.62961900000002
+Codora,UTE.AI.GO.030355-0.01,030355,GO,RB,TIPO II-B,Biomassa,S38_BIO,rótulo nom_tipocombustivel do ONS,8760,164.02520800000002
+Esplanada,UTE.AI.GO.028112-3.01,028112,GO,RB,TIPO III,Biomassa,S38_BIO,rótulo nom_tipocombustivel do ONS,8760,130.456251
+Quirinópolis,UTE.AI.GO.029268-0.01,029268,GO,RB,TIPO II-C,Biomassa,S38_BIO,rótulo nom_tipocombustivel do ONS,8760,128.963624
+PEQUENAS CENTRAIS TERMELÉTRICAS DA CELESC,-,,SC,RB,Pequenas Usinas (Tipo III),Biomassa,S38_BIO,rótulo nom_tipocombustivel do ONS,8016,125.908426
+Guarani Cruz Alta,UTE.AI.SP.027796-7.01,027796,SP,RB,TIPO III,Biomassa,S38_BIO,rótulo nom_tipocombustivel do ONS,8760,113.675477
+Sykué I,UTE.AI.BA.029634-1.01,029634,BA,RB,TIPO II-A,Biomassa,S38_BIO,rótulo nom_tipocombustivel do ONS,8760,78.014771
+Santa Vitória,UTE.AI.MG.031268-1.01,031268,MG,RB,TIPO II-A,Biomassa,S38_BIO,rótulo nom_tipocombustivel do ONS,8760,71.73377400000001
+Boa Vista,UTE.AI.GO.029588-4.01,029588,GO,RB,TIPO II-C,Biomassa,S38_BIO,rótulo nom_tipocombustivel do ONS,8760,57.878651
+São José Colina,UTE.AI.SP.028975-2.01,028975,SP,RB,TIPO III,Biomassa,S38_BIO,rótulo nom_tipocombustivel do ONS,8760,45.386894
+Caramuru Itumbiara,UTE.AI.GO.035527-5.01,035527,GO,RB,TIPO II-B,Biomassa,S38_BIO,rótulo nom_tipocombustivel do ONS,8760,40.387551
+ERB Candeias,UTE.FL.BA.030979-6.01,030979,BA,RB,TIPO II-A,Biomassa,S38_BIO,rótulo nom_tipocombustivel do ONS,8760,34.690777000000004
+Energia Madeiras,UTE.FL.SC.028140-9.01,028140,SC,RB,TIPO III,Biomassa,S38_BIO,rótulo nom_tipocombustivel do ONS,8760,15.967868000000001
+Interlagos,UTE.AI.SP.029461-6.01,029461,SP,RB,TIPO II-C,Biomassa,S38_BIO,rótulo nom_tipocombustivel do ONS,8760,0.671984
+Cidade Nova,UTE.PE.AM.028923-0.01,028923,AM,RB,TIPO III,Biomassa,S38_BIO,rótulo nom_tipocombustivel do ONS,8760,0.0
+Cocal,UTE.AI.SP.027974-9.01,027974,SP,RB,TIPO III,Biomassa,S38_BIO,rótulo nom_tipocombustivel do ONS,8760,0.0
+Conj. Biopav,-,,SP,RB,Conjunto de Usinas,Biomassa,S38_BIO,rótulo nom_tipocombustivel do ONS,8760,0.0
+Goiasa,UTE.AI.GO.028118-2.01,028118,GO,RB,TIPO III,Biomassa,S38_BIO,rótulo nom_tipocombustivel do ONS,8760,0.0
+Ituiutaba,UTE.AI.MG.030094-2.01,030094,MG,RB,TIPO II-B,Biomassa,S38_BIO,rótulo nom_tipocombustivel do ONS,1512,0.0
+JB,UTE.AI.PE.028392-4.01,028392,PE,RB,TIPO III,Biomassa,S38_BIO,rótulo nom_tipocombustivel do ONS,8760,0.0
+Lago Azul,UTE.AI.GO.029173-0.01,029173,GO,RB,TIPO III,Biomassa,S38_BIO,rótulo nom_tipocombustivel do ONS,8760,0.0
+Mandu,UTE.AI.SP.027787-8.01,027787,SP,RB,TIPO III,Biomassa,S38_BIO,rótulo nom_tipocombustivel do ONS,8760,0.0
+Mauá Bloco 1,UTE.PE.AM.002952-1.01,002952,AM,RB,TIPO III,Biomassa,S38_BIO,rótulo nom_tipocombustivel do ONS,8760,0.0
+Mauá Bloco 5A,UTE.PE.AM.002952-1.01,002952,AM,RB,TIPO III,Biomassa,S38_BIO,rótulo nom_tipocombustivel do ONS,8760,0.0
+PIE-RP,UTE.FL.SP.028592-7.01,028592,SP,RB,TIPO II-A,Biomassa,S38_BIO,rótulo nom_tipocombustivel do ONS,8760,0.0
+Porto do Pecém I,UTE.CM.CE.029720-8.01,029720,CE,RB,TIPO I,Carvão,S38_CAR,rótulo nom_tipocombustivel do ONS,8760,4172.179826
+Jorge Lacerda IV,UTE.CM.SC.027094-6.01,027094,SC,RB,TIPO I,Carvão,S38_CAR,rótulo nom_tipocombustivel do ONS,8760,2080.900577
+Porto do Pecém II,UTE.CM.CE.030098-5.01,030098,CE,RB,TIPO I,Carvão,S38_CAR,rótulo nom_tipocombustivel do ONS,8760,1635.0362830000001
+Porto do Itaqui,UTE.CM.MA.029700-3.01,029700,MA,RB,TIPO I,Carvão,S38_CAR,rótulo nom_tipocombustivel do ONS,8760,1442.5107039999998
+Jorge Lacerda III,UTE.CM.SC.027093-8.01,027093,SC,RB,TIPO I,Carvão,S38_CAR,rótulo nom_tipocombustivel do ONS,8760,1114.381402
+Jorge Lacerda I e II,UTE.CM.SC.001260-2.01,001260,SC,RB,TIPO I,Carvão,S38_CAR,rótulo nom_tipocombustivel do ONS,8760,893.6861829999999
+Figueira,UTE.CM.PR.000955-5.01,000955,PR,RB,TIPO II-A,Carvão,S38_CAR,rótulo nom_tipocombustivel do ONS,8760,0.0
+Conj. Paulino Neves,-,,MA,RB,Conjunto de Usinas,Eólica,S38_EOL,rótulo nom_tipocombustivel do ONS,8760,1650.59073
+Conj. Umburanas,-,,BA,RB,Conjunto de Usinas,Eólica,S38_EOL,rótulo nom_tipocombustivel do ONS,8760,1531.780626
+Conj. Gentio do Ouro I,-,,BA,RB,Conjunto de Usinas,Eólica,S38_EOL,rótulo nom_tipocombustivel do ONS,8760,1509.216791
+Conj. Araripe III,-,,PI,RB,Conjunto de Usinas,Eólica,S38_EOL,rótulo nom_tipocombustivel do ONS,8760,1502.5792509999999
+Conj. Campo Largo,-,,BA,RB,Conjunto de Usinas,Eólica,S38_EOL,rótulo nom_tipocombustivel do ONS,8760,1387.482441
+Conj. Cutia,-,,RN,RB,Conjunto de Usinas,Eólica,S38_EOL,rótulo nom_tipocombustivel do ONS,8760,1117.732278
+Conj. Morro do Chapéu Sul,-,,BA,RB,Conjunto de Usinas,Eólica,S38_EOL,rótulo nom_tipocombustivel do ONS,8760,994.104787
+Conj. Amazonas,-,,RN,RB,Conjunto de Usinas,Eólica,S38_EOL,rótulo nom_tipocombustivel do ONS,8760,972.210879
+Conj. Serra da Babilônia,-,,BA,RB,Conjunto de Usinas,Eólica,S38_EOL,rótulo nom_tipocombustivel do ONS,8760,971.639572
+Conj. Delfina,-,,BA,RB,Conjunto de Usinas,Eólica,S38_EOL,rótulo nom_tipocombustivel do ONS,8760,961.743589
+Conj. São Clemente,-,,PE,RB,Conjunto de Usinas,Eólica,S38_EOL,rótulo nom_tipocombustivel do ONS,8760,958.6837539999999
+Conj. Chapada III,-,,PI,RB,Conjunto de Usinas,Eólica,S38_EOL,rótulo nom_tipocombustivel do ONS,8760,887.3889919999999
+Conj. Chapada I,-,,PI,RB,Conjunto de Usinas,Eólica,S38_EOL,rótulo nom_tipocombustivel do ONS,8760,885.389037
+Conj. União dos Ventos,-,,RN,RB,Conjunto de Usinas,Eólica,S38_EOL,rótulo nom_tipocombustivel do ONS,8760,884.381936
+Conj. Chapadinha,-,,PI,RB,Conjunto de Usinas,Eólica,S38_EOL,rótulo nom_tipocombustivel do ONS,8760,869.426277
+Conj. Campo Formoso,-,,BA,RB,Conjunto de Usinas,Eólica,S38_EOL,rótulo nom_tipocombustivel do ONS,8760,866.8083710000001
+Conj. Pedra Branca,-,,BA,RB,Conjunto de Usinas,Eólica,S38_EOL,rótulo nom_tipocombustivel do ONS,8760,837.4275690000001
+Conj. Caetés II,-,,PE,RB,Conjunto de Usinas,Eólica,S38_EOL,rótulo nom_tipocombustivel do ONS,8760,806.9218149999999
+Conj. Lagoa do Barro I,-,,PI,RB,Conjunto de Usinas,Eólica,S38_EOL,rótulo nom_tipocombustivel do ONS,8760,791.096958
+Conj. Chapada II,-,,PI,RB,Conjunto de Usinas,Eólica,S38_EOL,rótulo nom_tipocombustivel do ONS,8760,791.072833
+Conj. Baixa do Feijão,-,,RN,RB,Conjunto de Usinas,Eólica,S38_EOL,rótulo nom_tipocombustivel do ONS,8760,760.4152310000001
+Conj. São Basílio,-,,PI,RB,Conjunto de Usinas,Eólica,S38_EOL,rótulo nom_tipocombustivel do ONS,8760,755.698494
+Conj. Itarema V,-,,CE,RB,Conjunto de Usinas,Eólica,S38_EOL,rótulo nom_tipocombustivel do ONS,8760,732.0072879999999
+Conj. Trairí,-,,CE,RB,Conjunto de Usinas,Eólica,S38_EOL,rótulo nom_tipocombustivel do ONS,8760,730.820058
+Conj. Bloco Sul,-,,RN,RB,Conjunto de Usinas,Eólica,S38_EOL,rótulo nom_tipocombustivel do ONS,8760,717.143917
+Conj. Cabeço Preto II,-,,RN,RB,Conjunto de Usinas,Eólica,S38_EOL,rótulo nom_tipocombustivel do ONS,8760,696.085287
+Conj. Babilônia,-,,BA,RB,Conjunto de Usinas,Eólica,S38_EOL,rótulo nom_tipocombustivel do ONS,8760,671.601838
+Conj. Brisa Potiguar I,-,,RN,RB,Conjunto de Usinas,Eólica,S38_EOL,rótulo nom_tipocombustivel do ONS,8760,659.2225820000001
+Conj. Araçás,-,,BA,RB,Conjunto de Usinas,Eólica,S38_EOL,rótulo nom_tipocombustivel do ONS,8760,631.915891
+Conj. Paranatama,-,,PE,RB,Conjunto de Usinas,Eólica,S38_EOL,rótulo nom_tipocombustivel do ONS,8760,609.011018
+Conj. Faísa,-,,CE,RB,Conjunto de Usinas,Eólica,S38_EOL,rótulo nom_tipocombustivel do ONS,8760,604.5316770000001
+Conj. Serra Azul,-,,BA,RB,Conjunto de Usinas,Eólica,S38_EOL,rótulo nom_tipocombustivel do ONS,8760,578.262269
+Conj. Renascença,-,,RN,RB,Conjunto de Usinas,Eólica,S38_EOL,rótulo nom_tipocombustivel do ONS,8760,574.91271
+Conj. Morro dos Ventos,-,,RN,RB,Conjunto de Usinas,Eólica,S38_EOL,rótulo nom_tipocombustivel do ONS,8760,559.4262269999999
+Conj. Ventos da Bahia 2,-,,BA,RB,Conjunto de Usinas,Eólica,S38_EOL,rótulo nom_tipocombustivel do ONS,8760,547.3196750000001
+Conj. Santa Rosália,-,,CE,RB,Conjunto de Usinas,Eólica,S38_EOL,rótulo nom_tipocombustivel do ONS,8760,534.517248
+Conj. Serra de Santana 3,-,,RN,RB,Conjunto de Usinas,Eólica,S38_EOL,rótulo nom_tipocombustivel do ONS,8760,515.072674
+Conj. Santa Clara,-,,RN,RB,Conjunto de Usinas,Eólica,S38_EOL,rótulo nom_tipocombustivel do ONS,8760,485.710582
+Conj. Cristal,-,,BA,RB,Conjunto de Usinas,Eólica,S38_EOL,rótulo nom_tipocombustivel do ONS,8760,476.406264
+Conj. Carnaúbas,-,,RN,RB,Conjunto de Usinas,Eólica,S38_EOL,rótulo nom_tipocombustivel do ONS,8760,464.99144
+Conj. Morrão,-,,BA,RB,Conjunto de Usinas,Eólica,S38_EOL,rótulo nom_tipocombustivel do ONS,8760,448.412494
+Conj. Asa Branca,-,,RN,RB,Conjunto de Usinas,Eólica,S38_EOL,rótulo nom_tipocombustivel do ONS,8760,444.598287
+Conj. Riachão,-,,RN,RB,Conjunto de Usinas,Eólica,S38_EOL,rótulo nom_tipocombustivel do ONS,8760,443.06552
+Conj. Serra de Santana 1 e 2,-,,RN,RB,Conjunto de Usinas,Eólica,S38_EOL,rótulo nom_tipocombustivel do ONS,8760,433.930499
+Conj. Icaraí,-,,CE,RB,Conjunto de Usinas,Eólica,S38_EOL,rótulo nom_tipocombustivel do ONS,8760,423.794325
+Conj. Carcará II,-,,RN,RB,Conjunto de Usinas,Eólica,S38_EOL,rótulo nom_tipocombustivel do ONS,8760,421.005511
+Conj. Cristalândia,-,,BA,RB,Conjunto de Usinas,Eólica,S38_EOL,rótulo nom_tipocombustivel do ONS,8760,412.397388
+Conj. Calango 3,-,,RN,RB,Conjunto de Usinas,Eólica,S38_EOL,rótulo nom_tipocombustivel do ONS,8760,408.879084
+Conj. Santo Inácio,-,,CE,RB,Conjunto de Usinas,Eólica,S38_EOL,rótulo nom_tipocombustivel do ONS,8760,407.08306400000004
+Conj. Aracati II,-,,CE,RB,Conjunto de Usinas,Eólica,S38_EOL,rótulo nom_tipocombustivel do ONS,8760,383.083573
+Conj. Campo dos Ventos,-,,RN,RB,Conjunto de Usinas,Eólica,S38_EOL,rótulo nom_tipocombustivel do ONS,8760,377.443337
+Conj. Tacaratu,-,,PE,RB,Conjunto de Usinas,Eólica,S38_EOL,rótulo nom_tipocombustivel do ONS,8760,375.151681
+Conj. Brotas de Macaúbas,-,,BA,RB,Conjunto de Usinas,Eólica,S38_EOL,rótulo nom_tipocombustivel do ONS,8760,366.127471
+Conj. BW Guirapá I,-,,BA,RB,Conjunto de Usinas,Eólica,S38_EOL,rótulo nom_tipocombustivel do ONS,8760,349.60577
+Conj. N. S. da Conceição,-,,BA,RB,Conjunto de Usinas,Eólica,S38_EOL,rótulo nom_tipocombustivel do ONS,8760,346.4736
+Conj. Caetité 123,-,,BA,RB,Conjunto de Usinas,Eólica,S38_EOL,rótulo nom_tipocombustivel do ONS,8760,345.780647
+Conj. Calango 2,-,,RN,RB,Conjunto de Usinas,Eólica,S38_EOL,rótulo nom_tipocombustivel do ONS,8760,343.872687
+Conj. Pitombeira,-,,CE,RB,Conjunto de Usinas,Eólica,S38_EOL,rótulo nom_tipocombustivel do ONS,8760,328.57020400000005
+Conj. Cacimbas,-,,CE,RB,Conjunto de Usinas,Eólica,S38_EOL,rótulo nom_tipocombustivel do ONS,8760,319.28718599999996
+Conj. Água Doce,-,,SC,RB,Conjunto de Usinas,Eólica,S38_EOL,rótulo nom_tipocombustivel do ONS,8760,318.197842
+Conj. BW Guirapá II,-,,BA,RB,Conjunto de Usinas,Eólica,S38_EOL,rótulo nom_tipocombustivel do ONS,8760,315.14889600000004
+Conj. Morro dos Ventos II,-,,RN,RB,Conjunto de Usinas,Eólica,S38_EOL,rótulo nom_tipocombustivel do ONS,8760,305.866976
+Conj. Caetité,-,,BA,RB,Conjunto de Usinas,Eólica,S38_EOL,rótulo nom_tipocombustivel do ONS,8760,303.526072
+Conj. Licínio de Almeida,-,,BA,RB,Conjunto de Usinas,Eólica,S38_EOL,rótulo nom_tipocombustivel do ONS,8760,300.459457
+Conj. Mangue Seco,-,,RN,RB,Conjunto de Usinas,Eólica,S38_EOL,rótulo nom_tipocombustivel do ONS,8760,287.592088
+Conj. Macacos,-,,RN,RB,Conjunto de Usinas,Eólica,S38_EOL,rótulo nom_tipocombustivel do ONS,8760,284.15736599999997
+Conj. Planaltina,-,,BA,RB,Conjunto de Usinas,Eólica,S38_EOL,rótulo nom_tipocombustivel do ONS,8760,274.458878
+Conj. Renascença V,-,,RN,RB,Conjunto de Usinas,Eólica,S38_EOL,rótulo nom_tipocombustivel do ONS,8760,257.130763
+Conj. Caetité A,-,,BA,RB,Conjunto de Usinas,Eólica,S38_EOL,rótulo nom_tipocombustivel do ONS,8760,253.963566
+Conj. Curva dos Ventos,-,,BA,RB,Conjunto de Usinas,Eólica,S38_EOL,rótulo nom_tipocombustivel do ONS,8760,242.432653
+Conj. Modelo,-,,RN,RB,Conjunto de Usinas,Eólica,S38_EOL,rótulo nom_tipocombustivel do ONS,8760,236.33128200000002
+Conj. Calango 1,-,,RN,RB,Conjunto de Usinas,Eólica,S38_EOL,rótulo nom_tipocombustivel do ONS,8760,235.614462
+Conj. Olho d'Água,-,,RN,RB,Conjunto de Usinas,Eólica,S38_EOL,rótulo nom_tipocombustivel do ONS,8760,231.94777299999998
+Conj. Guirapá,-,,BA,RB,Conjunto de Usinas,Eólica,S38_EOL,rótulo nom_tipocombustivel do ONS,8760,231.01514
+Alegria II,EOL.CV.RN.028443-2.01,028443,RN,RB,TIPO I,Eólica,S38_EOL,rótulo nom_tipocombustivel do ONS,8760,224.836315
+Conj. Papagaios,-,,CE,RB,Conjunto de Usinas,Eólica,S38_EOL,rótulo nom_tipocombustivel do ONS,8760,224.073529
+Conj. Pelourinho,-,,BA,RB,Conjunto de Usinas,Eólica,S38_EOL,rótulo nom_tipocombustivel do ONS,8760,222.24015599999998
+Conj. Laranjeiras,-,,BA,RB,Conjunto de Usinas,Eólica,S38_EOL,rótulo nom_tipocombustivel do ONS,7344,208.42593523
+Conj. Pedra Cheirosa,-,,CE,RB,Conjunto de Usinas,Eólica,S38_EOL,rótulo nom_tipocombustivel do ONS,8760,187.704411
+Conj. Casa Nova,-,,BA,RB,Conjunto de Usinas,Eólica,S38_EOL,rótulo nom_tipocombustivel do ONS,8760,186.23288300000002
+Praia Formosa,EOL.CV.CE.028631-1.01,028631,CE,RB,TIPO I,Eólica,S38_EOL,rótulo nom_tipocombustivel do ONS,8760,178.186562
+Conj. Alvorada,-,,BA,RB,Conjunto de Usinas,Eólica,S38_EOL,rótulo nom_tipocombustivel do ONS,8760,175.498572
+Miassaba 3,EOL.CV.RN.030339-9.01,030339,RN,RB,TIPO I,Eólica,S38_EOL,rótulo nom_tipocombustivel do ONS,8760,167.535645
+Conj. Areia Branca,-,,RN,RB,Conjunto de Usinas,Eólica,S38_EOL,rótulo nom_tipocombustivel do ONS,8760,165.388027
+Icaraizinho,EOL.CV.CE.028699-0.01,028699,CE,RB,TIPO I,Eólica,S38_EOL,rótulo nom_tipocombustivel do ONS,8760,163.144242
+Conj. Acaraú II,-,,CE,RB,Conjunto de Usinas,Eólica,S38_EOL,rótulo nom_tipocombustivel do ONS,8760,156.088894
+Rei dos Ventos 3,EOL.CV.RN.030417-4.01,030417,RN,RB,TIPO I,Eólica,S38_EOL,rótulo nom_tipocombustivel do ONS,8760,143.129777
+Rei dos Ventos 1,EOL.CV.RN.030416-6.01,030416,RN,RB,TIPO I,Eólica,S38_EOL,rótulo nom_tipocombustivel do ONS,8760,138.101148
+Conj. Taíba,-,,CE,RB,Conjunto de Usinas,Eólica,S38_EOL,rótulo nom_tipocombustivel do ONS,8760,126.292957
+Conj. GPEXPAN,-,,BA,RB,Conjunto de Usinas,Eólica,S38_EOL,rótulo nom_tipocombustivel do ONS,5880,119.91297
+Alegria I,EOL.CV.RN.028444-0.01,028444,RN,RB,TIPO I,Eólica,S38_EOL,rótulo nom_tipocombustivel do ONS,8760,119.24404700000001
+Malhadinha 1,EOL.CV.CE.030841-2.01,030841,CE,RB,TIPO II-B,Eólica,S38_EOL,rótulo nom_tipocombustivel do ONS,8760,95.664292
+Cataventos Acaraú I,EOL.CV.CE.033756-0.01,033756,CE,RB,TIPO II-B,Eólica,S38_EOL,rótulo nom_tipocombustivel do ONS,8760,95.270938
+Conj. São Miguel,-,,RN,RB,Conjunto de Usinas,Eólica,S38_EOL,rótulo nom_tipocombustivel do ONS,8760,43.75528
+Conj. Bom Jardim,-,,SC,RB,Conjunto de Usinas,Eólica,S38_EOL,rótulo nom_tipocombustivel do ONS,8760,33.485301
+PEQUENAS CENTRAIS EOLIELÉTRICAS DA CELESC,-,,SC,RB,Pequenas Usinas (Tipo III),Eólica,S38_EOL,rótulo nom_tipocombustivel do ONS,8016,9.494146
+Conj. Abil I,-,,BA,RB,Conjunto de Usinas,Eólica,S38_EOL,rótulo nom_tipocombustivel do ONS,1560,0.0
+Conj. Folha de Serra,-,,BA,RB,Conjunto de Usinas,Eólica,S38_EOL,rótulo nom_tipocombustivel do ONS,1560,0.0
+Conj. Tamboril II,-,,BA,RB,Conjunto de Usinas,Eólica,S38_EOL,rótulo nom_tipocombustivel do ONS,1560,0.0
+Norte Fluminense,UTE.GN.RJ.001544-0.01,001544,RJ,RB,TIPO I,Gás,S38_GN,rótulo nom_tipocombustivel do ONS,8760,5941.630444
+Termorio,UTE.GN.RJ.027888-2.01,027888,RJ,RB,TIPO I,Gás,S38_GN,rótulo nom_tipocombustivel do ONS,8760,4414.552879
+Termopernambuco,UTE.GN.PE.028031-3.01,028031,PE,RB,TIPO I,Gás,S38_GN,rótulo nom_tipocombustivel do ONS,8760,3456.040658
+Mauá 3,UTE.GN.AM.031888-4.01,031888,AM,RB,TIPO I,Gás,S38_GN,rótulo nom_tipocombustivel do ONS,8760,3394.52048
+Maranhão III,UTE.GN.MA.030800-5.01,030800,MA,RB,TIPO I,Gás,S38_GN,rótulo nom_tipocombustivel do ONS,8760,2743.599656
+Santa Cruz,UTE.GN.RJ.027243-4.01,027243,RJ,RB,TIPO I,Gás,S38_GN,rótulo nom_tipocombustivel do ONS,8760,2003.012658
+Baixada Fluminense,UTE.GN.RJ.030769-6.01,030769,RJ,RB,TIPO I,Gás,S38_GN,rótulo nom_tipocombustivel do ONS,8760,1952.074784
+Cubatão,UTE.GN.SP.028014-3.01,028014,SP,RB,TIPO I,Gás,S38_GN,rótulo nom_tipocombustivel do ONS,8760,1547.735801
+Cuiabá,UTE.GN.MT.027003-2.01,027003,MT,RB,TIPO I,Gás,S38_GN,rótulo nom_tipocombustivel do ONS,8760,1505.005108
+Luiz Oscar Rodrigues de Melo,UTE.GN.ES.030054-3.01,030054,ES,RB,TIPO I,Gás,S38_GN,rótulo nom_tipocombustivel do ONS,8760,1382.64246
+Ibirité,UTE.GN.MG.001096-0.01,001096,MG,RB,TIPO I,Gás,S38_GN,rótulo nom_tipocombustivel do ONS,8760,1368.674185
+Nova Piratininga,UTE.GN.SP.028191-3.01,028191,SP,RB,TIPO I,Gás,S38_GN,rótulo nom_tipocombustivel do ONS,8760,1353.356348
+Vale do Açú,UTE.GN.RN.028225-1.01,028225,RN,RB,TIPO I,Gás,S38_GN,rótulo nom_tipocombustivel do ONS,8760,1307.089621
+Três Lagoas,UTE.GN.MS.027975-7.01,027975,MS,RB,TIPO I,Gás,S38_GN,rótulo nom_tipocombustivel do ONS,8760,1278.565412
+Maranhão IV,UTE.GN.MA.030202-3.01,030202,MA,RB,TIPO I,Gás,S38_GN,rótulo nom_tipocombustivel do ONS,8760,1274.821664
+Maranhão V,UTE.GN.MA.030203-1.01,030203,MA,RB,TIPO I,Gás,S38_GN,rótulo nom_tipocombustivel do ONS,8760,1269.481821
+Termomacaé,UTE.GN.RJ.028029-1.01,028029,RJ,RB,TIPO I,Gás,S38_GN,rótulo nom_tipocombustivel do ONS,8760,1268.061953
+Termobahia,UTE.GN.BA.027263-9.01,027263,BA,RB,TIPO I,Gás,S38_GN,rótulo nom_tipocombustivel do ONS,8760,1239.109368
+Aparecida,UTE.GN.AM.027250-7.02,027250,AM,RB,TIPO I,Gás,S38_GN,rótulo nom_tipocombustivel do ONS,8760,1224.758611
+Fortaleza,UTE.GN.CE.028357-6.01,028357,CE,RB,TIPO I,Gás,S38_GN,rótulo nom_tipocombustivel do ONS,8760,1187.645069
+Veracel,UTE.FL.BA.029014-9.01,029014,BA,RB,TIPO II-B,Gás,S38_GN,rótulo nom_tipocombustivel do ONS,8760,953.032835
+Cristiano Rocha,UTE.PE.AM.029499-3.01,029499,AM,RB,TIPO I,Gás,S38_GN,rótulo nom_tipocombustivel do ONS,8760,588.966416
+Manauara,UTE.GN.AM.029432-2.01,029432,AM,RB,TIPO I,Gás,S38_GN,rótulo nom_tipocombustivel do ONS,8760,575.913516
+Ponta Negra,UTE.GN.AM.029361-0.02,029361,AM,RB,TIPO I,Gás,S38_GN,rótulo nom_tipocombustivel do ONS,8760,568.786655
+Tambaqui,UTE.PE.AM.029276-1.01,029276,AM,RB,TIPO I,Gás,S38_GN,rótulo nom_tipocombustivel do ONS,8760,503.09922700000004
+Seropédica,UTE.GN.RJ.027952-8.01,027952,RJ,RB,TIPO I,Gás,S38_GN,rótulo nom_tipocombustivel do ONS,8760,450.599044
+MC2 Nova Venécia 2,UTE.GN.MA.030196-5.01,030196,MA,RB,TIPO I,Gás,S38_GN,rótulo nom_tipocombustivel do ONS,8760,392.066184
+Jaraqui,UTE.GN.AM.029272-9.01,029272,AM,RB,TIPO I,Gás,S38_GN,rótulo nom_tipocombustivel do ONS,8760,387.694513
+Termoceará,UTE.GN.CE.028358-4.01,028358,CE,RB,TIPO I,Gás,S38_GN,rótulo nom_tipocombustivel do ONS,8760,237.112105
+Parnaíba IV,UTE.GN.MA.031193-6.01,031193,MA,RB,TIPO I,Gás,S38_GN,rótulo nom_tipocombustivel do ONS,8760,201.490745
+Juiz de Fora,UTE.GN.MG.001276-9.01,001276,MG,RB,TIPO I,Gás,S38_GN,rótulo nom_tipocombustivel do ONS,8760,139.766655
+Prosperidade I,UTE.GN.BA.032545-7.01,032545,BA,RB,TIPO II-A,Gás,S38_GN,rótulo nom_tipocombustivel do ONS,8760,137.412098
+Araucária,UTE.GN.PR.027733-9.01,027733,PR,RB,TIPO I,Gás,S38_GN,rótulo nom_tipocombustivel do ONS,8760,130.638937
+Berneck,UTE.FL.PR.029993-6.01,029993,PR,RB,TIPO II-B,Gás,S38_GN,rótulo nom_tipocombustivel do ONS,8760,58.536277
+Termocamaçari,UTE.GN.BA.028206-5.01,028206,BA,RB,TIPO I,Gás,S38_GN,rótulo nom_tipocombustivel do ONS,8760,36.143296
+Porto de Sergipe I,UTE.GN.SE.032228-8.01,032228,SE,RB,TIPO I,Gás,S38_GN,rótulo nom_tipocombustivel do ONS,336,0.353153
+Mauá Bloco 3,UTE.PE.AM.002952-1.01,002952,AM,RB,TIPO I,Gás,S38_GN,rótulo nom_tipocombustivel do ONS,8760,0.002678
+Camaçari,UTE.GN.BA.000602-5.01,000602,BA,RB,TIPO I,Gás,S38_GN,rótulo nom_tipocombustivel do ONS,528,0.0
+Campos,UTE.GN.RJ.027935-8.01,027935,RJ,RB,TIPO I,Gás,S38_GN,rótulo nom_tipocombustivel do ONS,8760,0.0
+Mauá Bloco 4,UTE.PE.AM.002952-1.01,002952,AM,RB,TIPO I,Gás,S38_GN,rótulo nom_tipocombustivel do ONS,8760,0.0
+Piratininga,UTE.PE.SP.002082-6.01,002082,SP,RB,TIPO I,Gás,S38_GN,rótulo nom_tipocombustivel do ONS,8760,0.0
+Willian Arjona,UTE.GN.MS.027075-0.01,027075,MS,RB,TIPO I,Gás,S38_GN,rótulo nom_tipocombustivel do ONS,528,0.0
+Itaipu 60 Hz,UHE.PH.PR.001161-4.01,001161,PR,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,39345.789702
+Tucuruí,UHE.PH.PA.002889-4.01,002889,PA,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,29044.010314
+Belo Monte,UHE.PH.PA.030354-2.01,030354,PA,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,25197.296187
+Santo Antônio,UHE.PH.RO.029707-0.01,029707,RO,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,17005.177744
+Jirau,UHE.PH.RO.029736-4.01,029736,RO,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,16884.147461
+Ilha Solteira,UHE.PH.SP.001120-7.01,001120,SP,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,12911.76873
+São Simão,UHE.PH.GO.002704-9.01,002704,MG,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,9186.523969
+Porto Primavera,UHE.PH.SP.002127-0.01,002127,SP,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,8622.716711
+Teles Pires,UHE.PH.PA.030557-0.01,030557,PA,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,8327.864249
+Xingó,UHE.PH.SE.027053-9.01,027053,AL,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,7972.819985
+Jupiá,UHE.PH.SP.001282-3.01,001282,SP,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,7561.786053999999
+Paulo Afonso IV,UHE.PH.BA.027050-4.01,027050,BA,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,6717.556708
+Itá,UHE.PH.RS.001152-5.01,001152,SC,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,6634.372214
+Salto Santiago,UHE.PH.PR.002672-7.01,002672,PR,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,6413.781622
+Água Vermelha,UHE.PH.MG.000041-8.01,000041,SP,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,5627.864222
+Marimbondo,UHE.PH.MG.001417-6.01,001417,MG,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,5599.33791
+Itumbiara,UHE.PH.MG.001194-0.01,001194,MG,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,5386.0638389999995
+Gov. Ney Braga,UHE.PH.PR.002715-4.01,002715,PR,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,5274.7616720000005
+Gov. José Richa,UHE.PH.PR.002591-7.01,002591,PR,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,5179.457737
+Pequenas Centrais Hidroelétricas da Cemat,-,,MT,RB,Pequenas Usinas (Tipo III),Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,4735.335947
+Machadinho,UHE.PH.SC.001356-0.01,001356,SC,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,4567.498002
+Gov. Bento Munhoz,UHE.PH.PR.000984-9.01,000984,PR,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,4505.550044
+Salto Osório,UHE.PH.PR.002659-0.01,002659,PR,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,4463.501683
+Furnas,UHE.PH.MG.001007-3.01,001007,MG,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,3879.8685410000003
+Estreito,UHE.PH.MA.028863-2.01,028863,MA,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,3735.051184
+Luiz Carlos Barreto,UHE.PH.SP.000917-2.01,000917,SP,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,3323.872589
+São Manoel,UHE.PH.PA.031444-7.01,031444,PA,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,3200.33615
+Luiz Gonzaga,UHE.PH.PE.001174-6.01,001174,PE,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,3092.117676
+Campos Novos,UHE.PH.SC.027401-1.01,027401,SC,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,3003.480179
+Lajeado,UHE.PH.TO.001304-8.01,001304,TO,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,2896.6320440000004
+Barra Grande,UHE.PH.RS.027556-5.01,027556,SC,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,2833.0672170000003
+Theodomiro Carneiro Santiago (Emborcação),UHE.PH.MG.027115-2.01,027115,MG,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,2800.120898
+Serra da Mesa,UHE.PH.GO.002731-6.01,002731,GO,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,2784.343962
+Cachoeira Dourada,UHE.PH.GO.000528-2.01,000528,GO,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,2621.438431
+Nilo Peçanha,UHE.PH.RJ.001536-9.01,001536,RJ,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,2551.6680890000002
+Capivara,UHE.PH.SP.000657-2.01,000657,SP,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,2392.273549
+Três Irmãos,UHE.PH.SP.002873-8.01,002873,SP,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,2143.791559
+Jaguara,UHE.PH.SP.001225-4.01,001225,MG,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,2009.578912
+Mascarenhas de Moraes,UHE.PH.MG.002038-9.01,002038,MG,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,1885.913904
+Nova Ponte,UHE.PH.MG.001574-1.01,001574,MG,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,1782.468613
+Sobradinho,UHE.PH.BA.002755-3.01,002755,BA,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,1773.309602
+Santo Antônio do Jari,UHE.PH.AP.026792-9.01,026792,AP,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,1677.327448
+Peixe Angical,UHE.PH.TO.028353-3.01,028353,TO,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,1632.880981
+Volta Grande,UHE.PH.SP.003045-7.01,003045,MG,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,1614.598511
+Porto Colômbia,UHE.PH.MG.002117-2.01,002117,MG,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,1604.680519
+Gov. Jayme Canet,UHE.PH.PR.029598-1.01,029598,PR,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,1550.6771170000002
+Miranda,UHE.PH.MG.001469-9.01,001469,MG,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,1532.019465
+Rosana,UHE.PH.SP.002555-0.01,002555,SP,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,1522.4225660000002
+Pequenas Centrais Hidrelétricas da Copel,-,,PR,RB,Pequenas Usinas (Tipo III),Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,1502.226386
+Taquaruçu,UHE.PH.SP.002821-5.01,002821,SP,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,1498.496802
+Cana Brava,UHE.PH.GO.000630-0.01,000630,GO,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,1454.7933540000001
+Dardanelos,UHE.PH.MT.029597-3.01,029597,MT,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,1352.8468
+Ferreira Gomes,UHE.PH.AP.030385-2.01,030385,AP,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,1345.788673
+Pimental,UHE.PH.PA.030354-2.01,030354,PA,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,1317.767349
+Nova Avanhandava,UHE.PH.SP.001552-0.01,001552,SP,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,1304.589076
+Corumbá I,UHE.PH.GO.000866-4.01,000866,GO,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,1278.043532
+Ponte de Pedra,UHE.PH.MT.002103-2.01,002103,MT,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,1270.80714
+Amador Aguiar I,UHE.PH.MG.027483-6.01,027483,MG,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,1255.2314979999999
+Baixo Iguaçu,UHE.PH.PR.030923-0.01,030923,PR,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8376,1215.437533
+Balbina,UHE.PH.AM.000190-2.01,000190,AM,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,1203.0864210000002
+Três Marias,UHE.PH.MG.027113-6.01,027113,MG,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,1201.4471299999998
+Pequenas Centrais Hidroelétricas da Celesc,-,,SC,RB,Pequenas Usinas (Tipo III),Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,1183.281094
+Gov. Parigot de Souza,UHE.PH.PR.001042-1.01,001042,PR,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,1167.0019269999998
+Amador Aguiar II,UHE.PH.MG.027484-4.01,027484,MG,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,1080.7790889999999
+Boa Esperança,UHE.PH.PI.000267-4.01,000267,PI,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,1025.124151
+Conj. Parecis,-,,MT,RB,Conjunto de Usinas,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,1015.347524
+Igarapava,UHE.PH.SP.001098-7.01,001098,MG,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,989.7420999999999
+Pequenas Centrais Hidroelétricas da Escelsa,-,,ES,RB,Pequenas Usinas (Tipo III),Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,982.4666169999999
+Promissão,UHE.PH.SP.002158-0.01,002158,SP,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,963.205947
+Chavantes,UHE.PH.SP.000764-1.01,000764,SP,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,928.115686
+Simplício,UHE.PH.MG.029458-6.01,029458,RJ,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,914.579179
+Cachoeira Caldeirão,UHE.PH.AP.031186-3.01,031186,AP,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,910.276663
+Henry Borden Subterrânea,UHE.PH.SP.001084-7.01,001084,SP,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,909.4497190000001
+Samuel,UHE.PH.RO.002687-5.01,002687,RO,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,880.863464
+São Salvador,UHE.PH.TO.028567-6.01,028567,TO,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,872.7098440000001
+Salto Pilão,UHE.PH.SC.028564-1.01,028564,SC,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,832.24486
+Henry Borden Externa,UHE.PH.SP.001084-7.01,001084,SP,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,789.13082
+Funil (RJ),UHE.PH.RJ.027118-7.01,027118,RJ,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,712.785134
+Serra do Facão,UHE.PH.GO.028355-0.01,028355,GO,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,668.6288079999999
+Colíder,UHE.PH.MT.030422-0.01,030422,MT,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,667.9730940000001
+Fontes Nova,UHE.PH.RJ.000973-3.01,000973,RJ,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,640.933664
+Bariri,UHE.PH.SP.000203-8.01,000203,SP,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,625.816239
+Itiquira II,UHE.PH.MT.027244-2.01,027244,MT,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,618.135276
+Salto,UHE.PH.GO.028758-0.01,028758,GO,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,615.281298
+Jauru,UHE.PH.MT.001245-9.01,001245,MT,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,612.863593
+Garibaldi,UHE.PH.SC.030415-8.01,030415,SC,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,609.5883839999999
+Ibitinga,UHE.PH.SP.001097-9.01,001097,SP,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,608.555489
+Coaracy Nunes,UHE.PH.AP.000783-8.01,000783,AP,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,586.743587
+Aimorés,UHE.PH.MG.000042-6.01,000042,MG,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,555.170474
+Quebra Queixo,UHE.PH.SC.002167-9.01,002167,SC,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,549.840522
+Salto do Rio Verdinho,UHE.PH.GO.028760-1.01,028760,GO,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,547.1869810000001
+Manso,UHE.PH.MT.001401-0.01,001401,MT,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,546.3368149999999
+Irapé,UHE.PH.MG.001146-0.01,001146,MG,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,522.561003
+Barra Bonita,UHE.PH.SP.000208-9.01,000208,SP,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,520.493739
+Funil (MG),UHE.PH.MG.001006-5.01,001006,MG,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,520.2802849999999
+Ilha dos Pombos,UHE.PH.RJ.001113-4.01,001113,RJ,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,507.607677
+Mascarenhas,UHE.PH.ES.001432-0.01,001432,ES,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,505.575444
+PEQUENAS CENTRAIS HIDROELÉTRICAS NA SE JAURU-CEMAT,-,,MT,RB,Pequenas Usinas (Tipo III),Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,481.693052
+Guaporé,UHE.PH.MT.001066-9.01,001066,MT,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,480.165278
+Barra dos Coqueiros,UHE.PH.GO.028757-1.01,028757,GO,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,456.79271600000004
+Fundão,UHE.PH.PR.028360-6.01,028360,PR,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,452.173381
+Santa Clara (PR),UHE.PH.PR.028361-4.01,028361,PR,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,424.691813
+Rondon II,UHE.PH.RO.027448-8.01,027448,RO,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,424.688525
+Conj. Fazenda,-,,MT,RB,Conjunto de Usinas,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,419.251339
+Euclides da Cunha,UHE.PH.SP.000923-7.01,000923,SP,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,413.14554200000003
+Itiquira I,UHE.PH.MT.027244-2.01,027244,MT,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,408.126727
+Pequenas Centrais Hidrelétricas da Emae,-,,SP,RB,Pequenas Usinas (Tipo III),Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,402.652461
+Pequenas Centrais Hidrelétricas da Cpfl,-,,SP,RB,Pequenas Usinas (Tipo III),Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,393.49203700000004
+Pequenas Centrais Hidroelétricas  da Enersul,-,,MS,RB,Pequenas Usinas (Tipo III),Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,386.636245
+Canoas I,UHE.PH.SP.000647-5.01,000647,SP,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,385.47021500000005
+Usi PCH Conjunto Blumenau,ND,,SC,RB,TIPO III,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,384.787399
+Queimado,UHE.PH.MG.002176-8.01,002176,MG,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,379.914832
+Pereira Passos,UHE.PH.RJ.002043-5.01,002043,RJ,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,371.219203
+Eng. J.L.M. Godoy Pereira,UHE.PH.GO.029455-1.01,029455,GO,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,368.042859
+Pequenas Centrais Hidroelétricas da Celg,-,,GO,RB,Pequenas Usinas (Tipo III),Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,363.45957
+Sinop,UHE.PH.MT.031428-5.01,031428,MT,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,4345,352.202436
+Baguari,UHE.PH.MG.029453-5.01,029453,MG,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,348.732593
+Xanxerê,UTE.FL.SC.029640-6.01,029640,SC,RB,TIPO III,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,344.742798
+Corumbá IV,UHE.PH.GO.027795-9.01,027795,GO,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,335.337787
+Guilman Amorim,UHE.PH.MG.001079-0.01,001079,MG,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,333.739212
+Salto Grande (SP),UHE.PH.SP.002648-4.01,002648,SP,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,330.87829800000003
+Caçu,UHE.PH.GO.028756-3.01,028756,GO,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,327.521402
+Caconde,UHE.PH.SP.000588-6.01,000588,SP,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,317.26413
+Paraibuna,UHE.PH.SP.027122-5.01,027122,SP,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,315.609914
+Canoas II,UHE.PH.SP.027092-0.01,027092,SP,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,310.012026
+Juba II,UHE.PH.MT.001269-6.01,001269,MT,RB,TIPO III,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,299.171443
+Sá Carvalho,UHE.PH.MG.002563-1.01,002563,MG,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,294.438416
+Itapebi,UHE.PH.BA.001175-4.01,001175,BA,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,288.35376
+Salto Grande (MG),UHE.PH.MG.027210-8.01,027210,MG,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,279.259398
+Jurumirim,UHE.PH.SP.001285-8.01,001285,SP,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,278.953315
+Conj. Santa Cabeça,-,,SP,RB,Conjunto de Usinas,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,275.39038400000004
+Juba I,UHE.PH.MT.001268-8.01,001268,MT,RB,TIPO III,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,268.18154100000004
+PEQUENAS CENTRAIS HIDROELÉTRICAS NA SE JI-PARANA,-,,RO,RB,Pequenas Usinas (Tipo III),Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,263.088934
+Buriti,PCH.PH.MS.028753-9.01,028753,MS,RB,TIPO III,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,259.214547
+Espora,UHE.PH.GO.000908-3.01,000908,GO,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,243.772123
+Curuá-Una,UHE.PH.PA.027130-6.01,027130,PA,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,242.529418
+São Domingos,UHE.PH.MS.028761-0.01,028761,MS,RB,TIPO II-A,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,240.085751
+Batalha,UHE.PH.MG.029454-3.01,029454,MG,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,230.737014
+Alto Sucuriú,PCH.PH.MS.028817-9.01,028817,MS,RB,TIPO III,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,220.651232
+Porto Estrela,UHE.PH.MG.027196-9.01,027196,MG,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,216.233251
+Corumbá III,UHE.PH.GO.028352-5.01,028352,GO,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,215.070725
+Conj. Barreiras,-,,BA,RB,Conjunto de Usinas,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,5425,214.69099400000002
+Pirajú,UHE.PH.SP.002077-0.01,002077,SP,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,214.347124
+PEQUENAS CENTRAIS HIDROELÉTRICAS NA SE VILHENA,-,,RO,RB,Pequenas Usinas (Tipo III),Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,212.30903400000003
+Assis Chateaubriand,UHE.PH.MS.028012-7.01,028012,MS,RB,TIPO III,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,209.712259
+Queixada,PCH.PH.GO.030272-4.01,030272,GO,RB,TIPO III,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,209.02497599999998
+Sobragi,UHE.PH.MG.002757-0.01,002757,MG,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,208.393576
+Pedra do Cavalo,UHE.PH.BA.028565-0.01,028565,BA,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,191.728628
+Rosal,UHE.PH.ES.002553-4.01,002553,ES,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,189.411002
+Pequenas Centrais Hidrelétricas da Cemig,-,,MG,RB,Pequenas Usinas (Tipo III),Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,186.20755799999998
+Santa Gabriela,PCH.PH.MT.028996-5.01,028996,MT,RB,TIPO III,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,177.346874
+Santa Branca,UHE.PH.SP.002696-4.01,002696,SP,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,172.88463000000002
+Picada,UHE.PH.MG.002053-2.01,002053,MG,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,167.88158900000002
+Retiro Baixo,UHE.PH.MG.029457-8.01,029457,MG,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,143.6455
+Sítio Grande,PCH.PH.BA.002754-5.01,002754,BA,RB,TIPO III,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,139.545552
+Ourinhos,UHE.PH.SP.027872-6.01,027872,SP,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,137.58607800000001
+Itutinga,UHE.PH.MG.001197-5.01,001197,MG,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,132.402051
+Mosquitão,PCH.PH.GO.028541-2.01,028541,GO,RB,TIPO III,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,130.469616
+PEQUENAS CENTRAIS HIDROELÉTRICAS NA SE PIMENTA BUE,-,,RO,RB,Pequenas Usinas (Tipo III),Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,123.16141099999999
+Limoeiro,UHE.PH.SP.001328-5.01,001328,SP,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,122.949235
+Ypê,PCH.PH.GO.031327-0.01,031327,GO,RB,TIPO III,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,116.660739
+Conj. Complexo do Prata,-,,MT,RB,Conjunto de Usinas,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,108.478869
+Barra do Braúna,UHE.PH.MG.000215-1.01,000215,MG,RB,TIPO II-A,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,105.848979
+Camargos,UHE.PH.MG.000608-4.01,000608,MG,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,105.515088
+Paulo Afonso III,UHE.PH.BA.027049-0.01,027049,BA,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,101.142428
+São Lourenço,PCH.PH.MT.028825-0.01,028825,MT,RB,TIPO II-B,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,89.88729
+Pequenas Centrais Hidroelétricas da Ceb,-,,DF,RB,Pequenas Usinas (Tipo III),Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,87.52158
+São João,PCH.PH.ES.026834-8.01,026834,ES,RB,TIPO III,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,84.70194599999999
+Anhanguera,PCH.PH.SP.028734-2.01,028734,SP,RB,TIPO III,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,78.700502
+Verde 8,PCH.PH.GO.030973-7.01,030973,GO,RB,TIPO III,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,66.958367
+Rondonópolis,PCH.PH.MT.028848-9.01,028848,MT,RB,TIPO III,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,63.334679
+Lajari,PCH.PH.MT.033386-7.01,033386,MT,RB,TIPO III,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,60.598151
+Anta,UHE.PH.MG.029458-6.01,029458,RJ,RB,TIPO II-B,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,55.925318
+Santa Clara (MG),UHE.PH.MG.002699-9.01,002699,MG,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,53.366495
+Jaguari,UHE.PH.SP.027131-4.01,027131,SP,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,49.770046
+Engenheiro José Gelásio da Rocha,PCH.PH.MT.028845-4.01,028845,MT,RB,TIPO III,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,29.251875
+Apolônio Sales,UHE.PH.AL.001510-5.01,001510,BA,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,28.473546
+Usi PCH Conjunto Nortems,ND,,MS,RB,TIPO III,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,2.398908
+Paulo Afonso II,UHE.PH.BA.027048-2.01,027048,BA,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,0.602804
+Paulo Afonso I,UHE.PH.BA.002012-5.01,002012,BA,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,0.11199200000000001
+Angelina,PCH.PH.SC.002133-4.01,002133,SC,RB,TIPO III,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,0.0
+Francisco Gross,PCH.PH.ES.028380-0.01,028380,ES,RB,TIPO III,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,3696,0.0
+Irara,PCH.PH.GO.001147-9.01,001147,GO,RB,TIPO III,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,3744,0.0
+Itumbiara,ND,,GO,RB,TIPO III,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,0.0
+Ludesa,PCH.PH.SC.028801-2.01,028801,PR,RB,TIPO III,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,4248,0.0
+Ludesa,PCH.PH.SC.028801-2.01,028801,SC,RB,TIPO III,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,0.0
+Macabu,PCH.PH.RJ.001347-1.01,001347,RJ,RB,TIPO III,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,0.0
+PEQUENAS CENTRAIS HIDROELÉTRICAS DA AMPLA,-,,RJ,RB,Pequenas Usinas (Tipo III),Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,0.0
+PEQUENAS CENTRAIS HIDROELÉTRICAS NA SE IACIARA,-,,GO,RB,Pequenas Usinas (Tipo III),Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,0.0
+Pequenas Centrais Hidrelétricas da Cesp,-,,SP,RB,Pequenas Usinas (Tipo III),Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,3408,0.0
+Pequenas Centrais Hidroelétricas da Cerj,-,,RJ,RB,Pequenas Usinas (Tipo III),Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,0.0
+Pequenas Centrais Hidroelétricas da Chesf,-,,BA,RB,Pequenas Usinas (Tipo III),Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,0.0
+Porto das Pedras,PCH.PH.MS.028995-7.01,028995,MS,RB,TIPO III,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,0.0
+Risoleta Neves,UHE.PH.MG.000641-6.01,000641,MG,RB,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,0.0
+Rochedo,UHE.PH.GO.002537-2.01,002537,GO,RB,TIPO III,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,0.0
+Salto Curuá,PCH.PH.PA.028672-9.01,028672,PA,RB,TIPO III,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,7248,0.0
+Santa Rosa II,PCH.PH.RJ.026732-5.01,026732,RJ,RB,TIPO III,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,0.0
+Santo Antônio do Caiapó,PCH.PH.GO.029119-6.01,029119,GO,RB,TIPO III,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,0.0
+São Joaquim,PCH.PH.ES.027985-4.01,027985,ES,RB,TIPO III,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,3744,0.0
+Tibagi Montante,UHE.PH.PR.032923-1.01,032923,PR,RB,TIPO III,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,1824,0.0
+Usi PCH Conjunto Campo Grande,ND,,MS,RB,TIPO III,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,0.0
+Angra II,UTN.UR.RJ.000101-5.01,000101,RJ,RB,TIPO I,Nuclear,S38_NUC,rótulo nom_tipocombustivel do ONS,8760,10582.956396
+Angra I,UTN.UR.RJ.000100-7.01,000100,RJ,RB,TIPO I,Nuclear,S38_NUC,rótulo nom_tipocombustivel do ONS,8760,5545.800295
+Suape II,UTE.PE.PE.029719-4.01,029719,PE,RB,TIPO I,Óleo Combustível,S38_PET,rótulo nom_tipocombustivel do ONS,8760,282.17879100000005
+U-50,UTE.PE.PE.030438-7.01,030438,PE,RB,TIPO II-B,Óleo Combustível,S38_PET,rótulo nom_tipocombustivel do ONS,8760,236.03341
+Termoparaíba,UTE.PE.PB.029638-4.01,029638,PB,RB,TIPO I,Óleo Combustível,S38_PET,rótulo nom_tipocombustivel do ONS,8760,223.600065
+Termonordeste,UTE.PE.PB.029641-4.01,029641,PB,RB,TIPO I,Óleo Combustível,S38_PET,rótulo nom_tipocombustivel do ONS,8760,221.702033
+Pequenas Centrais Termeletricas da Enersul,-,,MS,RB,Pequenas Usinas (Tipo III),Óleo Diesel,S38_PET,rótulo nom_tipocombustivel do ONS,8760,206.016116
+Pequenas Centrais Termelétricas da Cemat,-,,MT,RB,Pequenas Usinas (Tipo III),Óleo Diesel,S38_PET,rótulo nom_tipocombustivel do ONS,8760,194.060883
+Global I,UTE.PE.BA.029653-8.01,029653,BA,RB,TIPO I,Óleo Combustível,S38_PET,rótulo nom_tipocombustivel do ONS,8760,91.39222500000001
+Global II,UTE.PE.BA.029639-2.01,029639,BA,RB,TIPO I,Óleo Combustível,S38_PET,rótulo nom_tipocombustivel do ONS,8760,90.515328
+Iranduba,UTE.PE.AM.030274-0.01,030274,AM,RB,TIPO I,Óleo Diesel,S38_PET,rótulo nom_tipocombustivel do ONS,8760,57.796952
+Apoena,UTE.PE.BA.029554-0.01,029554,BA,RB,TIPO I,Óleo Combustível,S38_PET,rótulo nom_tipocombustivel do ONS,8760,54.867283
+Igarapé,UTE.PE.MG.001100-2.01,001100,MG,RB,TIPO I,Óleo Combustível,S38_PET,rótulo nom_tipocombustivel do ONS,8760,45.206769
+Viana,UTE.PE.ES.029664-3.01,029664,ES,RB,TIPO I,Óleo Combustível,S38_PET,rótulo nom_tipocombustivel do ONS,8760,34.642309999999995
+Guarani,UTE.PE.BA.029555-8.01,029555,BA,RB,TIPO I,Óleo Combustível,S38_PET,rótulo nom_tipocombustivel do ONS,8760,27.741336999999998
+Termocabo,UTE.GN.PE.028326-6.01,028326,PE,RB,TIPO I,Óleo Combustível,S38_PET,rótulo nom_tipocombustivel do ONS,8760,24.695438
+Termomanaus,UTE.PE.PE.029562-0.01,029562,PE,RB,TIPO I,Óleo Diesel,S38_PET,rótulo nom_tipocombustivel do ONS,8760,22.711064999999998
+Maracanaú I,UTE.PE.CE.029654-6.01,029654,CE,RB,TIPO I,Óleo Combustível,S38_PET,rótulo nom_tipocombustivel do ONS,8760,19.443108
+Flores 2,UTE.PE.AM.029192-7.01,029192,AM,RB,TIPO III,Óleo Diesel,S38_PET,rótulo nom_tipocombustivel do ONS,8760,18.604551
+Flores 1,UTE.PE.AM.029192-7.01,029192,AM,RB,TIPO III,Óleo Diesel,S38_PET,rótulo nom_tipocombustivel do ONS,8760,14.897511
+Petrolina,UTE.PE.PE.028584-6.01,028584,PE,RB,TIPO I,Óleo Combustível,S38_PET,rótulo nom_tipocombustivel do ONS,8760,14.486930000000001
+Pau Ferro I,UTE.PE.PE.029561-2.01,029561,PE,RB,TIPO I,Óleo Diesel,S38_PET,rótulo nom_tipocombustivel do ONS,8760,13.562225
+Potiguar III,UTE.PE.RN.029556-6.01,029556,RN,RB,TIPO I,Óleo Diesel,S38_PET,rótulo nom_tipocombustivel do ONS,8760,12.856129999999999
+Flores 3,UTE.PE.AM.029192-7.01,029192,AM,RB,TIPO III,Óleo Diesel,S38_PET,rótulo nom_tipocombustivel do ONS,8760,12.379211
+Potiguar,UTE.PE.RN.028655-9.01,028655,RN,RB,TIPO I,Óleo Diesel,S38_PET,rótulo nom_tipocombustivel do ONS,8760,12.30259
+Curumim,UTE.PE.BA.028615-0.01,028615,BA,RB,TIPO II-A,Óleo Combustível,S38_PET,rótulo nom_tipocombustivel do ONS,8760,10.953061
+Pernambuco III,UTE.PE.PE.030120-5.01,030120,PE,RB,TIPO I,Óleo Combustível,S38_PET,rótulo nom_tipocombustivel do ONS,8760,10.100627000000001
+Campina Grande,UTE.PE.PB.000612-2.01,000612,PB,RB,TIPO I,Óleo Combustível,S38_PET,rótulo nom_tipocombustivel do ONS,8760,9.870323
+Flores 4,UTE.PE.AM.029192-7.01,029192,AM,RB,TIPO III,Óleo Diesel,S38_PET,rótulo nom_tipocombustivel do ONS,8760,8.49112
+Palmeiras de Goiás,UTE.PE.GO.001946-1.01,001946,GO,RB,TIPO I,Óleo Diesel,S38_PET,rótulo nom_tipocombustivel do ONS,8760,2.011682
+Xavantes Aruanã,UTE.PE.GO.028654-0.01,028654,GO,RB,TIPO II-A,Óleo Diesel,S38_PET,rótulo nom_tipocombustivel do ONS,8760,0.77689
+Geramar II,UTE.PE.MA.029668-6.01,029668,MA,RB,TIPO I,Óleo Combustível,S38_PET,rótulo nom_tipocombustivel do ONS,8760,0.17275900000000002
+Geramar I,UTE.PE.MA.029705-4.01,029705,MA,RB,TIPO I,Óleo Combustível,S38_PET,rótulo nom_tipocombustivel do ONS,8760,0.157796
+Goiânia II,UTE.PE.GO.029460-8.01,029460,GO,RB,TIPO I,Óleo Diesel,S38_PET,rótulo nom_tipocombustivel do ONS,8760,0.05485
+Altos,UTE.PE.PI.028538-2.01,028538,PI,RB,TIPO II-A,Óleo Diesel,S38_PET,rótulo nom_tipocombustivel do ONS,8760,0.0
+Aracati,UTE.PE.CE.028531-5.01,028531,CE,RB,TIPO II-A,Óleo Diesel,S38_PET,rótulo nom_tipocombustivel do ONS,8760,0.0
+Araguaia,UTE.PE.MT.035090-7.01,035090,MT,RB,TIPO III,Óleo Combustível,S38_PET,rótulo nom_tipocombustivel do ONS,8760,0.0
+Baturité,UTE.PE.CE.028529-3.01,028529,CE,RB,TIPO II-A,Óleo Diesel,S38_PET,rótulo nom_tipocombustivel do ONS,8760,0.0
+Belo Jardim,UTE.PE.AC.030599-5.01,030599,AC,RB,TIPO II-B,Óleo Diesel,S38_PET,rótulo nom_tipocombustivel do ONS,8760,0.0
+Brasília,UTE.PE.DF.000312-3.01,000312,DF,RB,TIPO I,Óleo Diesel,S38_PET,rótulo nom_tipocombustivel do ONS,528,0.0
+Campo Maior,UTE.PE.PI.028537-4.01,028537,PI,RB,TIPO II-A,Óleo Diesel,S38_PET,rótulo nom_tipocombustivel do ONS,8760,0.0
+Carioba,UTE.PE.SP.000678-5.01,000678,SP,RB,TIPO I,Óleo Combustível,S38_PET,rótulo nom_tipocombustivel do ONS,8760,0.0
+Caucaia,UTE.PE.CE.028528-5.01,028528,CE,RB,TIPO II-A,Óleo Diesel,S38_PET,rótulo nom_tipocombustivel do ONS,8760,0.0
+Crato,UTE.PE.CE.028530-7.01,028530,CE,RB,TIPO II-A,Óleo Diesel,S38_PET,rótulo nom_tipocombustivel do ONS,8760,0.0
+Daia,UTE.PE.GO.028612-5.01,028612,GO,RB,TIPO I,Óleo Diesel,S38_PET,rótulo nom_tipocombustivel do ONS,8760,0.0
+Distrito A,UTE.PE.AM.030273-2.01,030273,AM,RB,TIPO III,Óleo Combustível,S38_PET,rótulo nom_tipocombustivel do ONS,8760,0.0
+Distrito B,UTE.PE.AM.030273-2.01,030273,AM,RB,TIPO III,Óleo Combustível,S38_PET,rótulo nom_tipocombustivel do ONS,8760,0.0
+Electron,UTE.PE.AM.027120-9.01,027120,AM,RB,TIPO III,Óleo Combustível,S38_PET,rótulo nom_tipocombustivel do ONS,8760,0.0
+Iguatu,UTE.PE.CE.028532-3.01,028532,CE,RB,TIPO II-A,Óleo Diesel,S38_PET,rótulo nom_tipocombustivel do ONS,8760,0.0
+Jaguarari,UTE.PE.BA.028527-7.01,028527,BA,RB,TIPO I,Óleo Diesel,S38_PET,rótulo nom_tipocombustivel do ONS,528,0.0
+Juazeiro do Norte,UTE.PE.CE.028534-0.01,028534,CE,RB,TIPO II-A,Óleo Diesel,S38_PET,rótulo nom_tipocombustivel do ONS,8760,0.0
+Marambaia,UTE.PE.PI.028535-8.01,028535,PI,RB,TIPO II-A,Óleo Diesel,S38_PET,rótulo nom_tipocombustivel do ONS,8760,0.0
+Mauá 7,UTE.PE.AM.002952-1.01,002952,AM,RB,TIPO III,Óleo Diesel,S38_PET,rótulo nom_tipocombustivel do ONS,8760,0.0
+Mauá Bloco 5B,UTE.PE.AM.002952-1.01,002952,AM,RB,TIPO III,Óleo Diesel,S38_PET,rótulo nom_tipocombustivel do ONS,8760,0.0
+Mauá Bloco 6,UTE.PE.AM.002952-1.01,002952,AM,RB,TIPO III,Óleo Diesel,S38_PET,rótulo nom_tipocombustivel do ONS,8760,0.0
+Nazária,UTE.PE.PI.028536-6.01,028536,PI,RB,TIPO II-A,Óleo Diesel,S38_PET,rótulo nom_tipocombustivel do ONS,8760,0.0
+Pecém,UTE.PE.CE.028533-1.01,028533,CE,RB,TIPO II-A,Óleo Diesel,S38_PET,rótulo nom_tipocombustivel do ONS,8760,0.0
+Rio Acre,UTE.PE.AC.002277-2.01,002277,AC,RB,TIPO II-B,Óleo Diesel,S38_PET,rótulo nom_tipocombustivel do ONS,528,0.0
+Rio Madeira,UTE.PE.RO.002406-6.01,002406,RO,RB,TIPO III,Óleo Diesel,S38_PET,rótulo nom_tipocombustivel do ONS,8760,0.0
+Santana Bloco 1,UTE.PE.AP.027104-7.01,027104,AP,RB,TIPO I,Óleo Diesel,S38_PET,rótulo nom_tipocombustivel do ONS,7248,0.0
+Santana Bloco 2,UTE.PE.AP.027104-7.01,027104,AP,RB,TIPO I,Óleo Diesel,S38_PET,rótulo nom_tipocombustivel do ONS,7248,0.0
+Santarém,UTE.PE.PA.031616-4.02,031616,PA,RB,TIPO I,Óleo Diesel,S38_PET,rótulo nom_tipocombustivel do ONS,528,0.0
+São José,UTE.PE.AM.028922-1.01,028922,AM,RB,TIPO I,Óleo Diesel,S38_PET,rótulo nom_tipocombustivel do ONS,528,0.0
+Termo Norte II,UTE.GN.RO.028033-0.01,028033,RO,RB,TIPO I,Óleo Diesel,S38_PET,rótulo nom_tipocombustivel do ONS,8760,0.0
+Conj. Pirapora 2,-,,MG,RB,Conjunto de Usinas,Fotovoltaica,S38_SOL,rótulo nom_tipocombustivel do ONS,8760,840.217465
+Conj. Nova Olinda,-,,PI,RB,Conjunto de Usinas,Fotovoltaica,S38_SOL,rótulo nom_tipocombustivel do ONS,8760,514.908308
+Conj. Ituverava,-,,BA,RB,Conjunto de Usinas,Fotovoltaica,S38_SOL,rótulo nom_tipocombustivel do ONS,8760,436.612657
+Conj. Juazeiro Solar,-,,BA,RB,Conjunto de Usinas,Fotovoltaica,S38_SOL,rótulo nom_tipocombustivel do ONS,8760,325.120029
+Conj. Calcário,-,,CE,RB,Conjunto de Usinas,Fotovoltaica,S38_SOL,rótulo nom_tipocombustivel do ONS,8760,271.53598100000005
+Conj. Guaimbê,-,,SP,RB,Conjunto de Usinas,Fotovoltaica,S38_SOL,rótulo nom_tipocombustivel do ONS,8760,267.094549
+Conj. Paracatu,-,,MG,RB,Conjunto de Usinas,Fotovoltaica,S38_SOL,rótulo nom_tipocombustivel do ONS,8760,242.144305
+Conj. Horizonte,-,,BA,RB,Conjunto de Usinas,Fotovoltaica,S38_SOL,rótulo nom_tipocombustivel do ONS,8760,198.782513
+Conj. Bom Jesus,-,,BA,RB,Conjunto de Usinas,Fotovoltaica,S38_SOL,rótulo nom_tipocombustivel do ONS,8760,166.184339
+Conj. Lapa,-,,BA,RB,Conjunto de Usinas,Fotovoltaica,S38_SOL,rótulo nom_tipocombustivel do ONS,8760,160.908027
+Conj. Floresta,-,,RN,RB,Conjunto de Usinas,Fotovoltaica,S38_SOL,rótulo nom_tipocombustivel do ONS,8760,157.307185
+Conj. São Pedro,-,,BA,RB,Conjunto de Usinas,Fotovoltaica,S38_SOL,rótulo nom_tipocombustivel do ONS,8760,142.692972
+Conj. Sol do Futuro,-,,CE,RB,Conjunto de Usinas,Fotovoltaica,S38_SOL,rótulo nom_tipocombustivel do ONS,8016,133.57748
+Conj. Rio Alto,-,,PB,RB,Conjunto de Usinas,Fotovoltaica,S38_SOL,rótulo nom_tipocombustivel do ONS,8760,124.456757
+Conj. BJL,-,,BA,RB,Conjunto de Usinas,Fotovoltaica,S38_SOL,rótulo nom_tipocombustivel do ONS,8760,105.200952
+Conj. Boa Hora,-,,SP,RB,Conjunto de Usinas,Fotovoltaica,S38_SOL,rótulo nom_tipocombustivel do ONS,7344,102.410309
+Assú V,UFV.RS.RN.034184-3.01,034184,RN,RB,TIPO II-B,Fotovoltaica,S38_SOL,rótulo nom_tipocombustivel do ONS,8760,73.300368
+Conj. Dracena,-,,SP,RB,Conjunto de Usinas,Fotovoltaica,S38_SOL,rótulo nom_tipocombustivel do ONS,4416,71.68444500000001
+Conj. Sertão Solar Barreiras,-,,BA,RB,Conjunto de Usinas,Fotovoltaica,S38_SOL,rótulo nom_tipocombustivel do ONS,1560,31.092438
+Fontes Solar II,UFV.RS.PE.032373-0.01,032373,PE,RB,TIPO II-C,Fotovoltaica,S38_SOL,rótulo nom_tipocombustivel do ONS,8760,8.509158
+Fontes Solar I,UFV.RS.PE.032372-1.01,032372,PE,RB,TIPO II-C,Fotovoltaica,S38_SOL,rótulo nom_tipocombustivel do ONS,8760,8.237603
+Conj. São Gonçalo,-,,PI,RB,Conjunto de Usinas,Fotovoltaica,S38_SOL,rótulo nom_tipocombustivel do ONS,1560,2.577327
+CMPC,UTE.FL.RS.030666-5.01,030666,RS,RS,TIPO II-B,Resíduos Industriais,FORA_S38,fora do S38 (autoprodução): licor negro (celulose): autoprodução da indústria (S17); fora da geração do S38 — 72.7 GWh,8760,72.722204
+São Sepé,UTE.AI.RS.034046-4.01,034046,RS,RS,TIPO II-A,Biomassa,S38_BIO,rótulo nom_tipocombustivel do ONS,8760,43.691462
+São Borja,UTE.AI.RS.029583-3.01,029583,RS,RS,TIPO III,Biomassa,S38_BIO,rótulo nom_tipocombustivel do ONS,8760,24.541983000000002
+Candiota III,UTE.CM.RS.029767-4.01,029767,RS,RS,TIPO I,Carvão,S38_CAR,rótulo nom_tipocombustivel do ONS,8760,1668.4504069999998
+Pampa Sul,UTE.CM.RS.032282-2.01,032282,RS,RS,TIPO I,Carvão,S38_CAR,rótulo nom_tipocombustivel do ONS,5880,956.722567
+São Jerônimo,UTE.CM.RS.026829-1.01,026829,RS,RS,TIPO I,Carvão,S38_CAR,rótulo nom_tipocombustivel do ONS,528,0.050636
+Charqueadas,UTE.CM.RS.000760-9.01,000760,RS,RS,TIPO I,Carvão,S38_CAR,rótulo nom_tipocombustivel do ONS,528,0.0
+Presidente Médici,UTE.CM.RS.002150-4.01,002150,RS,RS,TIPO I,Carvão,S38_CAR,rótulo nom_tipocombustivel do ONS,528,0.0
+Conj. Santa Vitória do Palmar,-,,RS,RS,Conjunto de Usinas,Eólica,S38_EOL,rótulo nom_tipocombustivel do ONS,8760,1742.4764779999998
+Conj. Marmeleiro 2,-,,RS,RS,Conjunto de Usinas,Eólica,S38_EOL,rótulo nom_tipocombustivel do ONS,8760,777.843611
+Conj. Lagoa dos Barros,-,,RS,RS,Conjunto de Usinas,Eólica,S38_EOL,rótulo nom_tipocombustivel do ONS,8760,736.763447
+Conj. Cerro Chato,-,,RS,RS,Conjunto de Usinas,Eólica,S38_EOL,rótulo nom_tipocombustivel do ONS,8760,558.667613
+Conj. Atlântica,-,,RS,RS,Conjunto de Usinas,Eólica,S38_EOL,rótulo nom_tipocombustivel do ONS,8760,415.258859
+Conj. Quinta 138 kV,-,,RS,RS,Conjunto de Usinas,Eólica,S38_EOL,rótulo nom_tipocombustivel do ONS,8760,397.790251
+Conj. Quinta 69 kV,-,,RS,RS,Conjunto de Usinas,Eólica,S38_EOL,rótulo nom_tipocombustivel do ONS,8760,198.455264
+Elebrás Cidreira 1,EOL.CV.RS.028712-1.01,028712,RS,RS,TIPO II-B,Eólica,S38_EOL,rótulo nom_tipocombustivel do ONS,8760,194.430308
+Conj. Viamão 3,-,,RS,RS,Conjunto de Usinas,Eólica,S38_EOL,rótulo nom_tipocombustivel do ONS,8760,175.45754300000002
+Xangri-lá,EOL.CV.RS.031302-5.01,031302,RS,RS,TIPO II-B,Eólica,S38_EOL,rótulo nom_tipocombustivel do ONS,8760,69.774163
+Canoas,UTE.GN.RS.028038-0.01,028038,RS,RS,TIPO I,Óleo Diesel,S38_GN,reclassificação: rotulada diesel pelo ONS; CEG (UTE.GN) e SIGA registram gás natural; emissões de gás do RS em 2019 no SEEG compatíveis,8760,174.56091
+Uruguaiana,UTE.GN.RS.002913-0.01,002913,RS,RS,TIPO I,Gás,S38_GN,rótulo nom_tipocombustivel do ONS,8760,0.00138
+Foz do Chapecó,UHE.PH.RS.028354-1.01,028354,RS,RS,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,3842.493705
+Itaúba,UHE.PH.RS.027019-9.01,027019,RS,RS,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,2101.8278790000004
+Jacuí,UHE.PH.RS.001217-3.01,001217,RS,RS,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,1278.201769
+Passo Fundo,UHE.PH.RS.002001-0.01,002001,RS,RS,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,1166.0238319999999
+PEQUENAS USINAS HIDRELETRICAS REGIÃO DA RGE,-,,RS,RS,Pequenas Usinas (Tipo III),Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,996.053209
+Dona Francisca,UHE.PH.RS.027012-1.01,027012,RS,RS,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,930.8376069999999
+Passo Real,UHE.PH.RS.002003-6.01,002003,RS,RS,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,779.941111
+Castro Alves,UHE.PH.RS.000718-8.01,000718,RS,RS,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,499.32936700000005
+Passo São João,UHE.PH.RS.029456-0.01,029456,RS,RS,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,451.53219
+Monte Claro,UHE.PH.RS.027968-4.01,027968,RS,RS,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,445.52788799999996
+Monjolinho,UHE.PH.RS.028562-5.01,028562,RS,RS,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,433.18857199999997
+14 de Julho,UHE.PH.RS.000012-4.01,000012,RS,RS,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,375.575648
+Conj. Lajeado Grande,-,,RS,RS,Conjunto de Usinas,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,364.769527
+São José,UHE.PH.RS.029459-4.01,029459,RS,RS,TIPO I,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,324.254535
+Conj. Boca do Monte,-,,RS,RS,Conjunto de Usinas,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,219.360097
+Pequenas Centrais Hidroelétricas da Ceee,-,,RS,RS,Pequenas Usinas (Tipo III),Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,169.60012700000001
+Canastra,UHE.PH.RS.000635-1.01,000635,RS,RS,TIPO II-A,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,8760,164.034864
+Taquaral,PCH.PH.RS.032563-5.01,032563,RS,RS,TIPO III,Hidráulica,S38_HID,rótulo nom_tipocombustivel do ONS,5760,0.0
+Alegrete,UTE.PE.RS.000049-3.01,000049,RS,RS,TIPO I,Óleo Combustível,S38_PET,rótulo nom_tipocombustivel do ONS,528,0.0
+Nutepa,UTE.PE.RS.001595-4.01,001595,RS,RS,TIPO I,Óleo Combustível,S38_PET,rótulo nom_tipocombustivel do ONS,528,0.0

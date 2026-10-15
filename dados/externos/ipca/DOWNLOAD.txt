@@ -1,0 +1,13 @@
+# Registro de download — gerado por scripts/rodada02_coleta.py (não editar à mão).
+# Este arquivo vai para o git mesmo quando o bruto (> 20 MB, em dados/externos/brutos/) não vai.
+# Para conferir um bruto baixado de novo, compare o SHA-256 abaixo.
+fonte: ipca
+descricao: IBGE SIDRA — tabela 1737, variável 2266, IPCA número-índice (Seção 5.4)
+url: https://apisidra.ibge.gov.br/values/t/1737/n1/all/v/2266/p/all
+data_acesso_utc: 2026-10-15T19:27:56Z
+origem_data_acesso: download feito nesta execução
+bytes: 170403
+sha256: f3b75095981322b5f0b2b261d18b76c32a5430812ef491d98c5134a368c26b97
+arquivo: dados/externos/ipca/ipca_1737.json
+versionado_no_git: sim (até 20 MB)
+user_agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36

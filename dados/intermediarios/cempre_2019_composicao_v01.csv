@@ -1,0 +1,61 @@
+territorio,variavel,nivel,item,cnae,valor,metodo,por_diferenca,detalhe,participacao
+Brasil,pessoal_ocupado,classe,geracao,35.11-5,39913.0,direto,False,35.11-5,0.2862788696026395
+Brasil,pessoal_ocupado,classe,transmissao,35.12-3,16084.0,direto,False,35.12-3,0.11536364940467651
+Brasil,pessoal_ocupado,classe,comercio,35.13-1,3146.0,direto,False,35.13-1,0.02256491177736336
+Brasil,pessoal_ocupado,classe,distribuicao,35.14-0,74946.0,direto,False,35.14-0,0.5375555874336537
+Brasil,pessoal_ocupado,classe,gas,35.20-4,4575.0,direto,False,35.20-4,0.03281451728589872
+Brasil,pessoal_ocupado,classe,vapor,35.30-1,756.0,direto,False,35.30-1,0.005422464495768183
+Brasil,pessoal_ocupado,subsetor,geracao,35.11-5,39913.0,direto,False,geracao,0.2862788696026395
+Brasil,pessoal_ocupado,subsetor,S38_TRA,35.12-3,16084.0,direto,False,transmissao,0.11536364940467651
+Brasil,pessoal_ocupado,subsetor,S38_DIS,35.13-1 + 35.14-0,78092.0,direto,False,comercio + distribuicao,0.560120499211017
+Brasil,pessoal_ocupado,subsetor,S38_GAS,35.20-4 + 35.30-1,5331.0,direto,False,gas + vapor,0.03823698178166691
+RS,pessoal_ocupado,classe,geracao,35.11-5,2217.0,direto,False,35.11-5,0.17723239267727237
+RS,pessoal_ocupado,classe,transmissao,35.12-3,704.25002600104,diferenca_proporcao_nacional,True,(35.1 − 35.11-5 − 35.14-0) × Brasil 35.12-3 / (35.12-3 + 35.13-1) = 842 × 16084/19230,0.05629946646422896
+RS,pessoal_ocupado,classe,comercio,35.13-1,137.74997399895994,diferenca_proporcao_nacional,True,(35.1 − 35.11-5 − 35.14-0) × Brasil 35.13-1 / (35.12-3 + 35.13-1) = 842 × 3146/19230,0.011012069230071144
+RS,pessoal_ocupado,classe,distribuicao,35.14-0,9087.0,direto,False,35.14-0,0.7264369653849229
+RS,pessoal_ocupado,classe,gas,35.20-4,311.5222284749578,diferenca_proporcao_nacional,True,(35 − 35.1) × Brasil 35.20-4 / (35.20-4 + 35.30-1) = 363 × 4575/5331,0.024903847507791014
+RS,pessoal_ocupado,classe,vapor,35.30-1,51.47777152504221,diferenca_proporcao_nacional,True,(35 − 35.1) × Brasil 35.30-1 / (35.20-4 + 35.30-1) = 363 × 756/5331,0.004115258735713663
+RS,pessoal_ocupado,subsetor,geracao,35.11-5,2217.0,direto,False,geracao,0.17723239267727237
+RS,pessoal_ocupado,subsetor,S38_TRA,35.12-3,704.25002600104,diferenca_proporcao_nacional,True,transmissao,0.05629946646422896
+RS,pessoal_ocupado,subsetor,S38_DIS,35.13-1 + 35.14-0,9224.74997399896,diferenca_proporcao_nacional + direto,True,comercio + distribuicao,0.737449034614994
+RS,pessoal_ocupado,subsetor,S38_GAS,35.20-4 + 35.30-1,363.0,diferenca_proporcao_nacional,True,gas + vapor,0.029019106243504678
+RB,pessoal_ocupado,classe,geracao,35.11-5,37696.0,brasil_menos_rs,False,Brasil − RS = 39913 − 2217,0.29702705045267946
+RB,pessoal_ocupado,classe,transmissao,35.12-3,15379.74997399896,brasil_menos_rs (RS: diferenca_proporcao_nacional),True,Brasil − RS = 16084 − 704.250026001,0.12118531864061398
+RB,pessoal_ocupado,classe,comercio,35.13-1,3008.25002600104,brasil_menos_rs (RS: diferenca_proporcao_nacional),True,Brasil − RS = 3146 − 137.749973999,0.02370361927650905
+RB,pessoal_ocupado,classe,distribuicao,35.14-0,65859.0,brasil_menos_rs,False,Brasil − RS = 74946 − 9087,0.5189384686906572
+RB,pessoal_ocupado,classe,gas,35.20-4,4263.477771525042,brasil_menos_rs (RS: diferenca_proporcao_nacional),True,Brasil − RS = 4575 − 311.522228475,0.03359423352999379
+RB,pessoal_ocupado,classe,vapor,35.30-1,704.5222284749578,brasil_menos_rs (RS: diferenca_proporcao_nacional),True,Brasil − RS = 756 − 51.477771525,0.0055513094095465156
+RB,pessoal_ocupado,subsetor,geracao,35.11-5,37696.0,brasil_menos_rs,False,geracao,0.29702705045267946
+RB,pessoal_ocupado,subsetor,S38_TRA,35.12-3,15379.74997399896,brasil_menos_rs (RS: diferenca_proporcao_nacional),True,transmissao,0.12118531864061398
+RB,pessoal_ocupado,subsetor,S38_DIS,35.13-1 + 35.14-0,68867.25002600104,brasil_menos_rs (RS: diferenca_proporcao_nacional) + brasil_menos_rs,True,comercio + distribuicao,0.5426420879671663
+RB,pessoal_ocupado,subsetor,S38_GAS,35.20-4 + 35.30-1,4968.0,brasil_menos_rs (RS: diferenca_proporcao_nacional),True,gas + vapor,0.039145542939540305
+Brasil,salarios_mil,classe,geracao,35.11-5,5171106.0,direto,False,35.11-5,0.3996807566123936
+Brasil,salarios_mil,classe,transmissao,35.12-3,1657692.0,direto,False,35.12-3,0.1281249297133557
+Brasil,salarios_mil,classe,comercio,35.13-1,346415.0,direto,False,35.13-1,0.02677481554272574
+Brasil,salarios_mil,classe,distribuicao,35.14-0,5204004.0,direto,False,35.14-0,0.4022234810375039
+Brasil,salarios_mil,classe,gas,35.20-4,524127.0,direto,False,35.20-4,0.04051038132287058
+Brasil,salarios_mil,classe,vapor,35.30-1,34747.0,direto,False,35.30-1,0.0026856357711504734
+Brasil,salarios_mil,subsetor,geracao,35.11-5,5171106.0,direto,False,geracao,0.3996807566123936
+Brasil,salarios_mil,subsetor,S38_TRA,35.12-3,1657692.0,direto,False,transmissao,0.1281249297133557
+Brasil,salarios_mil,subsetor,S38_DIS,35.13-1 + 35.14-0,5550419.0,direto,False,comercio + distribuicao,0.42899829658022964
+Brasil,salarios_mil,subsetor,S38_GAS,35.20-4 + 35.30-1,558874.0,direto,False,gas + vapor,0.04319601709402106
+RS,salarios_mil,classe,geracao,35.11-5,203958.0,direto,False,35.11-5,0.236489769131498
+RS,salarios_mil,classe,transmissao,35.12-3,92748.87101936174,diferenca_proporcao_nacional,True,(35.1 − 35.11-5 − 35.14-0) × Brasil 35.12-3 / (35.12-3 + 35.13-1) = 112131 × 1657692/2004107,0.10754252882738576
+RS,salarios_mil,classe,comercio,35.13-1,19382.12898063826,diferenca_proporcao_nacional,True,(35.1 − 35.11-5 − 35.14-0) × Brasil 35.13-1 / (35.12-3 + 35.13-1) = 112131 × 346415/2004107,0.02247362303958687
+RS,salarios_mil,classe,distribuicao,35.14-0,518275.0,direto,False,35.14-0,0.6009410520628126
+RS,salarios_mil,classe,gas,35.20-4,26329.4866553105,diferenca_proporcao_nacional,True,(35 − 35.1) × Brasil 35.20-4 / (35.20-4 + 35.30-1) = 28075 × 524127/558874,0.030529100209186387
+RS,salarios_mil,classe,vapor,35.30-1,1745.5133446895006,diferenca_proporcao_nacional,True,(35 − 35.1) × Brasil 35.30-1 / (35.20-4 + 35.30-1) = 28075 × 34747/558874,0.002023926729530437
+RS,salarios_mil,subsetor,geracao,35.11-5,203958.0,direto,False,geracao,0.236489769131498
+RS,salarios_mil,subsetor,S38_TRA,35.12-3,92748.87101936174,diferenca_proporcao_nacional,True,transmissao,0.10754252882738576
+RS,salarios_mil,subsetor,S38_DIS,35.13-1 + 35.14-0,537657.1289806382,diferenca_proporcao_nacional + direto,True,comercio + distribuicao,0.6234146751023993
+RS,salarios_mil,subsetor,S38_GAS,35.20-4 + 35.30-1,28075.0,diferenca_proporcao_nacional,True,gas + vapor,0.032553026938716825
+RB,salarios_mil,classe,geracao,35.11-5,4967148.0,brasil_menos_rs,False,Brasil − RS = 5171106 − 203958,0.4113358019923065
+RB,salarios_mil,classe,transmissao,35.12-3,1564943.1289806382,brasil_menos_rs (RS: diferenca_proporcao_nacional),True,Brasil − RS = 1657692 − 92748.8710194,0.12959491785459187
+RB,salarios_mil,classe,comercio,35.13-1,327032.8710193617,brasil_menos_rs (RS: diferenca_proporcao_nacional),True,Brasil − RS = 346415 − 19382.1289806,0.02708200526309981
+RB,salarios_mil,classe,distribuicao,35.14-0,4685729.0,brasil_menos_rs,False,Brasil − RS = 5204004 − 518275,0.3880311390225555
+RB,salarios_mil,classe,gas,35.20-4,497797.5133446895,brasil_menos_rs (RS: diferenca_proporcao_nacional),True,Brasil − RS = 524127 − 26329.4866553,0.041223241059339034
+RB,salarios_mil,classe,vapor,35.30-1,33001.4866553105,brasil_menos_rs (RS: diferenca_proporcao_nacional),True,Brasil − RS = 34747 − 1745.51334469,0.0027328948081072973
+RB,salarios_mil,subsetor,geracao,35.11-5,4967148.0,brasil_menos_rs,False,geracao,0.4113358019923065
+RB,salarios_mil,subsetor,S38_TRA,35.12-3,1564943.1289806382,brasil_menos_rs (RS: diferenca_proporcao_nacional),True,transmissao,0.12959491785459187
+RB,salarios_mil,subsetor,S38_DIS,35.13-1 + 35.14-0,5012761.871019362,brasil_menos_rs (RS: diferenca_proporcao_nacional) + brasil_menos_rs,True,comercio + distribuicao,0.41511314428565527
+RB,salarios_mil,subsetor,S38_GAS,35.20-4 + 35.30-1,530799.0,brasil_menos_rs (RS: diferenca_proporcao_nacional),True,gas + vapor,0.04395613586744633

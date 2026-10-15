@@ -1,12 +1,12 @@
 fonte,url,data_acesso_utc,acessivel,status_http,erro,arquivo,bytes,sha256
-ons,https://ons-aws-prod-opendata.s3.amazonaws.com/dataset/geracao_usina_2_ho/GERACAO_USINA-2_2019.parquet,2026-10-15T10:58:04Z,sim,200,,dados/externos/brutos/ons/GERACAO_USINA-2_2019.parquet,25049331,4fee764a541f11c47abaa3add1a7797ddb79683d383475b7c5834acb9709bf2b
-siga,https://dadosabertos.aneel.gov.br/dataset/6d90b77c-c5f5-4d81-bdec-7bc619494bb9/resource/11ec447d-698d-4ab8-977f-b424d5deee6a/download/siga-empreendimentos-geracao.csv,2026-10-15T10:58:05Z,não,,URLError: <urlopen error Tunnel connection failed: 403 Forbidden>,,,
-leiloes,https://dadosabertos.aneel.gov.br/dataset/593537c6-9e0e-4ed9-817a-2c5d5de05147/resource/a1328fc1-f06b-437d-8893-57ac2c8103df/download/resultado-leiloes-geracao.csv,2026-10-15T10:58:05Z,não,,URLError: <urlopen error Tunnel connection failed: 403 Forbidden>,,,
-ipca,https://apisidra.ibge.gov.br/values/t/1737/n1/all/v/2266/p/all,2026-10-15T10:58:05Z,não,,URLError: <urlopen error Tunnel connection failed: 403 Forbidden>,,,
-seeg,https://seeg.eco.br/wp-content/uploads/2025/12/Dados-nacionais-13.0.xlsx,2026-10-15T10:58:05Z,não,,URLError: <urlopen error Tunnel connection failed: 403 Forbidden>,,,
-cempre,"https://apisidra.ibge.gov.br/values/t/6450/n1/all/n3/43/v/707,662/p/2019/c12762/117297,117298,117299,117300,117301,117302,117303,117304,117305,117306",2026-10-15T10:58:06Z,não,,URLError: <urlopen error Tunnel connection failed: 403 Forbidden>,,,
-comex,https://api-comexstat.mdic.gov.br/general,2026-10-15T10:58:07Z,não,,URLError: <urlopen error Tunnel connection failed: 403 Forbidden>,,,
-epe,https://www.epe.gov.br/,2026-10-15T10:58:07Z,não,,URLError: <urlopen error Tunnel connection failed: 403 Forbidden>,,,
-sulgas,https://www.sulgas.rs.gov.br/,2026-10-15T10:58:07Z,não,,URLError: <urlopen error Tunnel connection failed: 403 Forbidden>,,,
-aneel_rap,https://www.gov.br/aneel/pt-br,2026-10-15T10:58:07Z,não,,URLError: <urlopen error Tunnel connection failed: 403 Forbidden>,,,
-anp,https://www.gov.br/anp/pt-br,2026-10-15T10:58:08Z,não,,URLError: <urlopen error Tunnel connection failed: 403 Forbidden>,,,
+ons,https://ons-aws-prod-opendata.s3.amazonaws.com/dataset/geracao_usina_2_ho/GERACAO_USINA-2_2019.parquet,2026-10-15T19:27:51Z,sim,200,,dados/externos/brutos/ons/GERACAO_USINA-2_2019.parquet,25049331,4fee764a541f11c47abaa3add1a7797ddb79683d383475b7c5834acb9709bf2b
+siga,https://dadosabertos.aneel.gov.br/dataset/6d90b77c-c5f5-4d81-bdec-7bc619494bb9/resource/11ec447d-698d-4ab8-977f-b424d5deee6a/download/siga-empreendimentos-geracao.csv,2026-10-15T19:27:52Z,sim,200,,dados/externos/siga/siga-empreendimentos-geracao.csv,8418652,60de2b32e25a67bc8708f649f3848b13ba602f6edc3823a5483405f07a0a5540
+leiloes,https://dadosabertos.aneel.gov.br/dataset/593537c6-9e0e-4ed9-817a-2c5d5de05147/resource/a1328fc1-f06b-437d-8893-57ac2c8103df/download/resultado-leiloes-geracao.csv,2026-10-15T19:27:54Z,sim,200,,dados/externos/leiloes/resultado-leiloes-geracao.csv,422878,547345ef69c8d7ca37f0ba143c5d12585e3dbd445906223ef537e1b71ef6c747
+ipca,https://apisidra.ibge.gov.br/values/t/1737/n1/all/v/2266/p/all,2026-10-15T19:27:56Z,sim,200,,dados/externos/ipca/ipca_1737.json,170403,f3b75095981322b5f0b2b261d18b76c32a5430812ef491d98c5134a368c26b97
+seeg,https://seeg.eco.br/wp-content/uploads/2025/12/Dados-nacionais-13.0.xlsx,2026-10-15T19:27:57Z,sim,200,,dados/externos/brutos/seeg/Dados-nacionais-13.0.xlsx,184691356,21fc49654828cdb2eb63c104f06ba19d08b7dd81229fd9bf8972d80834aff350
+cempre,"https://apisidra.ibge.gov.br/values/t/6450/n1/all/n3/43/v/707,662/p/2019/c12762/117297,117298,117299,117300,117301,117302,117303,117304,117305,117306",2026-10-15T19:28:01Z,sim,200,,dados/externos/cempre/cempre_6450.json,14954,21765f03657d53a231b27973b55e6f2a70e2fc54e85bfebaf1d2da95eba98d0e
+comex,https://api-comexstat.mdic.gov.br/general,2026-10-15T19:28:01Z,não,429,HTTPError 429: Too Many Requests,,,
+epe,https://www.epe.gov.br/,2026-10-15T19:28:02Z,não,,URLError: <urlopen error [Errno -2] Name or service not known>,,,
+sulgas,https://www.sulgas.rs.gov.br/,2026-10-15T19:28:03Z,não,,URLError: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: certificate has expired (_ssl.c:1032)>,,,
+aneel_rap,https://www.gov.br/aneel/pt-br,2026-10-15T19:28:04Z,sim,200,,,,
+anp,https://www.gov.br/anp/pt-br,2026-10-15T19:28:05Z,sim,200,,,,
