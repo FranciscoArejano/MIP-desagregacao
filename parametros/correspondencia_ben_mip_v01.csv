@@ -1,0 +1,23 @@
+setor_ben,compradores_mip,fonte,gas_natural_mil_tep,entra,participacao_no_gas_distribuido
+RESIDENCIAL,FAM,HIPÓTESE: correspondência BEN → 68 setores feita pelo projeto (nomes dos setores do BEN e da MIP); famílias = residencial (Seção 6.4),407.9592,True,0.03650406274779948
+RODOVIÁRIO,S43|FAM,"HIPÓTESE: correspondência BEN → 68 setores feita pelo projeto (nomes dos setores do BEN e da MIP); GNV: transporte terrestre e famílias, ∝ compras ao S38",2010.4392,True,0.17989347637566644
+COMERCIAL,S41|S42|S46|S47|S48|S49|S50|S51|S52|S53|S54|S55|S56|S57|S58|S59|S60|S63|S65|S66|S67,HIPÓTESE: correspondência BEN → 68 setores feita pelo projeto (nomes dos setores do BEN e da MIP),119.38652887688896,True,0.010682669593831757
+PÚBLICO,S39|S61|S62|S64,HIPÓTESE: correspondência BEN → 68 setores feita pelo projeto (nomes dos setores do BEN e da MIP); água e esgoto no setor público do BEN,27.646356869565217,True,0.0024737874422605635
+CIMENTO,S26,HIPÓTESE: correspondência BEN → 68 setores feita pelo projeto (nomes dos setores do BEN e da MIP),3.98993633104,True,0.0003570182660128978
+CERÂMICA,S26,HIPÓTESE: correspondência BEN → 68 setores feita pelo projeto (nomes dos setores do BEN e da MIP),1249.0950314819404,True,0.11176863619494624
+FERRO GUSA E AÇO,S27,HIPÓTESE: correspondência BEN → 68 setores feita pelo projeto (nomes dos setores do BEN e da MIP),1203.4957691210848,True,0.10768842833476305
+FERRO LIGAS,S27,HIPÓTESE: correspondência BEN → 68 setores feita pelo projeto (nomes dos setores do BEN e da MIP),2.81655487872,True,0.00025202445740999497
+MINERAÇÃO E PELOTIZAÇÃO,S04|S06|S07,HIPÓTESE: correspondência BEN → 68 setores feita pelo projeto (nomes dos setores do BEN e da MIP),310.1608530956842,True,0.027753096984492253
+NÃO FERROSOS E OUT. METALURG.,S28,HIPÓTESE: correspondência BEN → 68 setores feita pelo projeto (nomes dos setores do BEN e da MIP),405.6478604657905,True,0.03629724480279847
+QUÍMICA,S21|S22|S23|S24,HIPÓTESE: correspondência BEN → 68 setores feita pelo projeto (nomes dos setores do BEN e da MIP),1941.002357577668,True,0.17368028924128173
+CONSUMO FINAL NÃO ENERGÉTICO,S21|S22|S23|S24,"HIPÓTESE: correspondência BEN → 68 setores feita pelo projeto (nomes dos setores do BEN e da MIP); matéria-prima da química (fertilizantes, metanol)",309.628,True,0.027705417454675994
+ALIMENTOS E BEBIDAS,S08|S09|S10|S11,HIPÓTESE: correspondência BEN → 68 setores feita pelo projeto (nomes dos setores do BEN e da MIP),872.8264923679944,True,0.0781002439590601
+TÊXTIL,S13,HIPÓTESE: correspondência BEN → 68 setores feita pelo projeto (nomes dos setores do BEN e da MIP),216.99816523994392,True,0.019416928555787617
+PAPEL E CELULOSE,S17,HIPÓTESE: correspondência BEN → 68 setores feita pelo projeto (nomes dos setores do BEN e da MIP),915.0240960369978,True,0.08187607245401761
+OUTRAS INDÚSTRIAS,S12|S14|S15|S16|S18|S25|S29|S30|S31|S32|S33|S34|S35|S36|S37,HIPÓTESE: correspondência BEN → 68 setores feita pelo projeto (nomes dos setores do BEN e da MIP),1179.6040323524746,True,0.10555060313519592
+SETOR ENERGÉTICO,,"HIPÓTESE: fora — E&P, refinarias e UPGN usam gás próprio ou comprado do S05, não das distribuidoras",6596.643712120537,False,0.0
+AGROPECUÁRIO,,consumo zero no BEN 2019,0.0,False,0.0
+FERROVIÁRIO,,consumo zero no BEN 2019,0.0,False,0.0
+AÉREO,,consumo zero no BEN 2019,0.0,False,0.0
+HIDROVIÁRIO,,consumo zero no BEN 2019,0.0,False,0.0
+CONSUMO NÃO IDENTIFICADO,,consumo zero no BEN 2019,0.0,False,0.0

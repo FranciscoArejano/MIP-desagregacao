@@ -1,0 +1,18 @@
+# Registro de download — gás natural canalizado (Rodada 02b). Baixados pelo agente de pesquisa da sessão;
+# os números usados foram conferidos à mão nesta sessão (dados/externos/valores_documentais_v01.csv).
+
+arquivo: mme_boletim_dez2019/boletim_gn_dez2019.pdf
+url: https://www.gov.br/mme/pt-br/assuntos/secretarias/petroleo-gas-natural-e-biocombustiveis/publicacoes-1/boletim-mensal-de-acompanhamento-da-industria-de-gas-natural/2019/12-boletim-mensal-de-acompanhamento-da-industria-de-gas-natural-dezembro-2019.pdf
+data_acesso_utc: 2026-10-15T19:36:10Z
+sha256: c04078ff4b5c2ea15db1bd6a2c30dd5dcba508d9cfd3204436a0dd09198de339
+uso: θ (gás para geração elétrica, distribuidoras, Sulgás, térmicas de outros agentes; médias de 2019)
+
+arquivo: mme_boletim_dez2020/boletim_gn_dez2020.pdf
+sha256: 9d5b8476055e43a1c37b02ae392e0e081a25dd21eff50dc23b6f96e275a6ef63
+uso: informativo (médias de 2019 revisadas)
+
+fora do git (dados/externos/brutos/gas/):
+- cage_rs_2019/02143858-prestacao-de-contas-do-governador-2019-v-5-2.pdf (38 MB) — https://cage.fazenda.rs.gov.br/upload/arquivos/202507/02143858-prestacao-de-contas-do-governador-2019-v-5-2.pdf — acesso 2026-10-15T19:34:32Z — sha256 94cf3c42af64318d52194bc03ff75a478f00268d97a4fc6a45a2a4ce71d58a5f — demonstrações contábeis da Sulgás 2019 (receita líquida p. 69; segmentos p. 86)
+- anp_anuario_2020/anuario-2020.pdf (21.9 MB) — https://www.gov.br/anp/pt-br/centrais-de-conteudo/publicacoes/anuario-estatistico/arquivos-anuario-estatistico-2020/anuario-2020.pdf — acesso 2026-10-15T19:38:10Z — sha256 f079d0c1c3253d3a… (informativo: vendas de gás por UF, Tab. 3.30)
+- cvm_rad_comgas_dfp2019, cvm_rad_ceg_dfp2019, cvm_rad_gasmig_dfp2019, cvm_dfp_2019 (DFP 2019 na CVM; só conferência parcial do VBP do GAS-RB)
+A cópia da matriz do BEN baixada por este tema era idêntica a dados/externos/epe/ben_2020/BEN2020_Matriz_ab2019.xlsx e foi removida.

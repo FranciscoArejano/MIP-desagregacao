@@ -1,0 +1,23 @@
+regiao,subsetor,participacao,fonte
+RS,S38_HID,2420357.515246729,"GWh (ONS, geração por usina 2019 (dados abertos, GERACAO_USINA-2_2019.parquet); sem autoprodução (R02b, Seção 2)) × preço (Leilões de geração ANEEL até 31/12/2018 corrigidos pelo IPCA (SIDRA 1737), média ponderada pela energia)"
+RS,S38_EOL,912023.900049261,"GWh (ONS, geração por usina 2019 (dados abertos, GERACAO_USINA-2_2019.parquet); sem autoprodução (R02b, Seção 2)) × preço (Leilões de geração ANEEL até 31/12/2018 corrigidos pelo IPCA (SIDRA 1737), média ponderada pela energia)"
+RS,S38_SOL,0.0,produção zero no RS em 2019 (D6 = A: latente; nuclear zerado)
+RS,S38_BIO,14059.421195323606,"GWh (ONS, geração por usina 2019 (dados abertos, GERACAO_USINA-2_2019.parquet); sem autoprodução (R02b, Seção 2)) × preço (Leilões de geração ANEEL até 31/12/2018 corrigidos pelo IPCA (SIDRA 1737), média ponderada pela energia)"
+RS,S38_CAR,659254.3131096179,"GWh (ONS, geração por usina 2019 (dados abertos, GERACAO_USINA-2_2019.parquet); sem autoprodução (R02b, Seção 2)) × preço (Leilões de geração ANEEL até 31/12/2018 corrigidos pelo IPCA (SIDRA 1737), média ponderada pela energia)"
+RS,S38_GN,43062.09473450499,"GWh (ONS, geração por usina 2019 (dados abertos, GERACAO_USINA-2_2019.parquet); sem autoprodução (R02b, Seção 2)) × preço (Leilões de geração ANEEL até 31/12/2018 corrigidos pelo IPCA (SIDRA 1737), média ponderada pela energia)"
+RS,S38_PET,0.0,produção zero no RS em 2019 (D6 = A: latente; nuclear zerado)
+RS,S38_NUC,0.0,produção zero no RS em 2019 (D6 = A: latente; nuclear zerado)
+RS,S38_TRA,,não usado (ancora_componentes: VBP por componente/resíduo)
+RS,S38_DIS,,não usado (ancora_componentes: VBP por componente/resíduo)
+RS,S38_GAS,,não usado (ancora_componentes: VBP por componente/resíduo)
+RB,S38_HID,61712727.03235613,"GWh (ONS, geração por usina 2019 (dados abertos, GERACAO_USINA-2_2019.parquet); sem autoprodução (R02b, Seção 2)) × preço (Leilões de geração ANEEL até 31/12/2018 corrigidos pelo IPCA (SIDRA 1737), média ponderada pela energia)"
+RB,S38_EOL,8332995.601748359,"GWh (ONS, geração por usina 2019 (dados abertos, GERACAO_USINA-2_2019.parquet); sem autoprodução (R02b, Seção 2)) × preço (Leilões de geração ANEEL até 31/12/2018 corrigidos pelo IPCA (SIDRA 1737), média ponderada pela energia)"
+RB,S38_SOL,1142736.4038640987,"GWh (ONS, geração por usina 2019 (dados abertos, GERACAO_USINA-2_2019.parquet); sem autoprodução (R02b, Seção 2)) × preço (Leilões de geração ANEEL até 31/12/2018 corrigidos pelo IPCA (SIDRA 1737), média ponderada pela energia)"
+RB,S38_BIO,1910472.3927569236,"GWh (ONS, geração por usina 2019 (dados abertos, GERACAO_USINA-2_2019.parquet); sem autoprodução (R02b, Seção 2)) × preço (Leilões de geração ANEEL até 31/12/2018 corrigidos pelo IPCA (SIDRA 1737), média ponderada pela energia)"
+RB,S38_CAR,2847408.3269817545,"GWh (ONS, geração por usina 2019 (dados abertos, GERACAO_USINA-2_2019.parquet); sem autoprodução (R02b, Seção 2)) × preço (Leilões de geração ANEEL até 31/12/2018 corrigidos pelo IPCA (SIDRA 1737), média ponderada pela energia)"
+RB,S38_GN,11464489.28218242,"GWh (ONS, geração por usina 2019 (dados abertos, GERACAO_USINA-2_2019.parquet); sem autoprodução (R02b, Seção 2)) × preço (Leilões de geração ANEEL até 31/12/2018 corrigidos pelo IPCA (SIDRA 1737), média ponderada pela energia)"
+RB,S38_PET,1239878.1296148421,"GWh (ONS, geração por usina 2019 (dados abertos, GERACAO_USINA-2_2019.parquet); sem autoprodução (R02b, Seção 2)) × preço (Leilões de geração ANEEL até 31/12/2018 corrigidos pelo IPCA (SIDRA 1737), média ponderada pela energia)"
+RB,S38_NUC,3991383.41832177,"GWh (ONS, geração por usina 2019 (dados abertos, GERACAO_USINA-2_2019.parquet); sem autoprodução (R02b, Seção 2)) × preço (ANEEL, Resolução Homologatória nº 2.509, de 18/12/2018 (DOU Seção 1, 26/12/2018, p. 56) (objeto b): 'Tarifa no valor de R$ 247,47/MWh, relativa à energia proveniente das Centrais de Geração Angra 1 e 2 ... referentes ao ano de 2019'); acesso 2026-10-15T19:48:46Z; https://www.in.gov.br/web/dou/-/resolucao-homologatoria-n-2-509-de-18-de-dezembro-de-2018-56785419)"
+RB,S38_TRA,,não usado (ancora_componentes: VBP por componente/resíduo)
+RB,S38_DIS,,não usado (ancora_componentes: VBP por componente/resíduo)
+RB,S38_GAS,,não usado (ancora_componentes: VBP por componente/resíduo)

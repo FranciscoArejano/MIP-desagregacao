@@ -2,7 +2,16 @@
 
 Uma desagregação é descrita por **um YAML** (opções) + **CSVs** (subsetores, participações e regras).
 Todos os arquivos `TESTE_*` desta pasta têm **valores fictícios** e servem só para testar o motor
-(Rodada 01). Os parâmetros reais (decisões D1–D6 do Francisco) entram na Rodada 3, em arquivos novos.
+(Rodada 01).
+
+Os parâmetros **reais** (Rodada 02b; decisões D1 = C, D2 = D3 = D4 = D6 = D7 = A, D5 = E1) são os arquivos
+`*_v01*`, gerados por `scripts/rodada02_parametros.py`. Não edite à mão: rode o script de novo.
+- `especificacao_v01.yaml` — principal (P1 + E1); `_P2`, `_E2` e `_E3` — sensibilidades;
+- `subsetores_v01.csv`, `participacoes_vbp_v01.csv` (P1 = GWh × preço) e `_P2` (GWh), `componentes_v01.csv`
+  (VBP do TRA e do GAS, G, fração da TUST), `regras_coluna_v01.csv`, `regras_linha_v01.csv`,
+  `regras_primarios_v01.csv`, `latentes_espelho_v01.csv`, `correspondencia_ben_mip_v01.csv` (BEN → compradores);
+- `quadro_parametros_v01.xlsx` — cada número usado, com unidade, fonte e cálculo (para revisão).
+Cada linha dos CSVs tem a coluna `fonte`; os números de documentos estão em `dados/externos/valores_documentais_v01.csv`.
 
 Uso:
 

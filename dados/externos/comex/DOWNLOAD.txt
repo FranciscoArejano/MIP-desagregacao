@@ -1,0 +1,6 @@
+# Registro de download — Comex Stat (MDIC), importações 2019 (Rodada 02b, Seção 5.9)
+url: https://api-comexstat.mdic.gov.br/general?language=pt (POST)
+requisicao: api_2019_ncm/requisicao.json (por NCM) e api_2019_ncm/requisicao_uf.json (por NCM e UF)
+arquivos: api_2019_ncm/comex_importacao_2019_ncm.json (sha256 0de00461b1aab7446519575d29f85fbd8a871ba06c2e6620baead38a60057f6b; acesso 2026-10-15T19:50:15Z)
+          api_2019_ncm/comex_importacao_2019_ncm_uf.json (sha256 f7f4177f71127ff79fdab1cd2e133254bb866abf4127388493c88d0e6760b903; acesso 2026-10-15T19:50:56Z)
+observacao: a API responde 429 (limite de requisições) às vezes; bastou repetir depois de alguns segundos.

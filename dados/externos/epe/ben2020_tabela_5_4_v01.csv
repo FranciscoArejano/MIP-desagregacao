@@ -1,0 +1,14 @@
+fonte_ben,geracao_gwh_2019,consumo_mil_tep_2019,subsetor_s38,observacao
+GÁS NATURAL,47597,9386,S38_GN,
+CARVÃO VAPOR,13823,3338,S38_CAR,
+ÓLEO DIESEL,3506,999,S38_PET,derivado de petróleo
+ÓLEO COMBUSTÍVEL,1263,267,S38_PET,derivado de petróleo
+OUTRAS NÃO RENOVÁVEIS,405,137,,sem correspondência direta (gás de refinaria e outras secundárias); fora da soma do PET
+URÂNIO CONTIDO NO UO2,16129,4085,S38_NUC,
+LENHA,333,72,S38_BIO,
+BIODIESEL,404,108,S38_BIO,mistura do diesel nas térmicas a diesel (sistemas isolados); o SEEG põe biodiesel em BIO
+OUTRAS RENOVÁVEIS,1103,254,S38_BIO,
+EÓLICA,55954,,S38_EOL,
+SOLAR,4978,,S38_SOL,
+HIDRÁULICA,378450,,S38_HID,
+TOTAL,523943,,,total da geração das centrais de serviço público

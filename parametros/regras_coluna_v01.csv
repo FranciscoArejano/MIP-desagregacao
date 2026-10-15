@@ -1,0 +1,10 @@
+regiao,fornecedor,regiao_fornecedor,regra,subsetor,valor,teto_vbp,destino_excedente,grupo_teto,fonte
+*,*,*,proporcional_vbp,,,,,,padrão: na proporção do VBP (Seção 6.8)
+*,S04,*,fixa_com_teto,S38_CAR,1.0,0.4,demais_vbp,,"S04 (carvão e minerais não metálicos) 100% CAR, teto 0.40 × VBP_CAR, excedente aos demais ∝ VBP (Seção 6.8)"
+RS,S05,*,fixa_com_teto,S38_GN,0.051246,0.6,sem_teto,,"S05: θ_RS → GN (teto 0.60 × VBP_GN); excedente → GAS (resposta 2 da R02b); θ: cálculo do projeto (fallback das instruções, Seção 5.6), térmico RS = GWh(GN-RS) × 0.20 m³/kWh (fallback); volume comprado = Sulgás sem o 'Serviço' + térmico (ver observacao); acesso nan; nan"
+RS,S05,*,fixa_com_teto,S38_GAS,0.948754,,sem_teto,,S05: 1 − θ_RS → GAS (Seção 6.8)
+RB,S05,*,fixa_com_teto,S38_GN,0.430852,0.6,sem_teto,,"S05: θ_RB → GN (teto 0.60 × VBP_GN); excedente → GAS (resposta 2 da R02b); θ: cálculo do projeto com o Boletim do MME nº 154, θ_RB = (geração elétrica Brasil − térmico RS) ÷ (distribuidoras − Sulgás + outros agentes − térmico RS) (ver observacao); acesso 2026-10-15T19:36:10Z; https://www.gov.br/mme/pt-br/assuntos/secretarias/petroleo-gas-natural-e-biocombustiveis/publicacoes-1/boletim-mensal-de-acompanhamento-da-industria-de-gas-natural/2019/12-boletim-mensal-de-acompanhamento-da-industria-de-gas-natural-dezembro-2019.pdf"
+RB,S05,*,fixa_com_teto,S38_GAS,0.569148,,sem_teto,,S05: 1 − θ_RB → GAS (Seção 6.8)
+*,S19,*,fixa_com_teto,S38_PET,1.0,0.6,demais_vbp,,"S19 (refino) → PET onde existe, teto 0.60 × VBP_PET; restante aos demais ∝ VBP (Seção 6.8)"
+*,S03,*,fixa_com_teto,S38_BIO,1.0,0.4,demais_vbp,lenha_bagaco,"S03 e S09 (lenha; bagaço) 100% BIO, teto comum 0.40 × VBP_BIO sobre a soma (resposta 3 da R02b)"
+*,S09,*,fixa_com_teto,S38_BIO,1.0,0.4,demais_vbp,lenha_bagaco,"S03 e S09 (lenha; bagaço) 100% BIO, teto comum 0.40 × VBP_BIO sobre a soma (resposta 3 da R02b)"

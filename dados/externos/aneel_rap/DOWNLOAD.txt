@@ -1,0 +1,52 @@
+# Registro de download — transmissão (RAP, TUST) e tarifa nuclear (Rodada 02b). Baixados pelo agente de pesquisa
+# da sessão e conferidos à mão nesta sessão (números em dados/externos/valores_documentais_v01.csv).
+
+arquivo: atas_reunioes_diretoria/recorte_rap_v01.csv (recorte de 4 linhas; o CSV completo, 19 MB, fica em dados/externos/brutos/aneel_rap/atas_reunioes_diretoria/, fora do git)
+url: https://dadosabertos.aneel.gov.br/dataset/a9fb5b4b-59ca-4be8-9690-876d9547271d/resource/43386a8b-4781-44ec-a082-fa7fdfe33186/download/pautas-atas-reunioes-publicas-diretoria.csv
+data_acesso_utc: 2026-10-15T19:40Z (data do arquivo local)
+sha256 (CSV completo): 356bab8bd7837bb5e7a594ee9ef1a122fe9e26ca9d7ecc3ee12db9eddd7a39a8
+uso: total da RAP do ciclo 2018-2019 (REH 2.408/2018: R$ 24.066.854.871,36); decisão da REH 2.565/2019 (ciclo 2019-2020, sem o total no texto)
+
+arquivo: dou_reh_2565_2019/dou_reh_2565_2019.html; dou_reh_2565_2019/DOU_S1_2019-06-28_p120.pdf
+url: https://www.in.gov.br/web/dou/-/resolucao-homologatoria-n-2.565-de-25-de-junho-de-2019-179410784
+data_acesso_utc: 2026-10-15T19:31:28Z (html); 2026-10-15T19:48:46Z (pdf)
+sha256: ed54e38179a32d5a579fd7de495504c77a62ca841fc115e1ced29ddad533523a (html); e04202e108309a7eb0ab97cc7bc71989fc8af53522615018147e621812f391df (pdf)
+uso: extrato da REH 2.565/2019 (RAP 2019-2020); o anexo com os valores fica na biblioteca da ANEEL, não acessada (desafio anti-robô)
+
+arquivo: voto_2021_04_22_ceee_gt/voto-transmissoras-Aneel-22abr2021.pdf
+url: https://static.poder360.com.br/2021/04/voto-transmissoras-Aneel-22abr2021.pdf (documento da ANEEL hospedado pelo Poder360)
+data_acesso_utc: 2026-10-15T19:30:25Z
+sha256: 0f0f86cbddb3337af9b7a60002ad874c0be96da956458c34377b640d2b0cba2f
+uso: RAP da CEEE-GT no ciclo 2019-2020 (749.753.004,63; p. 10, Tabela 3) — checagem T_RS
+
+arquivo: rs_cage_prestacao_contas_2019/prestacao-de-contas-do-governador-2019-v-5-3.pdf
+url: https://cage.fazenda.rs.gov.br/upload/arquivos/202507/02143901-prestacao-de-contas-do-governador-2019-v-5-3.pdf
+data_acesso_utc: 2026-10-15T19:50:54Z
+sha256: a35c4d78191f402df266ee1584c02e616ca51d3c388d34543bf5a2095625a5c3
+uso: RAP da CEEE-GT pela REH 2.565/2019 (751.287.334,45; p. 12) — conferência
+
+arquivo: dou_2013_06_28_ren_559_2013/DOU_S1_2013-06-28_p87.pdf
+url: https://pesquisa.in.gov.br/imprensa/servlet/INPDFViewer?jornal=1&pagina=87&data=28/06/2013&captchafield=firstAccess
+data_acesso_utc: 2026-10-15T19:48:06Z
+sha256: 7e79994da7ee74dcc36d9eeebb8664a7c3c5256a781edd2c770ab724cddd9f63
+uso: REN 559/2013, art. 3º, IV: rateio dos encargos de transmissão 50% geração e 50% consumo
+
+arquivo: dou_reh_2509_2018_angra/dou_reh_2509_2018.html; dou_reh_2509_2018_angra/DOU_S1_2018-12-26_p56.pdf
+url: https://www.in.gov.br/web/dou/-/resolucao-homologatoria-n-2-509-de-18-de-dezembro-de-2018-56785419 ; https://pesquisa.in.gov.br/imprensa/servlet/INPDFViewer?jornal=515&pagina=56&data=26/12/2018&captchafield=firstAccess
+data_acesso_utc: 2026-10-15T19:48:31Z (html); 2026-10-15T19:48:46Z (pdf)
+sha256: 7c669d87c1674550be551cc4f343746f10d2e4e1255325ff82c5387569daed18 (html); 6b1ed0857ca539c66383d860d9004b7564fc3fb6324653df7ee666c71fa34e68 (pdf)
+uso: tarifa de Angra 1 e 2 para 2019 (R$ 247,47/MWh)
+
+arquivo: ons_seamse_201912/SEAMSE_201912.pdf
+url: https://www.ons.org.br/AcervoDigitalDocumentosEPublicacoes/SEAMSE_201912.pdf
+data_acesso_utc: 2026-10-15T19:50:04Z
+sha256: b67d328b31295894bccf393c7de1debed40b943daa108b3182b15627c5e7d239
+uso: conferência indireta da RAP 2019-2020 (encargos de uso acumulados jul–dez/2019 = R$ 12.145.090.044,99)
+
+arquivo: epe_nt_014_2021_tust/EPE-DEE-NT-014-2021-rev0.pdf
+url: https://www.epe.gov.br/sites-pt/publicacoes-dados-abertos/publicacoes/PublicacoesArquivos/publicacao-560/EPE-DEE-NT-014-2021-rev0_05fev21_(C%C3%A1lculos%20da%20TUST%20-%20sensibilidade).pdf
+data_acesso_utc: 2026-10-15T19:45:40Z
+sha256: 567cfa4d69a8005385313bc25fff303d789dd631af604747147c40079ea1ebd5
+uso: informativo (descreve a REN 559/2013 e o rateio 50/50 entre geração e carga)
+
+não acessados: www2.aneel.gov.br/cedoc (anexo da REH 2.565/2019 e notas técnicas) e www.canalenergia.com.br — ambos respondem com desafio anti-robô (Cloudflare, 403); não houve tentativa de contornar.

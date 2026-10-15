@@ -1,0 +1,24 @@
+# Registro de download — EPE (Rodada 02b). Arquivos ≤ 20 MB, versionados no git.
+fonte: epe_anuario_2020
+descricao: EPE, Anuário Estatístico de Energia Elétrica 2020 (ano-base 2019), workbook
+url: https://www.epe.gov.br/sites-pt/publicacoes-dados-abertos/publicacoes/PublicacoesArquivos/publicacao-160/topico-168/Anu%C3%A1rio%20Estat%C3%ADstico%20de%20Energia%20El%C3%A9trica%202020%20-%20Workbook.xlsx
+arquivo: dados/externos/epe/anuario_2020/Anuario_Estatistico_Energia_Eletrica_2020_Workbook.xlsx
+data_acesso_utc: 2026-10-15T19:37:42Z
+sha256: b7f69fcabcbc161832924b5630fa523c1fc05268bb67aa928b971ee70660ea3c
+uso: Seção 3 da R02b (procura da geração dos sistemas isolados por fonte: não há; só consumo, 2873.07 GWh, e emissões)
+
+fonte: epe_ben_2020_matriz
+descricao: EPE, Balanço Energético Nacional 2020 (ano-base 2019), matriz consolidada e aberta (mil tep e unidades comerciais)
+url: https://www.epe.gov.br/sites-pt/publicacoes-dados-abertos/publicacoes/PublicacoesArquivos/publicacao-479/topico-516/Matriz%20ab2019.xlsx
+arquivo: dados/externos/epe/ben_2020/BEN2020_Matriz_ab2019.xlsx
+data_acesso_utc: 2026-10-15T19:38:26Z
+sha256: d6c94053969aea09d59de1aebb6c3cd6c0e93aa277bfe79797f7d9a0d1a4a4b3
+uso: consumo final de gás natural por setor (aba Consolidada, coluna GÁS NATURAL) → gás por comprador; insumos das centrais de serviço público (conferência da Tabela 5.4)
+
+fonte: epe_ben_2020_relatorio
+descricao: EPE, Balanço Energético Nacional 2020 (ano-base 2019), relatório completo (PDF)
+url: https://www.epe.gov.br/sites-pt/publicacoes-dados-abertos/publicacoes/PublicacoesArquivos/publicacao-479/topico-528/BEN2020_sp.pdf
+arquivo: dados/externos/epe/ben_2020/BEN2020_sp.pdf
+data_acesso_utc: 2026-10-15T19:38:26Z
+sha256: e8455d4e0ffcb247ced27ff7741cfe86981d78ccf2792d484cd35236450d13cf
+uso: Tabela 5.4 (p. 112), centrais de serviço público 2019: geração e consumo de combustível por fonte → sistemas isolados (fallback 2 da Seção 3), consumo específico (Seção 5.10) e reconciliação (Seção 4). Transcrição em ben2020_tabela_5_4_v01.csv

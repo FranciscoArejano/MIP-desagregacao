@@ -1,7 +1,7 @@
 """Rodada 02 — motor com 11 subsetores: testes T6 (roteamento), T7 (latentes), T8 (emissões) e complementares.
 
 Usa uma especificação com valores FICTÍCIOS (tests/auxiliares.py: espec_11_ficticia), pois os parâmetros
-reais dependem das fontes externas. O T2 com a especificação real fica para quando ela existir.
+reais dependem das fontes externas. O T2 com a especificação real está em tests/test_especificacao_real_v01.py (Rodada 02b).
 """
 import numpy as np
 import pandas as pd

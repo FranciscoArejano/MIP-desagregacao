@@ -1,0 +1,3 @@
+regiao,subsetor,regiao_espelho,fonte
+RS,S38_SOL,RB,D6 = A: S38_SOL-RS latente; coluna do mesmo subsetor no RB (Seção 6.5)
+RS,S38_PET,RB,D6 = A: S38_PET-RS latente; coluna do mesmo subsetor no RB (Seção 6.5)

@@ -1,0 +1,6 @@
+subsetor,consumo_mil_tep_2019,geracao_gwh_2019,tep_por_mwh,fonte
+S38_BIO,434.0,1840,0.2358695652173913,"EPE, BEN 2020, Tabela 5.4 – Centrais Elétricas de Serviço Público (p. 112); acesso 2026-10-15T19:38:26Z: consumo de combustível ÷ geração, por fonte"
+S38_CAR,3338.0,13823,0.24148158865658684,"EPE, BEN 2020, Tabela 5.4 – Centrais Elétricas de Serviço Público (p. 112); acesso 2026-10-15T19:38:26Z: consumo de combustível ÷ geração, por fonte"
+S38_GN,9386.0,47597,0.1971973023509885,"EPE, BEN 2020, Tabela 5.4 – Centrais Elétricas de Serviço Público (p. 112); acesso 2026-10-15T19:38:26Z: consumo de combustível ÷ geração, por fonte"
+S38_NUC,4085.0,16129,0.2532705065410131,"EPE, BEN 2020, Tabela 5.4 – Centrais Elétricas de Serviço Público (p. 112); acesso 2026-10-15T19:38:26Z: consumo de combustível ÷ geração, por fonte"
+S38_PET,1266.0,4769,0.2654644579576431,"EPE, BEN 2020, Tabela 5.4 – Centrais Elétricas de Serviço Público (p. 112); acesso 2026-10-15T19:38:26Z: consumo de combustível ÷ geração, por fonte"

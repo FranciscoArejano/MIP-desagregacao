@@ -1,0 +1,23 @@
+regiao,subsetor,participacao,fonte
+RS,S38_HID,14542.551927,"GWh (ONS, geração por usina 2019 (dados abertos, GERACAO_USINA-2_2019.parquet); sem autoprodução (R02b, Seção 2))"
+RS,S38_EOL,5266.917537,"GWh (ONS, geração por usina 2019 (dados abertos, GERACAO_USINA-2_2019.parquet); sem autoprodução (R02b, Seção 2))"
+RS,S38_SOL,0.0,produção zero no RS em 2019 (D6 = A: latente; nuclear zerado)
+RS,S38_BIO,68.233445,"GWh (ONS, geração por usina 2019 (dados abertos, GERACAO_USINA-2_2019.parquet); sem autoprodução (R02b, Seção 2))"
+RS,S38_CAR,2625.22361,"GWh (ONS, geração por usina 2019 (dados abertos, GERACAO_USINA-2_2019.parquet); sem autoprodução (R02b, Seção 2))"
+RS,S38_GN,174.56229000000002,"GWh (ONS, geração por usina 2019 (dados abertos, GERACAO_USINA-2_2019.parquet); sem autoprodução (R02b, Seção 2))"
+RS,S38_PET,0.0,produção zero no RS em 2019 (D6 = A: latente; nuclear zerado)
+RS,S38_NUC,0.0,produção zero no RS em 2019 (D6 = A: latente; nuclear zerado)
+RS,S38_TRA,,não usado (ancora_componentes: VBP por componente/resíduo)
+RS,S38_DIS,,não usado (ancora_componentes: VBP por componente/resíduo)
+RS,S38_GAS,,não usado (ancora_componentes: VBP por componente/resíduo)
+RB,S38_HID,370796.682627,"GWh (ONS, geração por usina 2019 (dados abertos, GERACAO_USINA-2_2019.parquet); sem autoprodução (R02b, Seção 2))"
+RB,S38_EOL,48122.86242523,"GWh (ONS, geração por usina 2019 (dados abertos, GERACAO_USINA-2_2019.parquet); sem autoprodução (R02b, Seção 2))"
+RB,S38_SOL,4384.555167,"GWh (ONS, geração por usina 2019 (dados abertos, GERACAO_USINA-2_2019.parquet); sem autoprodução (R02b, Seção 2))"
+RB,S38_BIO,9271.940226,"GWh (ONS, geração por usina 2019 (dados abertos, GERACAO_USINA-2_2019.parquet); sem autoprodução (R02b, Seção 2))"
+RB,S38_CAR,11338.694975,"GWh (ONS, geração por usina 2019 (dados abertos, GERACAO_USINA-2_2019.parquet); sem autoprodução (R02b, Seção 2))"
+RB,S38_GN,46473.993314,"GWh (ONS, geração por usina 2019 (dados abertos, GERACAO_USINA-2_2019.parquet); sem autoprodução (R02b, Seção 2))"
+RB,S38_PET,4769.0,"GWh (ONS, geração por usina 2019 (dados abertos, GERACAO_USINA-2_2019.parquet); sem autoprodução (R02b, Seção 2))"
+RB,S38_NUC,16128.756691,"GWh (ONS, geração por usina 2019 (dados abertos, GERACAO_USINA-2_2019.parquet); sem autoprodução (R02b, Seção 2))"
+RB,S38_TRA,,não usado (ancora_componentes: VBP por componente/resíduo)
+RB,S38_DIS,,não usado (ancora_componentes: VBP por componente/resíduo)
+RB,S38_GAS,,não usado (ancora_componentes: VBP por componente/resíduo)

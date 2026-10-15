@@ -1,0 +1,7 @@
+url,status_http,tempo_s,horario_utc,observacao
+https://dadosabertos.aneel.gov.br/,200,1.926,2026-10-15T19:27:24Z,teste rápido da Seção 0 da 02b (curl pelo proxy do ambiente)
+https://apisidra.ibge.gov.br/values/t/1737/n1/all/v/2266/p/last,200,0.517,2026-10-15T19:27:26Z,teste rápido da Seção 0 da 02b
+https://seeg.eco.br/,200,1.291,2026-10-15T19:27:27Z,teste rápido da Seção 0 da 02b (User-Agent de navegador)
+https://www.epe.gov.br/,200,4.386,2026-10-15T19:27:28Z,teste rápido da Seção 0 da 02b
+https://www.gov.br/,200,1.037,2026-10-15T19:27:32Z,teste rápido da Seção 0 da 02b
+https://comexstat.mdic.gov.br/,200,1.401,2026-10-15T19:27:33Z,teste rápido da Seção 0 da 02b (a API api-comexstat.mdic.gov.br respondeu 429 depois; ver rodada02_acesso_fontes.csv)

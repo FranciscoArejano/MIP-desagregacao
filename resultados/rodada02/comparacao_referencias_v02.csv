@@ -45,6 +45,13 @@ fonte,grupo,item,esperado,obtido,diferenca,tolerancia,confere
 "ONS (R02b, Seção 2)",RB SIN (02b),Total,508491.9,508491.76679423,-0.13320577004924417,0.5,True
 "ONS (R02b, Seção 2)",Excluídas (autoprodução),RS,72.7,72.722204,0.02220400000000211,0.5,True
 "ONS (R02b, Seção 2)",Excluídas (autoprodução),RB,9440.4,9440.381631,-0.01836899999943853,0.5,True
+BEN 2020 (consistência),gás natural,Σ setores = consumo final (mil tep),17772.36414681633,17772.36414681633,0.0,0.5,True
+BEN 2020 (Tabela 5.4 × matriz),centrais de serviço público,consumo GÁS NATURAL (mil tep),9386.0,9385.981810434629,-0.018189565371358185,0.5,True
+BEN 2020 (Tabela 5.4 × matriz),centrais de serviço público,consumo CARVÃO VAPOR (mil tep),3338.0,3337.5824349982804,-0.4175650017195949,0.5,True
+BEN 2020 (Tabela 5.4 × matriz),centrais de serviço público,consumo URÂNIO CONTIDO NO UO2 (mil tep),4085.0,4084.709951193714,-0.29004880628599494,0.5,True
+BEN 2020 (Tabela 5.4 × matriz),centrais de serviço público,consumo ÓLEO DIESEL (mil tep),999.0,999.242589157602,0.24258915760196942,0.5,True
+BEN 2020 (Tabela 5.4 × matriz),centrais de serviço público,consumo ÓLEO COMBUSTÍVEL (mil tep),267.0,266.58966906958864,-0.41033093041136226,0.5,True
+BEN 2020 (Tabela 5.4 × matriz),centrais de serviço público,consumo LENHA (mil tep),72.0,71.56817252681012,-0.4318274731898839,0.5,True
 Leilões ANEEL + IPCA (5.4),,S38_HID,166.4,166.43279167207535,0.03279167207534783,1.0,True
 Leilões ANEEL + IPCA (5.4),,S38_EOL,173.2,173.1608466702411,-0.03915332975887509,1.0,True
 Leilões ANEEL + IPCA (5.4),,S38_SOL,260.6,260.62767152864484,0.02767152864481659,1.0,True
