@@ -1,0 +1,8 @@
+nom_usina,id_estado,ceg,subsetor,justificativa,fonte
+Canoas,RS,UTE.GN.RS.028038-0.01,S38_GN,"rotulada diesel pelo ONS; o próprio CEG (UTE.GN) e o SIGA a registram como gás natural; emissões de gás do RS em 2019 no SEEG compatíveis (instruções da Rodada 02, Seção 5.1)","Instruções da Rodada 02 (Francisco), Seção 5.1; CEG do ONS"
+CMPC,RS,UTE.FL.RS.030666-5.01,S38_BIO,"licor negro (celulose), rotulada Resíduos Industriais pelo ONS; CEG com código FL (floresta)","Instruções da Rodada 02, Seção 5.1; CEG do ONS"
+Do Atlântico,RJ,UTE.PE.RJ.029587-6.01,S38_CAR,"gases siderúrgicos (siderurgia integrada a coque) → CAR",Sugestão das instruções da Rodada 02 (Seção 5.1); a confirmar no SIGA
+CSP,CE,UTE.CM.CE.031241-0.02,S38_CAR,"gases siderúrgicos (siderurgia integrada a coque) → CAR",Sugestão das instruções da Rodada 02 (Seção 5.1); a confirmar no SIGA
+CST,ES,UTE.PE.ES.027054-7.01,S38_CAR,"gases siderúrgicos (siderurgia integrada a coque) → CAR",Sugestão das instruções da Rodada 02 (Seção 5.1); a confirmar no SIGA
+Klabin Celulose,PR,UTE.FL.PR.031098-0.01,S38_BIO,"licor negro (celulose) → BIO; CEG com código FL (floresta)",Sugestão das instruções da Rodada 02 (Seção 5.1); a confirmar no SIGA
+Suzano Maranhão,MA,UTE.FL.MA.030959-1.01,S38_BIO,"licor negro (celulose) → BIO; CEG com código FL (floresta)",Sugestão das instruções da Rodada 02 (Seção 5.1); a confirmar no SIGA

@@ -15,3 +15,6 @@ venv/
 # Sistema operacional
 .DS_Store
 Thumbs.db
+
+# Brutos grandes de fontes externas (> 20 MB) — não versionar; ver dados/externos/FONTES.md
+dados/externos/brutos/

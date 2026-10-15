@@ -1,0 +1,27 @@
+fonte,grupo,item,esperado,obtido,diferenca,tolerancia,confere
+ONS (Seção 5.1),RS (com exceções),S38_HID,14542.6,14542.551927,-0.0480729999999312,0.5,True
+ONS (Seção 5.1),RS (com exceções),S38_EOL,5266.9,5266.917537,0.017537000000629632,0.5,True
+ONS (Seção 5.1),RS (com exceções),S38_CAR,2625.2,2625.22361,0.023610000000189757,0.5,True
+ONS (Seção 5.1),RS (com exceções),S38_GN,174.6,174.56229000000002,-0.03770999999997571,0.5,True
+ONS (Seção 5.1),RS (com exceções),S38_BIO,140.9,140.955649,0.05564899999998829,0.5,True
+ONS (Seção 5.1),RS (com exceções),S38_PET,0.0,0.0,0.0,0.5,True
+ONS (Seção 5.1),RS (com exceções),S38_SOL,0.0,0.0,0.0,0.5,True
+ONS (Seção 5.1),RS (com exceções),S38_NUC,0.0,0.0,0.0,0.5,True
+ONS (Seção 5.1),RS (com exceções),Total,22750.2,22750.211013,0.011012999999366002,0.5,True
+ONS (Seção 5.1),RB (rótulo ONS),Hidráulica,370796.7,370796.682627,-0.017373000038787723,0.5,True
+ONS (Seção 5.1),RB (rótulo ONS),Eólica,48122.9,48122.86242523,-0.037574770001810975,0.5,True
+ONS (Seção 5.1),RB (rótulo ONS),Carvão,11338.7,11338.694974999999,-0.00502500000220607,0.5,True
+ONS (Seção 5.1),RB (rótulo ONS),Gás,46474.0,46473.993314,-0.006686000000627246,0.5,True
+ONS (Seção 5.1),RB (rótulo ONS),Biomassa,9271.9,9271.940226,0.04022600000098464,0.5,True
+ONS (Seção 5.1),RB (rótulo ONS),Óleo (diesel + combustível),1974.3,1974.281369,-0.01863099999991391,0.5,True
+ONS (Seção 5.1),RB (rótulo ONS),Fotovoltaica,4384.6,4384.555167,-0.04483299999992596,0.5,True
+ONS (Seção 5.1),RB (rótulo ONS),Nuclear,16128.8,16128.756690999999,-0.04330900000059046,0.5,True
+ONS (Seção 5.1),RB (rótulo ONS),Resíduos Industriais,9440.4,9440.381631,-0.01836899999943853,0.5,True
+ONS (Seção 5.1),RB (rótulo ONS),Total,517932.3,517932.14842522994,-0.1515747700468637,0.5,True
+ONS (Seção 5.1),Importação,Itaipu 50 Hz,24402.2,24402.229554999998,0.029554999997344567,0.5,True
+ONS (Seção 5.1),RB Resíduos Industriais,Do Atlântico,2758.4,2758.361857,-0.03814300000021831,0.5,True
+ONS (Seção 5.1),RB Resíduos Industriais,Klabin Celulose,1777.1,1777.130273,0.030273000000079264,0.5,True
+ONS (Seção 5.1),RB Resíduos Industriais,CSP,1611.8,1611.780145,-0.01985500000000684,0.5,True
+ONS (Seção 5.1),RB Resíduos Industriais,Suzano Maranhão,1255.4,1255.394776,-0.005223999999998341,0.5,True
+ONS (Seção 5.1),RB Resíduos Industriais,CST,1198.5,1198.488,-0.011999999999943611,0.5,True
+ONS (Seção 5.1),RB Resíduos Industriais,Sol,839.2,839.22658,0.026579999999967185,0.5,True
