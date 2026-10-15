@@ -1,0 +1,10 @@
+checagem,esperado,obtido,detalhe
+Linha: Σ Z + Σ demanda final (EK:EU) − total (EV),diferença máxima ≈ 7e-10,6.985e-10,máximo em RB S42
+Coluna: Σ Z + importações + impostos (147–149) + VA (151) − VBP (156),diferença máxima ≈ 0.0095 (RB S40 Construção); demais ≈ 0,0.009486,"máximo em RB S40 (Construção); maior dos demais = 0.0087 (RB S19); mediana |dif| = 3.1e-04; setores com |dif| > 1e-3: 32, > 1e-6: 129; maior |dif|/VBP = 5.3e-08"
+VA − (remunerações + EOB + impostos sobre a produção),≈ 1e-10,1.164e-10,máximo em RB S42
+"VBP (linha 156) − total da linha (EV), por setor",0,0.000e+00,máximo da diferença absoluta
+Setores com VBP = 0,"RS S05, RS S06, RS S07, RS S20","RS S05, RS S06, RS S07, RS S20",linhas e colunas desses setores: todas zeradas
+Valores negativos,"coluna EU (65 células; mínimo −5987.45); linha 153 EOB (RS S09, RB S09); linha 154 (RS S01, RB S01)","coluna EU: 65 células, mínimo -5987.45; demais: 4 células",insumos_primarios eob RS S09 (-3.50); insumos_primarios eob RB S09 (-1231.50); insumos_primarios impostos_producao RS S01 (-646.30); insumos_primarios impostos_producao RB S01 (-4883.70)
+[extra] Colunas de DF: Σ linhas + importações + impostos − total (linha 156),(não informado),0.0139,INV_RS: 0.0000; INV_RB: 0.0064; FAM_RS: 0.0053; FAM_RB: 0.0035; GOV_RS: -0.0014; GOV_RB: -0.0139; ISFLSF_RS: 0.0004; ISFLSF_RB: 0.0039; EXP_RS: 0.0000; EXP_RB: 0.0000; DISCREP: -0.0113
+[extra] Coluna EV das linhas 144–156 − soma da linha (EV156 = Σ VBP + importações + impostos),(não informado),1.392e-03,importacoes: -1.16e-09; ipi: -7.28e-12; icms: 1.16e-10; outros_impostos: 0.00e+00; va: -4.66e-09; remuneracoes: -2.79e-09; eob: 4.19e-09; impostos_producao: 1.46e-10; vbp: -1.39e-03
+[extra] Totais das contas satélite,(não informado),ocupacoes: 105995759.00; co2e: 1836705849.28; agua: 298198.73; energia: 216869.54,soma das 136 colunas
