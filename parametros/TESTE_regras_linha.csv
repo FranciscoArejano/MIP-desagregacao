@@ -1,0 +1,4 @@
+regiao,comprador,regiao_comprador,regra,subsetor,valor,fixar_no_ras,fonte
+*,*,*,somente_rede_e_gas,,,nao,FICTÍCIO (teste do motor)
+*,FAM,*,fixa_por_comprador,S38_TD,0.95,sim,FICTÍCIO (teste do motor)
+*,FAM,*,fixa_por_comprador,S38_GAS,0.05,sim,FICTÍCIO (teste do motor)

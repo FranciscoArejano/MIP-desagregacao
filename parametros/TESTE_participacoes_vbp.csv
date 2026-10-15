@@ -1,0 +1,17 @@
+regiao,subsetor,participacao,fonte
+RS,S38_HID,0.13,FICTÍCIO (teste do motor)
+RS,S38_EOL,0.04,FICTÍCIO (teste do motor)
+RS,S38_SOL,0.00,FICTÍCIO (teste do motor) — latente: produção zero + coluna de coeficientes
+RS,S38_BIO,0.03,FICTÍCIO (teste do motor)
+RS,S38_FOS,0.07,FICTÍCIO (teste do motor)
+RS,S38_NUC,0.00,FICTÍCIO (teste do motor) — produção zero (não latente)
+RS,S38_TD,0.63,FICTÍCIO (teste do motor)
+RS,S38_GAS,0.10,FICTÍCIO (teste do motor)
+RB,S38_HID,0.18,FICTÍCIO (teste do motor)
+RB,S38_EOL,0.03,FICTÍCIO (teste do motor)
+RB,S38_SOL,0.01,FICTÍCIO (teste do motor)
+RB,S38_BIO,0.03,FICTÍCIO (teste do motor)
+RB,S38_FOS,0.05,FICTÍCIO (teste do motor)
+RB,S38_NUC,0.01,FICTÍCIO (teste do motor)
+RB,S38_TD,0.59,FICTÍCIO (teste do motor)
+RB,S38_GAS,0.10,FICTÍCIO (teste do motor)

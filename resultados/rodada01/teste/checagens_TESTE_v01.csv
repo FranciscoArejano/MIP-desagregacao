@@ -1,0 +1,25 @@
+checagem,status,valor,tolerancia,detalhe
+reagregacao_Z,OK,1.4551915228366852e-11,1e-06,máx |Σ subsetores − original|
+reagregacao_F,OK,4.547473508864641e-13,1e-06,máx |Σ subsetores − original|
+reagregacao_X,OK,0.0,1e-06,máx |Σ subsetores − original|
+reagregacao_total_linha,OK,0.0,1e-06,máx |Σ subsetores − original|
+reagregacao_V,OK,1.4551915228366852e-11,1e-06,máx |Σ subsetores − original|
+reagregacao_S,OK,1.8189894035458565e-12,1e-06,máx |Σ subsetores − original|
+reagregacao_V_df,OK,0.0,1e-06,máx |Σ subsetores − original|
+reagregacao_X_df,OK,0.0,1e-06,máx |Σ subsetores − original|
+reagregacao_totais_EV,OK,0.0,1e-06,
+balanco_linha_subsetores,OK,1.1641532182693481e-10,1e-06,máx |Σ vendas − VBP| nos subsetores (tolerância + resíduo original × participação)
+balanco_coluna_subsetores,OK,5.6386860241772196e-11,1e-06,máx |resíduo da coluna − participação × resíduo original| (o resíduo original é repartido pelo VBP)
+identidade_VA_subsetores,OK,1.0459189070388675e-11,1e-06,VA − (remunerações + EOB + impostos sobre a produção)
+nao_negatividade,OK,0.0,0.0,"negativos só onde a original já tem (coluna de discrepância, EOB, impostos sobre a produção); nenhum negativo novo"
+satelite_ocupacoes_preservado,OK,1.8189894035458565e-12,1e-06,
+satelite_co2e_preservado,OK,0.0,1e-06,
+satelite_agua_preservado,OK,1.4210854715202004e-14,1e-06,
+satelite_energia_preservado,OK,5.684341886080802e-14,1e-06,
+EOB_nao_negativo_subsetores,OK,0.0,0.0,todos ≥ 0
+subsetores_producao_zero_zerados,OK,2.0,0.0,"2 subsetor(es) com produção zero: RS_S38_SOL, RS_S38_NUC"
+L_nao_negativa,OK,0.0,-1e-10,
+L_diagonal_maior_igual_1,OK,1.0,1.0,
+A_soma_colunas_menor_1,OK,0.8333826740734934,1.0,Σ coeficientes técnicos de cada coluna
+RAS_convergencia,OK,1.0,10000.0,"linhas RS S38: necessário, convergiu em 1 iterações, erro 7.28e-12 (inicial 6.13e+02); linhas RB S38: necessário, convergiu em 1 iterações, erro 1.16e-10 (inicial 1.01e+04)"
+subsetores_latentes,OK,1.0,0.0,colunas de coeficientes guardadas à parte: RS_S38_SOL

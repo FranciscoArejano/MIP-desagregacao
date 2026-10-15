@@ -1,0 +1,9 @@
+fonte,url_testada,data_acesso_utc,acessivel,status_http,erro,arquivo_salvo,bytes,sha256,uso_previsto
+ANEEL – Dados Abertos (SIGA),https://dadosabertos.aneel.gov.br/api/3/action/package_search?q=siga&rows=1,2026-10-15T01:36:20Z,não,,URLError: <urlopen error Tunnel connection failed: 403 Forbidden>,,,,"usinas: potência, fonte, UF"
+ONS – Dados Abertos,https://dados.ons.org.br/api/3/action/package_list,2026-10-15T01:36:21Z,não,,URLError: <urlopen error Tunnel connection failed: 403 Forbidden>,,,,geração por usina/fonte e UF
+CCEE – Dados Abertos,https://dadosabertos.ccee.org.br/api/3/action/package_list,2026-10-15T01:36:21Z,não,,URLError: <urlopen error Tunnel connection failed: 403 Forbidden>,,,,"geração, consumo por ramo, preços"
+EPE (Anuário Estatístico de Energia Elétrica; BEN),https://www.epe.gov.br/,2026-10-15T01:36:21Z,não,,URLError: <urlopen error Tunnel connection failed: 403 Forbidden>,,,,"geração e consumo por fonte e UF, 2019"
+IBGE – API SIDRA,https://apisidra.ibge.gov.br/values/t/6579/n1/all/p/2019,2026-10-15T01:36:21Z,não,,URLError: <urlopen error Tunnel connection failed: 403 Forbidden>,,,,pessoal ocupado e salários por CNAE e UF
+SEEG,https://seeg.eco.br/,2026-10-15T01:36:21Z,não,,URLError: <urlopen error Tunnel connection failed: 403 Forbidden>,,,,emissões por UF e fonte
+Base dos Dados (RAIS),https://basedosdados.org/,2026-10-15T01:36:22Z,não,,URLError: <urlopen error Tunnel connection failed: 403 Forbidden>,,,,emprego por CNAE subclasse e UF (só verificar se responde; sem credenciais)
+PyPI,https://pypi.org/simple/openpyxl/,2026-10-15T01:36:22Z,sim,200,,,,,instalação de pacotes

@@ -1,0 +1,24 @@
+# ======================================================================================
+# TESTE — VALORES FICTÍCIOS. NÃO USAR EM NENHUM RESULTADO.
+# Parâmetros inventados apenas para provar que o motor de desagregação funciona (Rodada 01).
+# As decisões reais (D1–D6) são do Francisco e entram na Rodada 3.
+# ======================================================================================
+nome: "TESTE — VALORES FICTÍCIOS (8 subsetores provisórios)"
+aviso: "TESTE — VALORES FICTÍCIOS"
+descricao: >-
+  Parâmetros inventados para testar o motor. Nenhum número destes arquivos tem fonte real;
+  o arquivo gerado (MIP_TESTE_valores_ficticios_NAO_USAR.xlsx) não deve ser usado em análises.
+setor_alvo: S38
+regioes: [RS, RB]                              # D2: desagregar também no RB (aqui só para teste)
+bloco_intrassetorial: geracao_vende_para_rede  # alternativas: proporcional | geracao_vende_para_rede
+modo_vbp: ancora_bloco                         # alternativas: participacoes | ancora_bloco
+arquivos:
+  subsetores: TESTE_subsetores.csv
+  participacoes_vbp: TESTE_participacoes_vbp.csv
+  regras_coluna: TESTE_regras_coluna.csv
+  regras_linha: TESTE_regras_linha.csv
+  regras_primarios: TESTE_regras_primarios.csv
+  coef_latentes: TESTE_coef_latentes.csv
+ras:
+  tolerancia: 1.0e-8
+  max_iter: 10000
