@@ -1,0 +1,17 @@
+# Caches e ambientes Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+.ipynb_checkpoints/
+.mypy_cache/
+.ruff_cache/
+
+# Arquivos temporários do Excel/LibreOffice (os .xlsx de dados/ e resultados/ NÃO são ignorados)
+~$*.xlsx
+.~lock.*#
+
+# Sistema operacional
+.DS_Store
+Thumbs.db

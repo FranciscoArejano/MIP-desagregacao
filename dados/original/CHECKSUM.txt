@@ -1,0 +1,2 @@
+# SHA-256 da planilha original (não editar a planilha; este hash é conferido pelo teste T1)
+15e734a43aba6cc582117a742e4279e0535ccad331c86b880eab38ece420a3ea  Matrtiz_Insumo-Produto_RS_RB_com_emissões.xlsx
