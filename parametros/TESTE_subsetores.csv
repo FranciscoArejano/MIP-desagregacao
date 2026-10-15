@@ -1,0 +1,9 @@
+codigo,nome,tipo
+S38_HID,"Geração hidrelétrica (UHE, PCH, CGH)",geracao
+S38_EOL,Geração eólica,geracao
+S38_SOL,Geração solar fotovoltaica,geracao
+S38_BIO,Geração a biomassa e biogás,geracao
+S38_FOS,"Geração termelétrica fóssil (carvão, gás natural, derivados de petróleo)",geracao
+S38_NUC,Geração nuclear (inexistente no RS),geracao
+S38_TD,"Transmissão, distribuição e comercialização de energia elétrica",rede
+S38_GAS,"Gás natural canalizado e outras utilidades (vapor, água quente)",gas_utilidades

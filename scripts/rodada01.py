@@ -8,6 +8,9 @@ Saídas:
 - resultados/rodada01/validacao_mip_original_v01.csv        (Etapa 2)
 - resultados/rodada01/replicacao_v01.xlsx                   (Etapa 3)
 - resultados/rodada01/diagnostico_S38_v01.xlsx              (Etapa 4)
+- resultados/rodada01/teste/MIP_TESTE_valores_ficticios_NAO_USAR.xlsx       (Etapa 5)
+- resultados/rodada01/teste/MIP_TESTE_valores_ficticios_NAO_USAR_longo.csv  (Etapa 5)
+- resultados/rodada01/teste/checagens_TESTE_v01.csv                         (Etapa 5)
 """
 from __future__ import annotations
 
@@ -22,7 +25,9 @@ import pandas as pd  # noqa: E402
 
 from mip import referencia as ref  # noqa: E402
 from mip import diagnostico as diag  # noqa: E402
-from mip.caminhos import PASTA_INTERMEDIARIOS, PASTA_RESULTADOS  # noqa: E402
+from mip.caminhos import PASTA_INTERMEDIARIOS, PASTA_PARAMETROS, PASTA_RESULTADOS  # noqa: E402
+from mip.desagregacao import desagregar, ler_especificacao  # noqa: E402
+from mip.leitura import ler_mip  # noqa: E402
 from mip.exportacao import salvar_tabelas  # noqa: E402
 from mip.leitura import formato_longo, ler_mip_original  # noqa: E402
 from mip.modelo import ModeloLeontief, ranking_setorial  # noqa: E402
@@ -161,10 +166,32 @@ def etapa4(mip, resultados):
     return resumo, bloco_res, peso
 
 
+def etapa5(mip):
+    """Motor de desagregação com os parâmetros FICTÍCIOS de teste (nenhuma desagregação real)."""
+    espec = ler_especificacao(PASTA_PARAMETROS / "TESTE_especificacao.yaml")
+    res = desagregar(mip, espec)
+    pasta = PASTA_SAIDA / "teste"
+    nome = "MIP_TESTE_valores_ficticios_NAO_USAR"
+    res.exportar(pasta / f"{nome}.xlsx", pasta / f"{nome}_longo.csv")
+    res.checagens.to_csv(pasta / "checagens_TESTE_v01.csv", index=False)
+    # releitura do arquivo exportado (prova de que o layout é o mesmo da original)
+    lida = ler_mip(pasta / f"{nome}.xlsx")
+    dif = max(
+        float(np.abs(getattr(lida, a) - getattr(res.mip, a)).max())
+        for a in ["Z", "F", "X", "total_linha", "V", "S", "V_df", "X_df"]
+    )
+    st = res.checagens["status"].value_counts().to_dict()
+    print(f"[Etapa 5] MIP de TESTE ({res.mip.n} setores-região): checagens {st}; "
+          f"RAS: {res.info_ras[['contexto', 'necessario', 'convergiu', 'iteracoes']].to_dict('records')}; "
+          f"releitura do .xlsx: máx |dif| = {dif:.1e}")
+    return res
+
+
 def main():
     mip = etapa2()
     resultados, _, _ = etapa3(mip)
     etapa4(mip, resultados)
+    etapa5(mip)
 
 
 if __name__ == "__main__":

@@ -1,0 +1,9 @@
+regiao,subsetor,tipo_linha,regiao_linha,codigo_linha,coeficiente,fonte
+RS,S38_SOL,setor,RS,S31,0.05,FICTÍCIO (teste do motor)
+RS,S38_SOL,setor,RB,S30,0.08,FICTÍCIO (teste do motor)
+RS,S38_SOL,setor,RB,S31,0.04,FICTÍCIO (teste do motor)
+RS,S38_SOL,setor,RS,S40,0.03,FICTÍCIO (teste do motor)
+RS,S38_SOL,setor,RS,S56,0.02,FICTÍCIO (teste do motor)
+RS,S38_SOL,setor,RS,S38_TD,0.01,FICTÍCIO (teste do motor)
+RS,S38_SOL,satelite,,co2e,0.0,FICTÍCIO (teste do motor)
+RS,S38_SOL,satelite,,ocupacoes,1.5,FICTÍCIO (teste do motor)
