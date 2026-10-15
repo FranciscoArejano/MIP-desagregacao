@@ -26,15 +26,27 @@ from mip.externos import ons  # noqa: E402
 PASTA_SAIDA = PASTA_RESULTADOS / "rodada02"
 BRUTOS = PASTA_EXTERNOS / "brutos"
 
-# fonte → arquivo bruto esperado (onde o script de coleta grava)
-ARQUIVOS = {
-    "ons": BRUTOS / "ons" / "GERACAO_USINA-2_2019.parquet",
-    "siga": PASTA_EXTERNOS / "siga" / "siga-empreendimentos-geracao.csv",
-    "leiloes": PASTA_EXTERNOS / "leiloes" / "resultado-leiloes-geracao.csv",
-    "ipca": PASTA_EXTERNOS / "ipca" / "ipca_1737.json",
-    "seeg": BRUTOS / "seeg" / "Dados-nacionais-13.0.xlsx",
-    "cempre": PASTA_EXTERNOS / "cempre" / "cempre_6450.json",
+# fonte → nome do arquivo gravado por scripts/rodada02_coleta.py. O arquivo fica em
+# dados/externos/brutos/<fonte>/ (> 20 MB, fora do git) ou em dados/externos/<fonte>/ (≤ 20 MB).
+NOMES = {
+    "ons": "GERACAO_USINA-2_2019.parquet",
+    "siga": "siga-empreendimentos-geracao.csv",
+    "leiloes": "resultado-leiloes-geracao.csv",
+    "ipca": "ipca_1737.json",
+    "seeg": "Dados-nacionais-13.0.xlsx",
+    "cempre": "cempre_6450.json",
 }
+
+
+def localizar(fonte: str) -> Path:
+    """Caminho do bruto da fonte: na pasta versionada ou em brutos/ (o que existir; senão, o versionado)."""
+    for pasta in (PASTA_EXTERNOS / fonte, BRUTOS / fonte):
+        if (pasta / NOMES[fonte]).exists():
+            return pasta / NOMES[fonte]
+    return PASTA_EXTERNOS / fonte / NOMES[fonte]
+
+
+ARQUIVOS = {f: localizar(f) for f in NOMES}
 OBRIGATORIAS = {"ons": "5.1", "leiloes": "5.4", "ipca": "5.4", "seeg": "5.7", "cempre": "5.8"}
 
 

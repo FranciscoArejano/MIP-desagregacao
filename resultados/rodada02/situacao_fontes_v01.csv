@@ -3,5 +3,5 @@ ons,5.1,True,dados/externos/brutos/ons/GERACAO_USINA-2_2019.parquet,True
 siga,5.2,False,dados/externos/siga/siga-empreendimentos-geracao.csv,False
 leiloes,5.4,True,dados/externos/leiloes/resultado-leiloes-geracao.csv,False
 ipca,5.4,True,dados/externos/ipca/ipca_1737.json,False
-seeg,5.7,True,dados/externos/brutos/seeg/Dados-nacionais-13.0.xlsx,False
+seeg,5.7,True,dados/externos/seeg/Dados-nacionais-13.0.xlsx,False
 cempre,5.8,True,dados/externos/cempre/cempre_6450.json,False

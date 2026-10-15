@@ -135,6 +135,16 @@ def leiloes_df() -> pd.DataFrame:
         ("oleo diesel", "S38_PET"),
         ("Diesel", "S38_PET"),
         ("Nuclear", "S38_NUC"),
+        # revisão: falsos positivos de "hidr..." e de "carvão"/"gás"
+        ("Hidroelétrica", "S38_HID"),
+        ("Hídrica", "S38_HID"),
+        ("Etanol hidratado", "S38_BIO"),  # não é HID (Seção 5.2: biocombustível líquido)
+        ("Hidrocarboneto", None),         # não é HID
+        ("Carvão Vegetal", "S38_BIO"),    # CAR é carvão MINERAL (Seção 3)
+        ("Gás Siderúrgico", "S38_CAR"),   # CAR inclui gases siderúrgicos (Seção 3), não GN
+        ("Gás de Alto-Forno", "S38_CAR"),
+        ("Gás de Refinaria", "S38_PET"),
+        ("Óleo Vegetal", "S38_BIO"),      # não é PET
         ("Termelétrica", None),
         ("Eólica + Solar", None),         # híbrida: ambígua, fica sem mapa
         ("Hidrogênio", None),
@@ -227,15 +237,54 @@ def test_ler_leiloes_ponto_decimal_e_separador_virgula(tmp_path):
 
 
 def test_ler_leiloes_milhar_sem_virgula_avisa(tmp_path):
+    # Só valores ambíguos ("1.234"): com ';' segue o formato documentado (decimal vírgula, '.'
+    # de milhar) → 1234, com aviso; decimal='.' força a outra leitura, sem aviso.
     texto = "DatLeilao;DscFonteEnergia;VlrPrecoLeilao;VlrEnergiaVendida\n2018-06-15;Eólica;1.234;10\n"
     caminho = tmp_path / "ambiguo.csv"
     caminho.write_text(texto, encoding="utf-8")
     with pytest.warns(UserWarning, match="ambíguos"):
-        ler_leiloes(caminho)
+        df = ler_leiloes(caminho)
+    assert df.attrs["decimal"] == ","
+    assert df["preco_rs_mwh"].iloc[0] == pytest.approx(1234.0)
     with warnings.catch_warnings():
         warnings.simplefilter("error")
-        df = ler_leiloes(caminho, decimal=",")
-    assert df["preco_rs_mwh"].iloc[0] == pytest.approx(1234.0)
+        df = ler_leiloes(caminho, decimal=".")
+    assert df["preco_rs_mwh"].iloc[0] == pytest.approx(1.234)
+
+
+def test_ler_leiloes_ponto_decimal_com_ponto_e_virgula(tmp_path):
+    # "166.40" só pode ter ponto decimal: decide a convenção, e "1.234" vira 1.234 sem aviso
+    texto = (
+        "DatLeilao;DscFonteEnergia;VlrPrecoLeilao;VlrEnergiaVendida\n"
+        "2018-06-15;Eólica;166.40;1.234\n"
+    )
+    caminho = tmp_path / "ponto.csv"
+    caminho.write_text(texto, encoding="utf-8")
+    with warnings.catch_warnings():
+        warnings.simplefilter("error")
+        df = ler_leiloes(caminho)
+    assert df.attrs["decimal"] == "."
+    assert df["preco_rs_mwh"].iloc[0] == pytest.approx(166.40)
+    assert df["energia_mwmed"].iloc[0] == pytest.approx(1.234)
+
+
+def test_ler_leiloes_linha_em_branco_e_valores_x(tmp_path):
+    texto = (
+        "DatLeilao;DscFonteEnergia;VlrPrecoLeilao;VlrEnergiaVendida\n"
+        "15/06/2018;Eólica;100,5;10\n"
+        "\n"
+        "16/06/2018;Solar;X;...\n"
+        "17/06/2018;Solar;R$ 1.200,00;abc\n"
+    )
+    caminho = tmp_path / "branco.csv"
+    caminho.write_bytes(texto.encode("latin-1"))
+    df = ler_leiloes(caminho, manter_colunas=True)
+    assert len(df) == 3
+    assert df["linha_arquivo"].tolist() == [2, 4, 5]  # a linha em branco (3) conta
+    assert np.isnan(df["preco_rs_mwh"].iloc[1]) and np.isnan(df["energia_mwmed"].iloc[1])
+    assert df["preco_rs_mwh"].iloc[2] == pytest.approx(1200.0)
+    # 'X' e '...' são ausentes; só 'abc' conta como não numérico
+    assert df.attrs["valores_nao_numericos"] == {"preco_rs_mwh": 0, "energia_mwmed": 1}
 
 
 def test_ler_leiloes_coluna_faltando(tmp_path):
@@ -270,6 +319,26 @@ def test_ler_ipca_sidra_arquivo_json(tmp_path):
     pd.testing.assert_frame_equal(df_arq, ler_ipca_sidra(lista_sidra()))
     pd.testing.assert_frame_equal(df_str, df_arq)
     assert media_indice_ano(df_arq, 2019) == pytest.approx(MEDIA_2019)
+
+
+@pytest.mark.parametrize("ausente", ["...", "-", "X", "x", " ... "])
+def test_ler_ipca_sidra_valores_ausentes(ausente):
+    regs = lista_sidra()
+    regs[1] = registro_sidra("201801", ausente)
+    df = ler_ipca_sidra(regs).set_index("mes")["indice"]
+    assert np.isnan(df[pd.Period("2018-01", freq="M")])
+    assert df[pd.Period("2018-02", freq="M")] == pytest.approx(90.0)
+
+
+def test_ler_ipca_sidra_cabecalho_sem_acento_e_maiusculas():
+    # descrições do cabeçalho sem acento/maiúsculas e com espaços; mês como D3 e variável como D2
+    cab = {"V": " VALOR ", "D1C": "BRASIL (CODIGO)", "D2C": "VARIAVEL (CODIGO)", "D3C": "MES  (CODIGO)"}
+    regs = [cab] + [
+        {"V": f"{v:.2f}", "D1C": "1", "D2C": "2266", "D3C": m} for m, v in indices_sinteticos().items()
+    ]
+    df = ler_ipca_sidra(regs)
+    assert len(df) == 24
+    assert media_indice_ano(df, 2019) == pytest.approx(MEDIA_2019)
 
 
 def test_ler_ipca_sidra_sem_mes_no_cabecalho():
@@ -361,6 +430,50 @@ def test_precos_medios_desempacota_em_tabela_e_detalhe():
     assert {"subsetor", "preco_2019_rs_mwh", "energia_mwmed_total", "n_registros",
             "primeiro_leilao", "ultimo_leilao"} <= set(tabela.columns)
     assert "preco_2019_rs_mwh" in detalhe.columns
+
+
+def test_precos_medios_resultado_indexavel_como_tupla():
+    res = precos_medios_2019(leiloes_df(), ipca_df())
+    assert len(res) == 2
+    assert res[0] is res.tabela and res[1] is res.detalhe
+
+
+def test_precos_medios_dataframe_com_texto_dd_mm_e_virgula():
+    # Datas e números em texto (como viriam de um CSV lido sem conversão). "10/12/2018" vem
+    # primeiro de propósito: pd.to_datetime inferiria mês/dia (→ 12/out) e perderia "15/06/2018".
+    leiloes = pd.DataFrame(
+        {
+            "data_leilao": ["10/12/2018", "15/06/2018 00:00", "15/01/2019"],
+            "fonte_energia": ["PCH", "Hidrelétrica", "Eólica"],
+            "preco_rs_mwh": ["95,00", "100,0", "80,0"],
+            "energia_mwmed": ["30", "10", "5"],
+        }
+    )
+    res = precos_medios_2019(leiloes, ipca_df())
+    assert res.contagens["n_usados"] == 2 and res.contagens["n_apos_corte"] == 1
+    assert res.detalhe["data_leilao"].tolist() == [pd.Timestamp("2018-06-15"), pd.Timestamp("2018-12-10")]
+    assert res.tabela.set_index("subsetor").loc["S38_HID", "preco_2019_rs_mwh"] == pytest.approx(131.875)
+
+
+def test_precos_medios_data_corte_dd_mm_aaaa():
+    # "01/12/2018" é 1º de dezembro (pd.Timestamp leria 12 de janeiro)
+    res = precos_medios_2019(leiloes_df(), ipca_df(), data_corte="01/12/2018")
+    assert res.data_corte == pd.Timestamp("2018-12-01")
+    assert res.contagens["n_apos_corte"] == 3  # 10/12/2018, 31/12/2018 e 15/01/2019
+    with pytest.raises(ValueError, match="data_corte"):
+        precos_medios_2019(leiloes_df(), ipca_df(), data_corte="31-dez-2018")
+
+
+def test_precos_medios_sem_registro_usado_nao_quebra():
+    # todos os registros válidos com fonte não mapeada: tabela vazia, sem erro
+    leiloes = leiloes_df().assign(fonte_energia="Termelétrica")
+    res = precos_medios_2019(leiloes, ipca_df())
+    assert res.tabela.empty and res.detalhe.empty
+    assert res.contagens["n_usados"] == 0
+    # válidos na janela: 10 + 30 + 5 + 2 + 7 = 54 MWmed em 5 registros
+    assert res.contagens["n_fonte_nao_mapeada"] == 5
+    assert res.fontes_nao_mapeadas["energia_mwmed_total"].tolist() == pytest.approx([54.0])
+    assert acrescentar_nuclear(res.tabela)["subsetor"].tolist() == ["S38_NUC"]
 
 
 def test_precos_medios_mes_sem_indice():

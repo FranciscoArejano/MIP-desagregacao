@@ -66,6 +66,10 @@ def _siga_bruto(registros: list[dict]) -> pd.DataFrame:
         ("28038.0", "028038"),
         (" 18 ", "000018"),
         (999999, "999999"),
+        ("28038,0", "028038"),  # decimal vírgula (não é lista de CEGs)
+        ("028038.00", "028038"),
+        ("28.038", "028038"),  # separador de milhar pt-BR
+        ("UTE.GN.RS.028038\u20130.01", "028038"),  # travessão Unicode no lugar do hífen
     ],
 )
 def test_nucleo_ceg_validos(entrada, esperado):
@@ -77,7 +81,7 @@ def test_nucleo_ceg_validos(entrada, esperado):
     [
         "-", "", "   ", None, np.nan, pd.NA, "abc", "UTE.GN.RS.28038-0.01", "UTE.GN.RS.0280380-0.01",
         "1234567", 1234567, 0, "0", -5, 28038.5, True, "UTE.GN.RS.028038-0.01, UTE.GN.RS.028039-0.01",
-        "UTE.GN.RS.028038-0.01 lixo",
+        "UTE.GN.RS.028038-0.01 lixo", "X", "...", "28038,5", "1.234.567",
     ],
 )
 def test_nucleo_ceg_invalidos(entrada):
@@ -113,6 +117,36 @@ def test_ler_siga_decimal_virgula_e_vazios(tmp_path):
     assert pot.iloc[1] == pytest.approx(30000.0)
     assert pot.iloc[2] == pytest.approx(250.5)
     assert pd.isna(pot.iloc[3])
+
+
+def test_ler_siga_marcadores_ausentes_e_decimal_ambiguo(tmp_path):
+    cab = "NomEmpreendimento;IdeNucleoCEG;DscFonteCombustivel;MdaPotenciaOutorgadaKw;MdaGarantiaFisicaKw"
+    linhas = [
+        '"Usina; com ponto e vírgula";28038;Gás natural;1.000,5;1.500,25',
+        "Usina B;1;Petróleo;-;1500.25",  # '-' = ausente; '1500.25' numa coluna com vírgula é ambíguo
+        "Usina C;2;Petróleo;X;10,0",
+        "Usina D;3;Petróleo;...;1.500",
+    ]
+    arq = tmp_path / "siga.csv"
+    arq.write_bytes(("\r\n".join([cab] + linhas) + "\r\n").encode("utf-8"))  # CRLF
+    df = ler_siga(arq)
+    assert df["NomEmpreendimento"].iloc[0] == "Usina; com ponto e vírgula"
+    assert df["nucleo_ceg"].tolist() == ["028038", "000001", "000002", "000003"]
+    pot = df["MdaPotenciaOutorgadaKw"]
+    assert pot.iloc[0] == pytest.approx(1000.5)
+    assert pot.iloc[1:].isna().all()  # '-', 'X', '...' → ausente, coluna numérica
+    # coluna com '1500.25' e decimal vírgula: não vira 150025 sem aviso, fica como texto
+    assert df["MdaGarantiaFisicaKw"].tolist() == ["1.500,25", "1500.25", "10,0", "1.500"]
+
+
+def test_ler_siga_latin1_puro(tmp_path):
+    """Byte 0x81 não existe em cp1252: só o latin-1 decodifica (último recurso)."""
+    arq = tmp_path / "siga.csv"
+    arq.write_bytes("NomEmpreendimento;IdeNucleoCEG;DscFonteCombustivel\nUsina \x81 Ó;5;Petróleo\n".encode("latin-1"))
+    df = ler_siga(arq)
+    assert df.attrs["encoding"] == "latin-1"
+    assert df["DscFonteCombustivel"].iloc[0] == "Petróleo"
+    assert classificar_siga(df)["subsetor"].iloc[0] == PET
 
 
 def test_ler_siga_separador_virgula(tmp_path):

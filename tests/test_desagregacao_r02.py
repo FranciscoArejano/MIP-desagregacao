@@ -249,20 +249,32 @@ def test_t8_residuo_negativo_reduz_identificados(mip):
 # ---------------------------------------------------------------------------------------------
 def test_tetos(mip, res_e1):
     tet = res_e1.extras["tetos_atingidos"]
-    m2 = res_e1.mip
+    m2, e = res_e1.mip, res_e1.especificacao
     # PET-RS é latente: todo o refino (S19) comprado pelo S38-RS vai aos demais, na proporção do VBP
     j_pet = _idx(res_e1, "RS", "S38_PET")
     assert ((tet["regiao"] == "RS") & (tet["subsetor"] == "S38_PET")).any()
     for q in ("RS", "RB"):
         assert m2.Z[m2.indice(q, "S19"), j_pet] == 0
-    # nenhum subsetor com teto passa do teto
-    for x in tet.itertuples():
-        reg_f, cod_f = x.fornecedor.split()
-        assert m2.Z[m2.indice(reg_f, cod_f), _idx(res_e1, x.regiao, x.subsetor)] == pytest.approx(x.teto, abs=1e-9)
-    # o fornecedor continua inteiro (re-agregação)
+    # o teto vale sobre o TOTAL do insumo (todas as origens; S03 + S09 dividem o mesmo teto)
+    grupos = {"S04": ["S04"], "S05": ["S05"], "S19": ["S19"], "lenha_bagaco": ["S03", "S09"]}
+    tetos = {"S04": ("S38_CAR", 0.40), "S05": ("S38_GN", 0.60), "S19": ("S38_PET", 0.60), "lenha_bagaco": ("S38_BIO", 0.40)}
+    for r in ("RS", "RB"):
+        for chave, cods in grupos.items():
+            sub, frac = tetos[chave]
+            j = _idx(res_e1, r, sub)
+            total = sum(m2.Z[m2.indice(q, c), j] for q in ("RS", "RB") for c in cods)
+            assert total <= frac * m2.X[j] + 1e-9, (r, chave)
+            hit = tet[(tet["regiao"] == r) & (tet["insumo_ou_grupo"] == chave) & (tet["subsetor"] == sub)]
+            if len(hit):
+                assert total == pytest.approx(hit["teto"].item(), abs=1e-9)
+                assert hit["valor_pela_regra"].item() > hit["teto"].item()
+    # cada fornecedor continua inteiro (re-agregação)
     for q in ("RS", "RB"):
-        i = m2.indice(q, "S05")
-        assert m2.Z[i, _bloco(res_e1, "RB")].sum() == pytest.approx(mip.Z[mip.indice(q, "S05"), mip.indice("RB", "S38")])
+        for c in ("S03", "S04", "S05", "S09", "S19"):
+            i = m2.indice(q, c)
+            for r in ("RS", "RB"):
+                assert m2.Z[i, _bloco(res_e1, r)].sum() == pytest.approx(mip.Z[mip.indice(q, c), mip.indice(r, "S38")])
+    assert e.regras_coluna.loc[e.regras_coluna["fornecedor"].isin(["S03", "S09"]), "grupo_teto"].eq("lenha_bagaco").all()
 
 
 def test_alocar_com_teto_unitario():
@@ -344,3 +356,55 @@ def test_exportacao_11_subsetores(tmp_path, res_e1):
     nomes = openpyxl.load_workbook(tmp_path / "m.xlsx", read_only=True).sheetnames
     for aba in ("componentes_bloco", "tetos_atingidos", "niveis", "coef_latentes", "checagens"):
         assert aba in nomes
+
+
+# ---------------------------------------------------------------------------------------------
+# Regressões dos achados da revisão adversarial (Rodada 02)
+# ---------------------------------------------------------------------------------------------
+def test_roteamento_com_regiao_nao_desagregada(mip):
+    """D2 = só RS: o roteamento manda a parte do RB ao S38-RB agregado e as checagens não acusam FALHA falsa."""
+    e = espec_11_ficticia()
+    e.regioes = ["RS"]
+    e.participacoes = e.participacoes[e.participacoes["regiao"] == "RS"].reset_index(drop=True)
+    e.componentes = e.componentes[e.componentes["regiao"] != "RB"].reset_index(drop=True)
+    e.regras_primarios = e.regras_primarios[e.regras_primarios["regiao"] != "RB"].reset_index(drop=True)
+    e.latentes_espelho = e.latentes_espelho.iloc[0:0]
+    res = desagregar(mip, e)  # estrito: não pode levantar
+    chk = res.checagens.set_index("checagem")
+    assert chk.loc["roteamento_fracao_transmissao", "status"] == "OK"
+    m2 = res.mip
+    tra = _idx(res, "RS", "S38_TRA")
+    T = e.componente("RS", "vbp_transmissao")
+    F = sum(mip.Z[mip.indice("RS", "S38"), mip.indice(q, "S38")] for q in ("RS", "RB"))
+    frac_rb = mip.Z[mip.indice("RS", "S38"), mip.indice("RB", "S38")] / F
+    assert m2.Z[tra, m2.indice("RB", "S38")] == pytest.approx(T * frac_rb)
+    assert m2.Z[tra, _idx(res, "RS", "S38_DIS")] == pytest.approx(0.5 * T * (1 - frac_rb))
+
+
+def test_roteamento_detecta_geracao_vendendo_fora_do_bloco(mip):
+    """Geração ou transmissão com venda fora do bloco (ex.: parcela negativa da discrepância) dá FALHA."""
+    e = espec_11_ficticia()
+    e.regras_linha = e.regras_linha[e.regras_linha["comprador"] != "DISCREP"].reset_index(drop=True)
+    e.regras_linha.loc[e.regras_linha["comprador"] == "*", ["regra", "subsetor", "valor"]] = ["proporcional_vbp", "", np.nan]
+    res = desagregar(mip, e, estrito=False)
+    chk = res.checagens.set_index("checagem")
+    assert chk.loc["roteamento_geracao_e_transmissao_nao_vendem_fora", "status"] == "FALHA"
+
+
+def test_e3_continua_verificando_o_resto(mip, variantes):
+    """Na E3 só o S38 pode diferir da base (pelo resíduo); um erro em outro setor continua dando FALHA."""
+    from mip.desagregacao import verificar
+
+    res = variantes["sem_residuo"]
+    chk = res.checagens.set_index("checagem")
+    assert "exatamente o resíduo" in chk.loc["satelite_co2e_preservado", "detalhe"]
+    assert chk.loc["reagregacao_S", "status"] == "OK"
+    k = ITENS_SATELITE.index("co2e")
+    j = res.mip.indice("RS", "S10")
+    original = res.mip.S[k, j]
+    try:
+        res.mip.S[k, j] = original + 1000.0
+        chk2 = verificar(res).set_index("checagem")
+        assert chk2.loc["reagregacao_S", "status"] == "FALHA"
+    finally:
+        res.mip.S[k, j] = original

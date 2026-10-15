@@ -21,7 +21,8 @@ sobre o arquivo real:
 - encoding UTF-8 (com ou sem BOM); Windows-1252/Latin-1 também são aceitos;
 - separador ';' (',', tabulação e '|' são detectados se aparecerem no cabeçalho);
 - colunas numéricas (`Mda*`, `NumCoord*`) com decimal vírgula; se alguma célula tiver vírgula,
-  o ponto é tratado como separador de milhar.
+  o ponto só é aceito como separador de milhar ('1.500,25'); '-', 'X', '...' viram ausente.
+  Coluna que não converte inteira fica como texto (essas colunas não são usadas na classificação).
 
 Regras de classificação (Seção 5.2), aplicadas a `DscFonteCombustivel` sem acento/maiúsculas:
   Carvão mineral → S38_CAR; Gás natural → S38_GN; Petróleo → S38_PET;
@@ -156,9 +157,17 @@ REGRAS_NOM_FONTE_RESERVA: tuple[tuple[str, str], ...] = (
 # CEG: <tipo>.<combustível>.<UF>.<núcleo de 6 dígitos>-<dígito>.<versão>, ex.: UTE.GN.RS.028038-0.01
 _RE_CEG_COMPLETO = re.compile(r"^[A-Z]{2,4}\.[A-Z0-9]{1,4}\.[A-Z]{2}\.(\d{6})-\d(?:\.\d{1,2})?$")
 _RE_CEG_NUCLEO = re.compile(r"^(\d{6})-\d(?:\.\d{1,2})?$")  # só '028038-0' ou '028038-0.01'
-_RE_SO_DIGITOS = re.compile(r"^(\d{1,6})(?:\.0)?$")  # '28038', '028038' ou '28038.0' (float lido como texto)
+# '28038', '028038', '28038.0' (float lido como texto) ou '28038,00' (decimal vírgula). Só 1 ou 2 zeros
+# depois do separador: com 3 dígitos ('123.000') seria ambíguo com separador de milhar.
+_RE_SO_DIGITOS = re.compile(r"^(\d{1,6})(?:[.,]0{1,2})?$")
+# '28.038' ou '128.038': número formatado com separador de milhar pt-BR (núcleo é inteiro, então
+# 3 dígitos depois do ponto só podem ser milhar).
+_RE_MILHAR = re.compile(r"^(\d{1,3})\.(\d{3})$")
+_RE_TRACOS = re.compile(r"[\u2010-\u2015\u2212]")  # hífens/travessões Unicode → '-'
 _RE_SEPARA_CEGS = re.compile(r"[,;|/]+")
 _VAZIOS = {"", "-", "--", "nan", "none", "null", "na", "n/a"}
+# Marcadores de valor ausente/sigiloso em colunas numéricas.
+_MARCADORES_AUSENTE = _VAZIOS | {"x", "...", "\u2026", "*"}
 
 
 # --------------------------------------------------------------------------------------------
@@ -195,7 +204,7 @@ def _chave_coluna(nome) -> str:
 
 
 def _limpar_nome_coluna(nome) -> str:
-    return str(nome).replace("﻿", "").strip().strip('"').strip("'").strip()
+    return str(nome).replace("\ufeff", "").strip().strip('"').strip("'").strip()
 
 
 def _texto_ou_none(valor) -> str | None:
@@ -243,7 +252,7 @@ def nucleo_ceg(ceg) -> str | None:
       (maiúsculas/minúsculas e espaços são ignorados);
     - só o núcleo com dígito verificador: '028038-0' ou '028038-0.01' → '028038';
     - o `IdeNucleoCEG` do SIGA como número ou texto, com ou sem zeros à esquerda:
-      28038, '28038', '028038', 28038.0 → '028038'.
+      28038, '28038', '028038', 28038.0, '28038.0', '28038,00', '28.038' (milhar pt-BR) → '028038'.
     Vários CEGs na mesma célula (separados por ',', ';', '|' ou '/') só são aceitos se todos
     tiverem o mesmo núcleo. Devolve None para vazio, '-', NaN, zero, número com mais de
     6 dígitos ou qualquer formato não reconhecido.
@@ -260,9 +269,17 @@ def nucleo_ceg(ceg) -> str | None:
     if not isinstance(ceg, str):
         return None
 
-    texto = ceg.strip()
+    texto = _RE_TRACOS.sub("-", ceg.strip())
     if texto.lower() in _VAZIOS:
         return None
+    # número inteiro escrito como texto (antes de separar por ',': '28038,0' é decimal vírgula)
+    compacto = re.sub(r"\s+", "", texto)
+    m = _RE_SO_DIGITOS.match(compacto)
+    if m:
+        return _nucleo_de_inteiro(int(m.group(1)))
+    m = _RE_MILHAR.match(compacto)
+    if m:
+        return _nucleo_de_inteiro(int(m.group(1) + m.group(2)))
     nucleos: set[str] = set()
     for pedaco in _RE_SEPARA_CEGS.split(texto):
         pedaco = re.sub(r"\s+", "", pedaco).upper()
@@ -313,15 +330,37 @@ def _detectar_separador(texto: str) -> str:
     return melhor if contagens[melhor] > 0 else ";"
 
 
+_RE_MILHAR_PONTO = re.compile(r"^[+-]?\d{1,3}(?:\.\d{3})+$")
+
+
 def _para_numero(serie: pd.Series) -> pd.Series | None:
-    """Converte texto numérico com decimal vírgula ou ponto; None se alguma célula não converter."""
-    s = serie.astype(object).map(lambda v: None if _vazio(v) else str(v).strip().replace(" ", ""))
+    """Converte texto numérico com decimal vírgula ou ponto; None se alguma célula não converter.
+
+    Marcadores de ausente/sigiloso ('-', 'X', '...', '…', '*') viram NaN. Se a coluna tiver
+    alguma vírgula, ela é o separador decimal e o ponto só é aceito como separador de milhar
+    ('1.500,25', '1.500'); uma célula como '1500.25' nessa coluna é ambígua e deixa a coluna
+    como texto (em vez de virar 150025 sem aviso).
+    """
+    def limpar(v):
+        if _vazio(v):
+            return None
+        t = str(v).strip().replace(" ", "")
+        return None if t.lower() in _MARCADORES_AUSENTE else t
+
+    s = serie.astype(object).map(limpar)
     preenchidos = s.notna()
     if not preenchidos.any():
         return None
-    if s[preenchidos].str.contains(",", regex=False).any():
-        # decimal vírgula: o ponto, se houver, é separador de milhar
-        s = s.map(lambda v: v.replace(".", "").replace(",", ".") if isinstance(v, str) else v)
+    if s[preenchidos].map(lambda v: "," in v).any():
+        def de_virgula(v):
+            if not isinstance(v, str):
+                return v
+            if "," in v:
+                return v.replace(".", "").replace(",", ".")
+            if "." in v:
+                return v.replace(".", "") if _RE_MILHAR_PONTO.match(v) else "ambiguo"
+            return v
+        s = s.map(de_virgula)
     num = pd.to_numeric(s, errors="coerce")
     if num[preenchidos].isna().any():
         return None

@@ -63,7 +63,7 @@ TOL_REAGREGACAO = 1e-6
 COLS_SUBSETORES = ["codigo", "nome", "tipo"]
 COLS_PARTICIPACOES = ["regiao", "subsetor", "participacao", "fonte"]
 COLS_REGRAS_COLUNA = ["regiao", "fornecedor", "regiao_fornecedor", "regra", "subsetor", "valor", "teto_vbp",
-                      "destino_excedente", "fonte"]
+                      "destino_excedente", "grupo_teto", "fonte"]
 COLS_REGRAS_LINHA = ["regiao", "comprador", "regiao_comprador", "regra", "subsetor", "valor", "fixar_no_ras", "fonte"]
 COLS_REGRAS_PRIMARIOS = ["regiao", "item", "regra", "subsetor", "valor", "fonte"]
 COLS_COEF_LATENTES = ["regiao", "subsetor", "tipo_linha", "regiao_linha", "codigo_linha", "coeficiente", "fonte"]
@@ -372,6 +372,7 @@ class _Grupo:
     fixar: bool = False
     tetos: dict = field(default_factory=dict)  # subsetor → teto como fração do VBP (fixa_com_teto)
     destino: str = "demais_vbp"  # destino do excedente dos tetos
+    grupo_teto: str = ""  # insumos que dividem o mesmo teto (vazio = o código do fornecedor, todas as origens)
 
 
 def _agrupar(tab: pd.DataFrame, chave_cols: list[str], nome: str) -> list[_Grupo]:
@@ -396,7 +397,11 @@ def _agrupar(tab: pd.DataFrame, chave_cols: list[str], nome: str) -> list[_Grupo
         destinos = {d for d in g["destino_excedente"] if d} if "destino_excedente" in g else set()
         if len(destinos) > 1:
             raise EspecificacaoInvalida(f"{nome}: chave {chave} com mais de um destino_excedente: {sorted(destinos)}")
-        grupos.append(_Grupo(chave, regras[0], valores, fontes, fixar, tetos, destinos.pop() if destinos else "demais_vbp"))
+        gts = {x for x in g["grupo_teto"] if x} if "grupo_teto" in g else set()
+        if len(gts) > 1:
+            raise EspecificacaoInvalida(f"{nome}: chave {chave} com mais de um grupo_teto: {sorted(gts)}")
+        grupos.append(_Grupo(chave, regras[0], valores, fontes, fixar, tetos,
+                             destinos.pop() if destinos else "demais_vbp", gts.pop() if gts else ""))
     return grupos
 
 
@@ -519,36 +524,65 @@ def _pesos(grupo: _Grupo | None, ga: _GrupoAlvo, descricao: str) -> tuple[np.nda
     return w, regra, fonte
 
 
+def _alocar_grupo_com_teto(celulas: list[tuple[float, _Grupo]], ga: _GrupoAlvo, X_sub: np.ndarray,
+                           descricao: str) -> tuple[list[np.ndarray], list[dict]]:
+    """Reparte um insumo (todas as origens, e os insumos que dividem o mesmo grupo_teto) com tetos sobre o TOTAL.
+
+    Cada célula (valor, regra) é repartida primeiro pelas participações fixas da sua regra. Para cada subsetor
+    com teto, o total do grupo (soma das células) fica limitado a teto × VBP; quando o teto é atingido, a parte
+    de cada célula nesse subsetor é reduzida na mesma proporção. O excedente de cada célula vai, conforme o
+    `destino_excedente` da regra, aos "demais" subsetores (sem teto no grupo), na proporção do VBP
+    ('demais_vbp'), ou aos subsetores da regra sem teto, na proporção das participações ('sem_teto').
+    Cada célula continua somando o seu valor original (re-agregação exata). Valores ≤ 0 não são limitados.
+    Devolve a alocação de cada célula e a lista dos tetos atingidos (no total do grupo).
+    """
+    tetos: dict[str, float] = {}
+    for _, g in celulas:
+        for c, tt in g.tetos.items():
+            if c in tetos and abs(tetos[c] - tt) > 1e-12:
+                raise EspecificacaoInvalida(f"{descricao}: tetos diferentes para {c} no mesmo grupo ({tetos[c]} e {tt})")
+            tetos[c] = tt
+    bases = []
+    for z, g in celulas:
+        w, _, _ = _pesos(g, ga, descricao)
+        bases.append(w * z)
+    pos = [z > 0 for z, _ in celulas]
+    base_tot = sum((b for b, p in zip(bases, pos) if p), np.zeros(len(ga.codigos)))
+    fator = np.ones(len(ga.codigos))
+    atingidos = []
+    for k, c in enumerate(ga.codigos):
+        if c in tetos:
+            lim = tetos[c] * X_sub[k]
+            if base_tot[k] > lim + 1e-12:
+                fator[k] = lim / base_tot[k]
+                atingidos.append({"subsetor": c, "valor_pela_regra": base_tot[k], "teto": lim,
+                                  "teto_fracao_vbp": tetos[c], "excedente": base_tot[k] - lim})
+    com_teto = np.array([c in tetos for c in ga.codigos])
+    alocs = []
+    for (z, g), b, p in zip(celulas, bases, pos):
+        if not p:
+            alocs.append(b)
+            continue
+        aloc = b * fator
+        exced = z - aloc.sum()
+        if exced > 1e-12 * max(1.0, abs(z)):
+            if g.destino == "sem_teto":
+                w, _, _ = _pesos(g, ga, descricao)
+                base = np.where(com_teto, 0.0, w)
+            else:
+                base = np.where(com_teto, 0.0, X_sub)
+            if base.sum() <= 0:
+                raise EspecificacaoInvalida(f"{descricao}: excedente de teto ({exced:.4f}) sem destinatário ({g.destino})")
+            aloc = aloc + exced * base / base.sum()
+        alocs.append(aloc)
+    return alocs, atingidos
+
+
 def _alocar_com_teto(grupo: _Grupo, ga: _GrupoAlvo, valor: float, X_sub: np.ndarray,
                      descricao: str) -> tuple[np.ndarray, list[dict]]:
-    """Reparte `valor` pelas participações fixas, limitando cada subsetor com teto a teto × VBP.
-
-    O excedente vai para os "demais" subsetores (os que não têm teto nesta regra), na proporção do VBP
-    (destino 'demais_vbp'), ou para os subsetores da regra sem teto, na proporção das participações
-    (destino 'sem_teto'). Devolve a alocação e a lista dos tetos atingidos.
-    """
-    w, _, _ = _pesos(grupo, ga, descricao)
-    aloc = w * valor
-    atingidos = []
-    if valor <= 0:  # valores negativos ou nulos não são limitados
-        return aloc, atingidos
-    for k, c in enumerate(ga.codigos):
-        if c in grupo.tetos:
-            lim = grupo.tetos[c] * X_sub[k]
-            if aloc[k] > lim + 1e-12:
-                atingidos.append({"subsetor": c, "valor_pela_regra": aloc[k], "teto": lim,
-                                  "teto_fracao_vbp": grupo.tetos[c], "excedente": aloc[k] - lim})
-                aloc[k] = lim
-    exced = valor - aloc.sum()
-    if exced > 1e-12:
-        if grupo.destino == "sem_teto":
-            base = np.array([w[k] if c not in grupo.tetos else 0.0 for k, c in enumerate(ga.codigos)])
-        else:
-            base = np.array([X_sub[k] if c not in grupo.tetos else 0.0 for k, c in enumerate(ga.codigos)])
-        if base.sum() <= 0:
-            raise EspecificacaoInvalida(f"{descricao}: excedente de teto ({exced:.4f}) sem destinatário ({grupo.destino})")
-        aloc = aloc + exced * base / base.sum()
-    return aloc, atingidos
+    """Caso de uma única célula de `_alocar_grupo_com_teto`."""
+    alocs, atingidos = _alocar_grupo_com_teto([(valor, grupo)], ga, X_sub, descricao)
+    return alocs[0], atingidos
 
 
 # =============================================================================================
@@ -991,6 +1025,7 @@ def desagregar(mip: MIP, espec: Especificacao, estrito: bool = True) -> Resultad
     for r, ga in grupos.items():
         j = ga.idx_orig
         X_sub = X2[ga.idx_novo]
+        com_teto = {}  # (grupo do teto) → células [(i, i2, z, regra)]
         for i, i2 in zip(fora, fora2):
             def pont(ch, r=r, i=i):
                 if not (_casa(ch["regiao"], r) and _casa(ch["fornecedor"], cod_orig[i]) and _casa(ch["regiao_fornecedor"], reg_orig[i])):
@@ -1000,16 +1035,24 @@ def desagregar(mip: MIP, espec: Especificacao, estrito: bool = True) -> Resultad
             g = _escolher(g_col, pont, desc) if ga.desagregado else None
             z = mip.Z[i, j]
             if g is not None and g.regra == "fixa_com_teto":
-                aloc, atingidos = _alocar_com_teto(g, ga, z, X_sub, desc)
-                for a in atingidos:
-                    tetos_reg.append({"regiao": r, "fornecedor": f"{reg_orig[i]} {cod_orig[i]}", "valor_total": z, **a,
-                                      "destino_excedente": g.destino, "fonte": g.fonte})
-                Z2[i2, ga.idx_novo] = aloc
-                w, regra, fonte = (aloc / z if z else aloc * 0.0), g.regra, g.fonte
-            else:
-                w, regra, fonte = _pesos(g, ga, desc)
-                Z2[i2, ga.idx_novo] = w * z
+                com_teto.setdefault(g.grupo_teto or cod_orig[i], []).append((i, i2, z, g))
+                continue
+            w, regra, fonte = _pesos(g, ga, desc)
+            Z2[i2, ga.idx_novo] = w * z
             registrar("coluna", ga, f"{reg_orig[i]} {cod_orig[i]}", regra, fonte, w)
+        # tetos sobre o total do insumo (todas as origens) ou do grupo de insumos
+        for chave_teto, cels in com_teto.items():
+            desc = f"coluna {r} {t} ← {chave_teto} (teto sobre o total)"
+            alocs, atingidos = _alocar_grupo_com_teto([(z, g) for _, _, z, g in cels], ga, X_sub, desc)
+            for (i, i2, z, g), aloc in zip(cels, alocs):
+                Z2[i2, ga.idx_novo] = aloc
+                registrar("coluna", ga, f"{reg_orig[i]} {cod_orig[i]}", g.regra, g.fonte, aloc / z if z else aloc * 0.0)
+            for a in atingidos:
+                tetos_reg.append({"regiao": r, "insumo_ou_grupo": chave_teto,
+                                  "origens": ", ".join(f"{reg_orig[i]} {cod_orig[i]}" for i, _, _, _ in cels),
+                                  "valor_total": sum(z for _, _, z, _ in cels), **a,
+                                  "destino_excedente": "; ".join(sorted({g.destino for _, _, _, g in cels})),
+                                  "fonte": "; ".join(sorted({g.fonte for _, _, _, g in cels if g.fonte}))})
     if tetos_reg:
         extras["tetos_atingidos"] = pd.DataFrame(tetos_reg)
 
@@ -1239,19 +1282,24 @@ def verificar(res: ResultadoDesagregacao) -> pd.DataFrame:
         status = "OK" if ok else ("ALERTA" if alerta else "FALHA")
         linhas.append((nome, status, valor, tol, detalhe))
 
-    # itens satélite que, por especificação, não preservam o total da base (níveis sem resíduo, variante E3)
+    # itens satélite que, por especificação, não preservam o total da base (níveis sem resíduo, variante E3):
+    # nesses casos o valor esperado do setor-alvo da região é a soma dos níveis (base − resíduo), e todo o
+    # resto continua tendo de bater com a original
     niv = res.extras.get("niveis")
     nao_preserva = set(niv.loc[~niv["preserva_total"].astype(bool), "item"]) if niv is not None and len(niv) else set()
+    S_esperado = m1.S.copy()
+    if nao_preserva:
+        for x in niv[~niv["preserva_total"].astype(bool)].itertuples():
+            S_esperado[ITENS_SATELITE.index(x.item), m1.indice(x.regiao, res.especificacao.setor_alvo)] = x.identificado
 
     # 1) re-agregação
     ag = agregar(m2, mapa, m1.setores)
     for nome in ["Z", "F", "X", "total_linha", "V", "S", "V_df", "X_df"]:
-        A, B = getattr(ag, nome), getattr(m1, nome)
+        A, B = getattr(ag, nome), (S_esperado if nome == "S" else getattr(m1, nome))
         detalhe = "máx |Σ subsetores − original|"
         if nome == "S" and nao_preserva:
-            manter = [k for k, it in enumerate(ITENS_SATELITE) if it not in nao_preserva]
-            A, B = A[manter], B[manter]
-            detalhe += f" (exceto {sorted(nao_preserva)}: variante que não preserva o total da base)"
+            detalhe += (f"; para {sorted(nao_preserva)} sem resíduo (E3), o esperado no setor-alvo é a soma dos níveis "
+                        "(original − resíduo)")
         d = float(np.abs(A - B).max()) if np.size(A) else 0.0
         add(f"reagregacao_{nome}", d <= TOL_REAGREGACAO, d, TOL_REAGREGACAO, detalhe)
     d = max((abs(m2.totais_ev[k] - m1.totais_ev[k]) for k in m1.totais_ev), default=0.0)
@@ -1313,8 +1361,10 @@ def verificar(res: ResultadoDesagregacao) -> pd.DataFrame:
         dif = m2.S[k] @ _matriz_agregacao(mapa, m1.n, m2.n).T - m1.S[k]
         d = float(np.abs(dif).max())
         if it in nao_preserva:
+            ok_niv = float(np.abs(m2.S[k] @ _matriz_agregacao(mapa, m1.n, m2.n).T - S_esperado[k]).max()) <= TOL_REAGREGACAO
             add(f"satelite_{it}_preservado", False, d, TOL_REAGREGACAO,
-                f"NÃO PRESERVA O TOTAL DA BASE (níveis sem resíduo): diferença total = {dif.sum():.4f}", alerta=True)
+                f"NÃO PRESERVA O TOTAL DA BASE (níveis sem resíduo, E3): diferença total = {dif.sum():.4f}; "
+                + ("a diferença é exatamente o resíduo" if ok_niv else "A DIFERENÇA NÃO É O RESÍDUO"), alerta=ok_niv)
         else:
             add(f"satelite_{it}_preservado", d <= TOL_REAGREGACAO, d, TOL_REAGREGACAO)
     if niv is not None and len(niv):
@@ -1343,7 +1393,10 @@ def verificar(res: ResultadoDesagregacao) -> pd.DataFrame:
     add("L_nao_negativa", mod.L.min() >= -1e-10, float(mod.L.min()), -1e-10)
     add("L_diagonal_maior_igual_1", np.diag(mod.L).min() >= 1 - 1e-10, float(np.diag(mod.L).min()), 1.0)
     cs = mod.A.sum(axis=0)
-    add("A_soma_colunas_menor_1", (cs < 1).all(), float(cs.max()), 1.0, "Σ coeficientes técnicos de cada coluna", alerta=True)
+    acima = [f"{m2.setores['id'][k]} ({cs[k]:.4f})" for k in np.flatnonzero(cs >= 1)]
+    add("A_soma_colunas_menor_1", (cs < 1).all(), float(cs.max()), 1.0,
+        "Σ coeficientes técnicos de cada coluna (inclui latentes)" + ("; ≥ 1 em: " + ", ".join(acima) if acima else ""),
+        alerta=True)
 
     # 8) RAS
     if len(res.info_ras):
@@ -1353,37 +1406,43 @@ def verificar(res: ResultadoDesagregacao) -> pd.DataFrame:
                       f"{'convergiu' if r.convergiu else 'NÃO convergiu'} em {r.iteracoes} iterações, "
                       f"erro {r.erro_max:.2e} (inicial {r.erro_inicial:.2e})" for r in res.info_ras.itertuples()))
 
-    # 9) roteamento por componentes: energia, transmissão, fração da transmissão e fluxos regionais
+    # 9) roteamento por componentes: energia, transmissão, fração da transmissão e vendas fora do bloco
     comp = res.extras.get("componentes_bloco")
     if comp is not None and len(comp) and res.especificacao.bloco == "roteamento_por_componentes":
+        e = res.especificacao
         tipo = dict(zip(mapa["id_novo"], mapa["tipo_subsetor"].map(tipo_canonico)))
         ids = list(m2.setores["id"])
-        bloco_novo = [k for k in sub]
-        erros_e, erros_t, erros_a = [], [], []
+        alvo_todos = mapa.loc[mapa["codigo_original"] == e.setor_alvo, "indice_novo"].to_numpy()  # inclui agregados
+        fora_bloco = np.setdiff1d(np.arange(m2.n), alvo_todos)
+        regs_des = set(mapa.loc[mapa["desagregado"], "regiao"])
+        erros_e, erros_t, erros_a, fora_abs = [], [], [], []
         for c in comp.to_dict("records"):
             r = c["regiao"]
-            linhas_r = [k for k in bloco_novo if m2.setores["regiao"][k] == r]
+            linhas_r = [k for k in sub if m2.setores["regiao"][k] == r]
             ger = [k for k in linhas_r if tipo[ids[k]] == "geracao"]
             tra = [k for k in linhas_r if tipo[ids[k]] == "transmissao"]
-            dis_todas = [k for k in bloco_novo if tipo[ids[k]] == "distribuicao"]
-            ger_todas = [k for k in bloco_novo if tipo[ids[k]] == "geracao"]
+            dis_todas = [k for k in sub if tipo[ids[k]] == "distribuicao"]
+            ger_todas = [k for k in sub if tipo[ids[k]] == "geracao"]
             E, T = c["E_r (energia = VBP da geração)"], c["T_r (transmissão)"]
-            vend_ger = m2.Z[ger].sum() + m2.F[ger].sum()  # tudo o que a geração vende (deve ser só no bloco)
-            vend_tra = m2.Z[tra].sum() + m2.F[tra].sum()
-            erros_e.append(abs(vend_ger - E))
-            erros_t.append(abs(vend_tra - T))
+            erros_e.append(abs(m2.Z[np.ix_(ger, alvo_todos)].sum() - E))
+            erros_t.append(abs(m2.Z[np.ix_(tra, alvo_todos)].sum() - T))
+            fora_abs.append(float(np.abs(m2.Z[np.ix_(ger + tra, fora_bloco)]).sum() + np.abs(m2.F[ger + tra]).sum()))
             if T > 0:
-                a = m2.Z[np.ix_(tra, dis_todas)].sum() / T
-                alfa = res.especificacao.componente(r, "fracao_transmissao_distribuicao")
-                erros_a.append(abs(a - alfa))
-                if ger_todas:
-                    erros_a.append(abs(m2.Z[np.ix_(tra, ger_todas)].sum() / T - (1 - alfa)))
+                i0 = m1.indice(r, e.setor_alvo)
+                Fr = sum(m1.Z[i0, m1.indice(q, e.setor_alvo)] for q in m1.lista_regioes)
+                frac_des = sum(m1.Z[i0, m1.indice(q, e.setor_alvo)] for q in regs_des) / Fr
+                alfa = e.componente(r, "fracao_transmissao_distribuicao")
+                erros_a.append(abs(m2.Z[np.ix_(tra, dis_todas)].sum() - alfa * T * frac_des) / T)
+                erros_a.append(abs(m2.Z[np.ix_(tra, ger_todas)].sum() - (1 - alfa) * T * frac_des) / T)
         add("roteamento_vendas_geracao_igual_E", max(erros_e) <= TOL_REAGREGACAO, max(erros_e), TOL_REAGREGACAO,
-            "Σ vendas da geração de r = E_r = F_r − T_r − G_r")
+            "Σ vendas da geração de r dentro do bloco = E_r = F_r − T_r − G_r")
         add("roteamento_vendas_transmissao_igual_T", max(erros_t) <= TOL_REAGREGACAO, max(erros_t), TOL_REAGREGACAO,
-            "Σ vendas da transmissão de r = T_r (todas dentro do bloco)")
+            "Σ vendas da transmissão de r dentro do bloco = T_r")
+        add("roteamento_geracao_e_transmissao_nao_vendem_fora", max(fora_abs) <= TOL_REAGREGACAO, max(fora_abs),
+            TOL_REAGREGACAO, "Σ |vendas| da geração e da transmissão fora do bloco e à demanda final (Seção 6.4)")
         add("roteamento_fracao_transmissao", max(erros_a, default=0.0) <= 1e-9, max(erros_a, default=0.0), 1e-9,
-            "fração da transmissão paga pela distribuição (e o restante pela geração)")
+            "fração da transmissão paga pela distribuição e pela geração das regiões desagregadas "
+            "(o S38 agregado de região não desagregada recebe a sua parte inteira)")
     if res.especificacao.bloco != "proporcional":
         grupos_idx = {}
         for k, row in mapa.iterrows():
@@ -1399,7 +1458,7 @@ def verificar(res: ResultadoDesagregacao) -> pd.DataFrame:
     tet = res.extras.get("tetos_atingidos")
     if tet is not None:
         add("tetos_atingidos", True, len(tet), 0, "; ".join(
-            f"{x.regiao} {x.fornecedor}→{x.subsetor}: excedente {x.excedente:.4f}" for x in tet.itertuples()))
+            f"{x.regiao} {x.insumo_ou_grupo}→{x.subsetor}: excedente {x.excedente:.4f}" for x in tet.itertuples()))
 
     # 10) latentes
     if m2.coef_latentes is not None and len(m2.coef_latentes):

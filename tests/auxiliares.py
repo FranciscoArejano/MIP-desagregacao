@@ -173,6 +173,7 @@ def espec_11_ficticia(modo_niveis: str = "residuo", gas_termicas: float = 0.0, n
     col += [("*", f, "*", "fixa_com_teto", "S38_BIO", 1.0, 0.40, "demais_vbp") for f in ("S03", "S09")]
     regras_coluna = pd.DataFrame(col, columns=["regiao", "fornecedor", "regiao_fornecedor", "regra", "subsetor",
                                                "valor", "teto_vbp", "destino_excedente"])
+    regras_coluna["grupo_teto"] = np.where(regras_coluna["fornecedor"].isin(["S03", "S09"]), "lenha_bagaco", "")
     regras_coluna["fonte"] = FONTE
     lin = [("*", "*", "*", "fixa_por_comprador", "S38_DIS", 1.0, False),
            ("*", "S08:S37|S43|FAM", "*", "somente_distribuicao_e_gas", "", np.nan, False),

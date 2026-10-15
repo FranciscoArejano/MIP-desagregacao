@@ -29,8 +29,9 @@ formato documentado nas instruções e testado só com dados sintéticos
   utf-8-sig → utf-8 → cp1252 → latin-1 (cp1252 é o "Latin-1" do Windows e só difere nos
   bytes 0x80–0x9F); separador detectado no cabeçalho (';' por padrão).
 - Números: decimal vírgula com '.' de milhar opcional ("1.234,56"). A convenção é detectada
-  nas colunas de preço e energia em conjunto; sem nenhuma vírgula, assume-se ponto decimal
-  (com aviso se houver valores como "1.234", ambíguos). Pode ser forçada com `decimal=`.
+  nas colunas de preço e energia em conjunto ("166,40" vota vírgula; "166.40" vota ponto). Se
+  só houver valores ambíguos como "1.234", segue-se o formato documentado (separador ';' →
+  decimal vírgula, logo 1234), com aviso. Pode ser forçada com `decimal=`.
 - Datas: dd/mm/aaaa ou aaaa-mm-dd, com ou sem hora; a hora é descartada (só o dia importa).
 - Cada linha do CSV é um registro de venda (leilão × produto/empreendimento) com preço e
   energia próprios; a ponderação é feita registro a registro.
@@ -128,17 +129,26 @@ ROTULO_IPCA_MEDIA = "IPCA_MEDIA_2019"
 # animais e biocombustíveis → BIO (5.2); gás de alto-forno/coqueria → CAR e gás de refinaria e
 # petróleo → PET (5.2). Siglas usuais da ANEEL para eólica (EOL) e fotovoltaica (UFV) também
 # são aceitas. Uma descrição que casa com mais de um subsetor (ex.: híbrida) fica sem mapa.
+# Revisão: "hidr..." restrito a hidro/hidrelétrica/hidráulica/hídrica (antes "Etanol hidratado"
+# e "Hidrocarboneto" iam para HID); carvão vegetal, etanol e óleos vegetais → BIO (Seção 3: CAR
+# é carvão MINERAL; Seção 5.2: Floresta e Biocombustíveis líquidos → BIO); gás siderúrgico e de
+# aciaria → CAR (Seção 3: CAR inclui gases siderúrgicos), não GN.
 _REGRAS_FONTE: tuple[tuple[str, re.Pattern], ...] = (
-    ("S38_HID", re.compile(r"\b(hidr(?!ogeni)\w*|pch|cgh|uhe)\b")),
+    ("S38_HID", re.compile(
+        r"\b(hidr(?:o(?!gen|carbon)\w*|eletric\w*|aulic\w*|ic\w*)|pch|cgh|uhe)\b"
+    )),
     ("S38_EOL", re.compile(r"\b(eolic\w*|eolio\w*|eol)\b")),
     ("S38_SOL", re.compile(r"\b(solar\w*|fotovoltaic\w*|ufv)\b")),
     ("S38_BIO", re.compile(
         r"\b(biomassa\w*|bagaco\w*|biogas\w*|biodiesel|biocombustive\w*|lenha|licor negro"
-        r"|residuos? solidos? urbanos?|florest\w*|agroindustria\w*|residuos? anima\w*)\b"
+        r"|residuos? solidos? urbanos?|florest\w*|agroindustria\w*|residuos? anima\w*"
+        r"|carvao vegeta\w*|etanol|oleos? vegeta\w*)\b"
     )),
-    ("S38_CAR", re.compile(r"\b(carvao|alto forno|coqueria)\b")),
-    ("S38_GN", re.compile(r"\bgas\b(?! de (alto forno|coqueria|refinaria))|\bgnl\b")),
-    ("S38_PET", re.compile(r"\b(oleo(?! vegetal)|diesel|petroleo|refinaria)\b")),
+    ("S38_CAR", re.compile(r"\b(carvao(?! vegeta)|alto forno|coqueria|aciaria|siderurgic\w*)\b")),
+    ("S38_GN", re.compile(
+        r"\bgas\b(?! (?:de )?(?:alto forno|coqueria|aciaria|refinaria|siderurgic))|\bgnl\b"
+    )),
+    ("S38_PET", re.compile(r"\b(oleo(?! vegeta)|diesel|petroleo|refinaria)\b")),
     ("S38_NUC", re.compile(r"\bnuclear\b")),
 )
 
@@ -209,12 +219,14 @@ def _limpar_numero(texto) -> str:
     return re.sub(r"\s+", "", t)
 
 
-def _detectar_decimal(valores: Iterable[str]) -> str:
+def _detectar_decimal(valores: Iterable[str], padrao_ambiguo: str = ",") -> str:
     """Convenção decimal de um conjunto de valores em texto: ',' (padrão ANEEL) ou '.'.
 
-    Votos: "1.234,56" e "166,40" → vírgula; "1,234.56" e "1,234,567" → ponto; "1.234.567" →
-    vírgula (pontos só podem ser milhar). Sem nenhuma vírgula nem pontos repetidos → ponto,
-    com aviso se houver valores como "1.234" (ambíguos: podem ser milhar).
+    Votos: "1.234,56" e "166,40" → vírgula; "1,234.56", "1,234,567" e "166.40" (ponto seguido
+    de um número de dígitos diferente de 3) → ponto; "1.234.567" → vírgula (pontos só podem ser
+    milhar). Se só houver valores como "1.234" (ambíguos: milhar ou decimal), usa
+    `padrao_ambiguo` — por padrão ',' (formato documentado do CSV da ANEEL: decimal vírgula com
+    '.' de milhar) — e emite aviso. Sem nenhuma evidência (só inteiros), devolve '.'.
     """
     virgula = ponto = 0
     ambiguos = []
@@ -234,17 +246,22 @@ def _detectar_decimal(valores: Iterable[str]) -> str:
                 ponto += 1
         elif v.count(".") > 1:
             virgula += 1
-        elif re.fullmatch(r"-?\d{1,3}\.\d{3}", v):
+        elif re.fullmatch(r"[-+]?\d{1,3}\.\d{3}", v):
             ambiguos.append(v)
-    if virgula >= ponto and virgula > 0:
+        elif re.fullmatch(r"[-+]?\d*\.\d+", v):
+            ponto += 1  # "166.40", "0.5", "1234.567": o ponto só pode ser decimal
+    if virgula > ponto or (virgula and virgula == ponto):
         return ","
-    if ambiguos and ponto == 0:
+    if ponto:
+        return "."
+    if ambiguos:
         warnings.warn(
-            "nenhuma vírgula decimal encontrada; assumindo ponto decimal, mas há valores ambíguos "
-            f"(ex.: {ambiguos[:3]}) que poderiam ter '.' como separador de milhar. "
-            "Use decimal=',' se for o caso.",
+            "nenhum valor decide a convenção decimal; há valores ambíguos "
+            f"(ex.: {ambiguos[:3]}) em que '.' pode ser milhar ou decimal. Assumindo "
+            f"decimal {padrao_ambiguo!r}. Informe decimal=',' ou decimal='.' para fixar.",
             stacklevel=3,
         )
+        return padrao_ambiguo
     return "."
 
 
@@ -337,8 +354,11 @@ def ler_leiloes(
     """
     texto, enc = _ler_texto(caminho, encoding)
     sep = separador or _detectar_separador(texto)
+    # skip_blank_lines=False: linhas em branco viram linhas vazias (descartadas abaixo), o que
+    # mantém `linha_arquivo` alinhado com o número real da linha no CSV.
     bruto = pd.read_csv(
-        io.StringIO(texto), sep=sep, dtype=str, keep_default_na=False, skipinitialspace=True
+        io.StringIO(texto), sep=sep, dtype=str, keep_default_na=False, skipinitialspace=True,
+        skip_blank_lines=False,
     )
     bruto.columns = [str(c).strip() for c in bruto.columns]
     mapa = _localizar_colunas(bruto.columns, COLUNAS_LEILOES, "CSV de leilões da ANEEL")
@@ -350,7 +370,11 @@ def ler_leiloes(
     bruto = bruto.loc[~vazias].reset_index(drop=True)
 
     col_preco, col_energia = por_padrao["preco_rs_mwh"], por_padrao["energia_mwmed"]
-    dec = decimal or _detectar_decimal(list(bruto[col_preco]) + list(bruto[col_energia]))
+    # valores só ambíguos ("1.234"): segue o formato documentado (';' → decimal vírgula)
+    dec = decimal or _detectar_decimal(
+        list(bruto[col_preco]) + list(bruto[col_energia]),
+        padrao_ambiguo="," if sep == ";" else ".",
+    )
     if dec not in (",", "."):
         raise ValueError(f"decimal deve ser ',' ou '.', não {dec!r}")
     preco, n_preco_nn = _converter_numeros(bruto[col_preco], dec)
@@ -535,11 +559,12 @@ def mapear_fonte_leilao(dsc) -> str | None:
 # --------------------------------------------------------------------------------------------
 # 4) Preços médios de 2019 por subsetor
 # --------------------------------------------------------------------------------------------
-@dataclass
+@dataclass(eq=False)
 class ResultadoPrecos:
     """Resultado de `precos_medios_2019`.
 
-    Desempacota como `(tabela, detalhe)`; os demais campos ficam como atributos:
+    Comporta-se como a tupla `(tabela, detalhe)` (desempacota, `res[0]`, `res[1]`, `len(res)`);
+    os demais campos ficam como atributos:
     - `tabela`: subsetor, preco_2019_rs_mwh, energia_mwmed_total, n_registros, primeiro_leilao,
       ultimo_leilao, origem;
     - `detalhe`: cada registro usado, com mês, índice do mês, fator de correção e preço de 2019;
@@ -562,6 +587,37 @@ class ResultadoPrecos:
 
     def __iter__(self) -> Iterator[pd.DataFrame]:
         return iter((self.tabela, self.detalhe))
+
+    def __getitem__(self, i):
+        return (self.tabela, self.detalhe)[i]
+
+    def __len__(self) -> int:
+        return 2
+
+
+def _colunas_numericas(*series: pd.Series) -> list[pd.Series]:
+    """Converte colunas de preço/energia em float.
+
+    Valores já numéricos passam direto; valores em texto (ex.: "95,00", "1.234,5") são
+    convertidos com a convenção decimal detectada no conjunto dos textos de todas as colunas.
+    """
+    def eh_texto(v) -> bool:
+        return isinstance(v, str)
+
+    textos = [v for s in series for v in s if eh_texto(v)]
+    dec = _detectar_decimal(textos) if textos else "."
+    saida = []
+    for s in series:
+        if pd.api.types.is_numeric_dtype(s) and not pd.api.types.is_bool_dtype(s):
+            saida.append(s.astype(float))
+            continue
+        mascara = s.map(eh_texto).astype(bool)
+        numeros = pd.to_numeric(s.where(~mascara, None), errors="coerce").astype(float)
+        if mascara.any():
+            convertidos, _ = _converter_numeros(s[mascara].astype(str), dec)
+            numeros[mascara] = convertidos.to_numpy()
+        saida.append(numeros)
+    return saida
 
 
 def _ordem_subsetor(subsetores: pd.Series) -> pd.Series:
@@ -594,15 +650,30 @@ def precos_medios_2019(
         raise ValueError(
             f"leilões: coluna(s) ausente(s) {faltando}. Colunas disponíveis: {list(leiloes.columns)}"
         )
-    corte = pd.Timestamp(data_corte).normalize()
+    # data de corte: texto em dd/mm/aaaa ou aaaa-mm-dd (pd.Timestamp("01/12/2018") daria 12/jan)
+    if isinstance(data_corte, str):
+        corte = _converter_datas(pd.Series([data_corte])).iloc[0]
+        if pd.isna(corte):
+            raise ValueError(f"data_corte inválida: {data_corte!r} (use dd/mm/aaaa ou aaaa-mm-dd)")
+    else:
+        corte = pd.Timestamp(data_corte)
+    corte = pd.Timestamp(corte).normalize()
     serie_ipca = _serie_ipca(ipca)
     media = media_indice_ano(serie_ipca, ano_base)
 
     df = pd.DataFrame(leiloes).copy().reset_index(drop=True)
     df.attrs = {}
-    df["data_leilao"] = pd.to_datetime(df["data_leilao"], errors="coerce")
-    df["preco_rs_mwh"] = pd.to_numeric(df["preco_rs_mwh"], errors="coerce").astype(float)
-    df["energia_mwmed"] = pd.to_numeric(df["energia_mwmed"], errors="coerce").astype(float)
+    # Datas: se não vierem como datetime (ex.: texto dd/mm/aaaa), usa o mesmo conversor do
+    # leitor; pd.to_datetime inferiria mês/dia a partir do 1º valor ("10/12/2018" → 12/out).
+    if pd.api.types.is_datetime64_any_dtype(df["data_leilao"]):
+        df["data_leilao"] = pd.to_datetime(df["data_leilao"])
+    else:
+        df["data_leilao"] = _converter_datas(df["data_leilao"])
+    # Números: se vierem como texto (ex.: "95,00"), aplica a mesma detecção decimal do leitor;
+    # pd.to_numeric transformaria "95,00" em NaN e o registro seria descartado sem aviso.
+    df["preco_rs_mwh"], df["energia_mwmed"] = _colunas_numericas(
+        df["preco_rs_mwh"], df["energia_mwmed"]
+    )
 
     sem_data = df["data_leilao"].isna()
     apos_corte = ~sem_data & (df["data_leilao"].dt.normalize() > corte)
@@ -638,7 +709,11 @@ def precos_medios_2019(
     usados = validos.loc[~nao_mapeado].copy()
     usados["mes_leilao"] = usados["data_leilao"].dt.to_period("M")
     indice_por_mes = serie_ipca.dropna().to_dict()
-    usados["indice_mes_leilao"] = usados["mes_leilao"].map(lambda m: indice_por_mes.get(m, np.nan)).astype(float)
+    # np.array(..., float) em vez de Series.map(...).astype(float): com 0 registros usados o
+    # map devolve dtype period e o astype falhava (TypeError) em vez de dar uma tabela vazia.
+    usados["indice_mes_leilao"] = np.array(
+        [indice_por_mes.get(m, np.nan) for m in usados["mes_leilao"]], dtype=float
+    )
     sem_indice = usados.loc[usados["indice_mes_leilao"].isna(), "mes_leilao"]
     if not sem_indice.empty:
         raise ValueError(

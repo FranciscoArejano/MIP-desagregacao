@@ -99,10 +99,14 @@ def geracao_por_usina(df: pd.DataFrame, reclassificacao: pd.DataFrame | None = N
     g["regra"] = np.where(g["subsetor"].notna(), "rótulo nom_tipocombustivel do ONS", "")
 
     if siga is not None and len(siga):
-        mapa_siga = siga.dropna(subset=["subsetor"]).drop_duplicates("nucleo_ceg").set_index("nucleo_ceg")["subsetor"]
-        m = (_norm_serie(g["nom_tipocombustivel"]) == "residuos industriais") & g["nucleo_ceg"].isin(mapa_siga.index)
-        g.loc[m, "subsetor"] = g.loc[m, "nucleo_ceg"].map(mapa_siga)
-        g.loc[m, "regra"] = "SIGA (núcleo do CEG)"
+        # casamento pelo núcleo do CEG com o tratamento de conflitos do módulo do SIGA
+        # (núcleo repetido no SIGA com subsetores diferentes → sem classificação, com a regra explicando)
+        from .siga import classificar_usinas_ons
+
+        casado = classificar_usinas_ons(g[["ceg", "nom_usina"]], siga)
+        m = (_norm_serie(g["nom_tipocombustivel"]) == "residuos industriais") & casado["subsetor_siga"].notna()
+        g.loc[m, "subsetor"] = casado.loc[m, "subsetor_siga"]
+        g.loc[m, "regra"] = "SIGA: " + casado.loc[m, "regra_siga"].astype(str)
 
     if reclassificacao is not None and len(reclassificacao):
         chave = reclassificacao.assign(_k=_norm_serie(reclassificacao["nom_usina"]) + "|" + reclassificacao["id_estado"])

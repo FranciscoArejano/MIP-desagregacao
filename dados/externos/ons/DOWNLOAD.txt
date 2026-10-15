@@ -1,0 +1,13 @@
+# Registro de download — gerado por scripts/rodada02_coleta.py (não editar à mão).
+# Este arquivo vai para o git mesmo quando o bruto (> 20 MB, em dados/externos/brutos/) não vai.
+# Para conferir um bruto baixado de novo, compare o SHA-256 abaixo.
+fonte: ons
+descricao: ONS — geração por usina em base horária, 2019 (Seção 5.1)
+url: https://ons-aws-prod-opendata.s3.amazonaws.com/dataset/geracao_usina_2_ho/GERACAO_USINA-2_2019.parquet
+data_acesso_utc: 2026-10-15T10:30:53Z
+origem_data_acesso: data de modificação do arquivo local (o arquivo já existia e não foi baixado de novo; a hora exata do download original não foi registrada)
+bytes: 25049331
+sha256: 4fee764a541f11c47abaa3add1a7797ddb79683d383475b7c5834acb9709bf2b
+arquivo: dados/externos/brutos/ons/GERACAO_USINA-2_2019.parquet
+versionado_no_git: não (mais de 20 MB; dados/externos/brutos/ está no .gitignore)
+user_agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36
