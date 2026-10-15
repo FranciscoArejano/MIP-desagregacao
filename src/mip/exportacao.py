@@ -67,7 +67,7 @@ def salvar_tabelas(
             if destacar and nome in destacar:
                 marcas = destacar[nome].to_numpy()
                 for i in np.flatnonzero(marcas):
-                    for cel in ws[i + 2]:
+                    for cel in ws[int(i) + 2]:
                         cel.fill = DESTAQUE
 
 

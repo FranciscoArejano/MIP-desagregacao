@@ -7,6 +7,7 @@ Saídas:
 - dados/intermediarios/mip_original_longo.csv              (Etapa 2)
 - resultados/rodada01/validacao_mip_original_v01.csv        (Etapa 2)
 - resultados/rodada01/replicacao_v01.xlsx                   (Etapa 3)
+- resultados/rodada01/diagnostico_S38_v01.xlsx              (Etapa 4)
 """
 from __future__ import annotations
 
@@ -20,6 +21,7 @@ import numpy as np  # noqa: E402
 import pandas as pd  # noqa: E402
 
 from mip import referencia as ref  # noqa: E402
+from mip import diagnostico as diag  # noqa: E402
 from mip.caminhos import PASTA_INTERMEDIARIOS, PASTA_RESULTADOS  # noqa: E402
 from mip.exportacao import salvar_tabelas  # noqa: E402
 from mip.leitura import formato_longo, ler_mip_original  # noqa: E402
@@ -105,9 +107,64 @@ def etapa3(mip):
     return resultados, comp, top_cmp
 
 
+def valores_diagnostico(mip, codigo: str = "S38") -> pd.DataFrame:
+    """Valores-chave do diagnóstico, comparados com a referência das instruções."""
+    obt = diag.valores_chave(mip, codigo)
+    linhas = []
+    for r in ref.DIAGNOSTICO_S38.itertuples(index=False):
+        for reg, esp in (("RS", r[1]), ("RB", r[2])):
+            o = obt[reg][r.item]
+            linhas.append((r.item, f"{codigo}-{reg}", esp, o, o - esp, r.tolerancia, abs(o - esp) <= r.tolerancia))
+    for (a, b), esp in ref.BLOCO_S38.items():
+        o = mip.Z[mip.indice(a, codigo), mip.indice(b, codigo)]
+        linhas.append((f"Bloco {codigo}→{codigo}: {a}→{b}", "", esp, o, o - esp, 0.05, abs(o - esp) <= 0.05))
+    return pd.DataFrame(
+        linhas, columns=["item", "setor", "esperado", "obtido", "diferenca", "tolerancia", "confere"]
+    )
+
+
+def etapa4(mip, resultados):
+    """Diagnóstico do S38 nas duas regiões."""
+    cod = "S38"
+    resumo = valores_diagnostico(mip, cod)
+    bloco, bloco_res = diag.bloco_intrassetorial(mip, cod)
+    ins = {r: diag.estrutura_insumos(mip, r, cod, ref.INSUMOS_ENERGETICOS) for r in mip.lista_regioes}
+    ven = {r: diag.estrutura_vendas(mip, r, cod) for r in mip.lista_regioes}
+    prim = pd.concat([diag.primarios_satelite(mip, r, cod) for r in mip.lista_regioes], ignore_index=True)
+    peso = diag.peso_nas_emissoes(resultados, mip, cod, ref.PESO_S38_CENARIOS)
+    abas = {"resumo_referencia": resumo}
+    for r in mip.lista_regioes:
+        abas[f"insumos_{cod}_{r}"] = ins[r]
+    for r in mip.lista_regioes:
+        abas[f"vendas_{cod}_{r}"] = ven[r]
+    abas[f"bloco_{cod}_{cod}"] = bloco
+    abas[f"bloco_{cod}_resumo"] = bloco_res
+    abas["primarios_satelite"] = prim
+    abas["peso_nas_emissoes"] = peso
+    destacar = {f"insumos_{cod}_{r}": ins[r]["insumo_energetico"] == "SIM" for r in mip.lista_regioes}
+    leiame = [
+        "Rodada 01 — Etapa 4: diagnóstico do S38 (Energia elétrica, gás natural e outras utilidades) no RS e no RB.",
+        "resumo_referencia: valores-chave comparados com a referência das instruções.",
+        "insumos_S38_*: coluna do S38 em Z — valor, coeficiente técnico (valor/VBP), região de origem; "
+        "insumos energéticos (S01, S03, S04, S05, S09, S16, S19, S20) destacados em amarelo (coluna insumo_energetico = SIM).",
+        "vendas_S38_*: linha do S38 — vendas a cada setor-região e a cada coluna da demanda final (% das vendas totais = % do VBP).",
+        "bloco_S38_S38: fluxos RS→RS, RS→RB, RB→RS, RB→RB (linha = região vendedora; coluna = região compradora).",
+        "bloco_S38_resumo: vendas do S38 de cada região ao S38 das duas regiões, como % do VBP "
+        "(candidata a âncora do valor da geração elétrica — decisão D3, do Francisco); idem para as compras.",
+        "primarios_satelite: importações, impostos, VA e componentes, ocupações, CO2e, água e energia, com intensidade por R$ mi de VBP.",
+        "peso_nas_emissoes: emissões induzidas no S38-RS e no S38-RB como % do total em cada cenário da Etapa 3.",
+        "Valores em R$ milhões (2019); CO2e em t; água em hm3; energia em mil tep. Gerado por scripts/rodada01.py.",
+    ]
+    salvar_tabelas(PASTA_SAIDA / f"diagnostico_{cod}_v01.xlsx", abas, leiame=leiame, destacar=destacar)
+    print(f"[Etapa 4] diagnóstico do {cod}: {int(resumo['confere'].sum())}/{len(resumo)} valores conferem; "
+          f"peso do S38 confere em {int((peso['diferenca (p.p.)'].abs() <= 0.05).sum())}/{len(peso)} cenários")
+    return resumo, bloco_res, peso
+
+
 def main():
     mip = etapa2()
-    etapa3(mip)
+    resultados, _, _ = etapa3(mip)
+    etapa4(mip, resultados)
 
 
 if __name__ == "__main__":
