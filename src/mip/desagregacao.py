@@ -76,7 +76,7 @@ def _tabela(df: pd.DataFrame | None, colunas: list[str]) -> pd.DataFrame:
     numericas = {"participacao", "valor", "coeficiente"}
     for c in colunas:
         if c in numericas:
-            df[c] = pd.to_numeric(df[c], errors="raise")
+            df[c] = pd.to_numeric(df[c].replace("", np.nan), errors="raise")
         elif c == "fixar_no_ras":
             df[c] = df[c].map(
                 lambda v: str(v).strip().lower() in {"1", "true", "sim", "s", "verdadeiro", "yes"}
@@ -702,7 +702,7 @@ def desagregar(mip: MIP, espec: Especificacao, estrito: bool = True) -> Resultad
                     f"({bloco_linhas[r][k]:.4f}) deixa {resid[k]:.4f} a vender, mas as regras de linha não lhe permitem "
                     "vender a nenhum comprador fora do bloco. Ajuste as participações (ou use modo_vbp = ancora_bloco)."
                 )
-            tol = max(espec.ras_tolerancia, 1e-12 * mip.X[i])
+            tol = max(espec.ras_tolerancia, 1e-14 * mip.X[i])  # piso: precisão numérica das somas
             M, info = ras(M0, alvo_lin, alvo_col, fix, tol=tol, max_iter=espec.ras_max_iter, contexto=f"linhas {r} {t}")
             infos.append(info)
             if info.necessario:
