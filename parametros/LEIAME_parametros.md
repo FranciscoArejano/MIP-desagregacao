@@ -15,6 +15,12 @@ compradores do mesmo grupo (D10 no RS; indústria do BEN no RB) ou, se o grupo i
 "serviço" do RS, só o S19), aos demais compradores da região, na proporção do alvo. Abas `gas_por_comprador`, `gas_grupos_teto` e
 `gas_x_eletricidade_BEN` do `quadro_parametros_v02.xlsx`. A energia do satélite usa
 `dados/intermediarios/ben_2019_consumo_especifico_v02.csv` (PET com as "outras não renováveis", como na D8).
+Os parâmetros **v03** (Rodada 04, a versão final: `scripts/rodada04_parametros.py`) partem dos v02 e mudam V1 (TUST da
+geração por MWh no SIN, `pesos_tust_geracao_v03.csv`; remunerações e ocupações da geração ∝ VBP − combustível), V2
+(VBP do GAS-RB pelo preço da Sulgás) e V3 (variante `_rap_ons`); especificações `especificacao_v03.yaml` e variantes
+`_P2`, `_E2`, `_E3`, `_gas4dist`, `_rap_ons`, `_k060` e `_eta005`, todas sem a extensão de viabilidade (o script roda o
+T9 sem ela e só a ligaria se ele falhasse); `quadro_parametros_v03.xlsx`. `cenarios_v03.csv` traz os cenários das
+simulações da Rodada 04 (blocos A0, A1, A2 e B).
 Não edite à mão: rode o script de novo. `cenarios_exemplo.csv` traz os 9 cenários da Rodada 01 no formato do
 executor de cenários (`scripts/rodar_cenarios.py`). Na v01:
 - `especificacao_v01.yaml` — principal (P1 + E1); `_P2`, `_E2` e `_E3` — sensibilidades;
@@ -49,6 +55,8 @@ res.exportar("saida.xlsx", "saida_longo.csv")
 | `piso_vbp` | `{kappa: 0.70, combustiveis: {S38_CAR: [S04], S38_GN: [S05, importacoes], ...}, viabilidade_eta: 0.10, max_iter: 50}` | Rodada 03, D9-f (só com `ancora_componentes`): VBP de cada subsetor listado ≥ combustível ÷ κ (combustível = compras às linhas listadas, de todas as origens, e as importações, se `importacoes` estiver na lista). Com `viabilidade_eta`, o piso também é ≥ combustível ÷ (1 − η − φ), em que φ é a parte do VBP que o reequilíbrio não pode mexer além do combustível (TUST, remunerações, impostos sobre a produção, células negativas e o resíduo contábil da coluna original). Quem fica abaixo sobe ao piso; os demais subsetores de geração da mesma região caem na proporção do VBP (E_r não muda). O motor repete a desagregação até estabilizar; resultado na aba `pisos_vbp` |
 | `reequilibrio` | `{eta: 0.10, linhas_fixas: [S04, S05, S19, S03, S09], primarios_ajustaveis: [ipi, icms, outros_impostos], importacoes: fixas, se_inviavel: erro \| limitar}` | Rodada 03, D9-r: RAS dos insumos não energéticos das colunas dos subsetores (compras a setores fora do bloco, exceto `linhas_fixas`; impostos sobre produtos). Fixos: bloco, combustíveis, importações (só `fixas`: as importações do setor-alvo são de energia pela regra do Comex), remunerações e impostos sobre a produção; a checagem `reequilibrio_insumos_fixos` confere que não mudam. Totais de linha preservados; alvo de coluna tal que EOB ≥ η × VBP; quem está acima cede a folga (EOB − η × VBP) na proporção; a soma dos EOB da região não muda. Se nem com os ajustáveis a zero couber, `erro` (padrão) ou `limitar` (EOB fica no máximo possível, ALERTA). Abas `reequilibrio_RAS` e `reequilibrio_insumos`; na aba `parametros`, a etapa `apos_reequilibrio` traz os pesos realizados. Com `piso_vbp.viabilidade_eta`, o bloco `reequilibrio` é obrigatório e `viabilidade_eta ≥ eta` |
 | `alerta_multiplicador_producao` | número (ex.: 2.2) | ALERTA se o multiplicador de produção (Σ da coluna de L) de algum subsetor passar desse valor |
+| `alerta_insumos_nao_energeticos` | número (ex.: 0.05) | Rodada 04, T12: ALERTA se as compras de algum subsetor com produção a setores fora do bloco, exceto as linhas de combustível (`reequilibrio.linhas_fixas` e `piso_vbp.combustiveis`), ficarem abaixo dessa fração do VBP (checagem `insumos_nao_energeticos_minimo`) |
+| `arquivos.pesos_tust_geracao` | CSV `regiao, subsetor, valor, fonte` | Rodada 04, V1 (só no `roteamento_por_componentes`): a parte (1 − α) da transmissão paga pela geração de cada região compradora é repartida entre os subsetores de geração por esses pesos (na v03, o MWh gerado no SIN), e não pelo VBP. Só subsetores de geração; peso > 0 para subsetor sem produção é erro |
 | `arquivos` | nomes dos CSVs | relativos à pasta do YAML |
 | `ras.tolerancia`, `ras.max_iter` | número | conciliação biproporcional das linhas |
 
@@ -112,7 +120,9 @@ somam 1 em cada região. Participação zero = subsetor com produção zero (per
   por subsetor com o nível absoluto, ex.: t CO₂e do SEEG; o resíduo segue o `modo` do YAML); `fixa_por_tipo`
   (Rodada 03: `subsetor` = código ou tipo — `geracao`, `transmissao`, `distribuicao`, `gas_utilidades` — e `valor` =
   participação; a parte de um tipo é repartida entre os seus subsetores na proporção do VBP final; usada nas
-  remunerações e ocupações do CEMPRE, para acompanhar o piso de VBP).
+  remunerações e ocupações do CEMPRE, para acompanhar o piso de VBP); `fixa_por_tipo_sem_combustivel` (Rodada 04,
+  V1: igual, mas dentro do tipo na proporção de VBP − combustível, com o combustível de `piso_vbp.combustiveis`;
+  exige `piso_vbp.combustiveis`).
 - **EOB é o resíduo** que fecha a coluna de cada subsetor (o pequeno resíduo contábil da original é repartido
   pelo VBP); VA = remunerações + EOB + impostos sobre a produção. EOB negativo é **sinalizado** (ALERTA), nunca corrigido
   pelo motor por conta própria; a correção só acontece se a especificação pedir `reequilibrio` (Rodada 03, D9-r).

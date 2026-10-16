@@ -105,3 +105,18 @@ Observações: o preço da Gasmig sem o térmico é **aproximação** (a companh
 rateadas na proporção da receita bruta). Os volumes por segmento da CEG e da Gasmig são marcados "não auditados" nas DFP.
 A extração foi feita e conferida por agentes verificadores independentes (dois por empresa; um dos verificadores da
 Gasmig não terminou por limite de sessão), e os valores usados foram reconferidos nas tabelas citadas.
+
+## Rodada 04 — fontes novas
+
+| Uso (Rodada 04) | Fonte | Localização | Arquivo |
+|---|---|---|---|
+| V3 (`_rap_ons`): encargos de uso da transmissão faturados em jul–dez/2018 (10576544162.01) | ONS, Síntese da Apuração Mensal dos Serviços e Encargos (SEAMSE), dez/2018 | p. 8, seção 4, "Total Encargos de Uso", coluna "Total Ciclo 18/19" | `aneel_rap/ons_seamse_201812/SEAMSE_201812.pdf` |
+| V3: ciclo 2018-2019 inteiro (21367058292.17) | ONS, SEAMSE jun/2019 | p. 8, seção 4, idem | `aneel_rap/ons_seamse_201906/SEAMSE_201906.pdf` |
+| V3: jul–dez/2019 (12145090044.99) | ONS, SEAMSE dez/2019 (o mesmo arquivo da 02b) | p. 7, seção 4 | `aneel_rap/ons_seamse_201912/SEAMSE_201912.pdf` |
+| Confirmação da REH 2.565/2019 (sem o total da RAP) | ANEEL, REH 2.565/2019, texto integral (enviado pelo Francisco) | 3 p. | `aneel_rap/reh_2565_2019_texto/reh20192565ti.pdf` |
+| V1: MWh no SIN = mín(GWh da D8; GWh do ONS sem autoprodução e sem Itaipu) | ONS 2019 por usina (02b) e D8 (Rodada 03) | — | `dados/intermediarios/geracao_2019_usina_v02.csv`, `geracao_2019_regiao_subsetor_v03.csv` |
+
+Ano civil 2019 = (21367.06 − 10576.54) + 12145.09 = 22935.6 R$ mi (`valores_documentais_v03.csv`). Os encargos do
+SEAMSE não incluem PIS/Pasep e Cofins e incluem a parcela do orçamento do ONS. O total da RAP 2019-2020 continua o da
+fonte secundária (25700): o texto da REH não o traz, e o Anexo na biblioteca da ANEEL respondeu 403 (desafio
+anti-robô, não contornado) em 16/10/2026.
