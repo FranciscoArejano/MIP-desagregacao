@@ -49,5 +49,5 @@ RB,co2e,niveis,S38_CAR,9708245.0,"SEEG 13.0, Dados nacionais, CO2e (t) GWP-AR5, 
 RB,co2e,niveis,S38_GN,20513045.650000002,"SEEG 13.0, Dados nacionais, CO2e (t) GWP-AR5, 2019, Geração de eletricidade (serviço público); 'Não alocado' somado ao RB"
 RB,co2e,niveis,S38_PET,4291625.8815,"SEEG 13.0, Dados nacionais, CO2e (t) GWP-AR5, 2019, Geração de eletricidade (serviço público); 'Não alocado' somado ao RB"
 RB,co2e,niveis,S38_BIO,12196.055247059001,"SEEG 13.0, Dados nacionais, CO2e (t) GWP-AR5, 2019, Geração de eletricidade (serviço público); 'Não alocado' somado ao RB"
-RB,co2e,niveis,S38_TRA,30604.445334528187,"SF6 nacional (SEEG 13.0, Dados nacionais, CO2e (t) GWP-AR5, 2019, Geração de eletricidade (serviço público)) × participação de RB no VBP do S38 (0.9394) × participação do S38_TRA no VBP de TRA + DIS"
-RB,co2e,niveis,S38_DIS,272898.13005939027,"SF6 nacional (SEEG 13.0, Dados nacionais, CO2e (t) GWP-AR5, 2019, Geração de eletricidade (serviço público)) × participação de RB no VBP do S38 (0.9394) × participação do S38_DIS no VBP de TRA + DIS"
+RB,co2e,niveis,S38_TRA,31637.50993391223,"SF6 nacional (SEEG 13.0, Dados nacionais, CO2e (t) GWP-AR5, 2019, Geração de eletricidade (serviço público)) × participação de RB no VBP do S38 (0.9394) × participação do S38_TRA no VBP de TRA + DIS"
+RB,co2e,niveis,S38_DIS,271865.06546000624,"SF6 nacional (SEEG 13.0, Dados nacionais, CO2e (t) GWP-AR5, 2019, Geração de eletricidade (serviço público)) × participação de RB no VBP do S38 (0.9394) × participação do S38_DIS no VBP de TRA + DIS"

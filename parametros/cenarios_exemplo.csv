@@ -1,0 +1,44 @@
+# Os 9 cenários de referência da Rodada 01 (choques de R$ 1 bilhão na demanda final do RS; R$ milhões).
+# Formato do executor de cenários (src/mip/cenarios.py, scripts/rodar_cenarios.py): cenario, regiao, setor, valor_R$mi.
+# Choque em S38 numa MIP desagregada é repartido entre os subsetores ∝ vendas à demanda final (ou por pesos informados).
+cenario,regiao,setor,valor_R$mi
+E1,RS,S38,1000
+R1,RS,S38,300
+R1,RS,S31,250
+R1,RS,S29,150
+R1,RS,S40,200
+R1,RS,S43,50
+R1,RS,S56,50
+F1,RS,S38,350
+F1,RS,S43,250
+F1,RS,S19,400
+R2,RS,S38,166.66666666666666
+R2,RS,S31,166.66666666666666
+R2,RS,S29,166.66666666666666
+R2,RS,S40,166.66666666666666
+R2,RS,S43,166.66666666666666
+R2,RS,S56,166.66666666666666
+R3,RS,S38,150
+R3,RS,S31,250
+R3,RS,S29,250
+R3,RS,S40,250
+R3,RS,S43,50
+R3,RS,S56,50
+R4a,RS,S38,450
+R4a,RS,S31,150
+R4a,RS,S29,100
+R4a,RS,S40,100
+R4a,RS,S43,150
+R4a,RS,S56,50
+R4b,RS,S38,500
+R4b,RS,S31,150
+R4b,RS,S29,100
+R4b,RS,S40,100
+R4b,RS,S43,100
+R4b,RS,S56,50
+F2,RS,S38,333.33333333333331
+F2,RS,S43,333.33333333333331
+F2,RS,S19,333.33333333333331
+F3,RS,S38,500
+F3,RS,S43,200
+F3,RS,S19,300

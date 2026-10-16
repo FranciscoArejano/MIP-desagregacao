@@ -238,3 +238,54 @@ def formato_longo(mip: MIP) -> pd.DataFrame:
             )
         )
     return pd.concat(partes, ignore_index=True)
+
+
+def ler_mip_longo(caminho: str | Path, caminho_coef_latentes: str | Path | None = None) -> MIP:
+    """Reconstrói uma MIP a partir do CSV em formato longo (ver `formato_longo`).
+
+    Os coeficientes dos subsetores latentes não estão no formato longo: se houver um arquivo
+    `<nome>_coef_latentes.csv` ao lado (ou `caminho_coef_latentes`), ele é lido. Os nomes dos setores
+    não estão no formato longo (ficam iguais aos códigos); `total_linha` = Σ Z + Σ F e `totais_ev` = somas.
+    """
+    caminho = Path(caminho)
+    df = pd.read_csv(caminho, dtype={"regiao_origem": str, "regiao_destino": str}, keep_default_na=False)
+    z = df[df["bloco"] == "Z"]
+    ordem = list(dict.fromkeys(zip(z["regiao_origem"], z["setor_origem"])))
+    n = len(ordem)
+    pos = {k: i for i, k in enumerate(ordem)}
+    setores = pd.DataFrame({"regiao": [a for a, _ in ordem], "codigo": [b for _, b in ordem],
+                            "nome": [b for _, b in ordem]})
+    Z = np.zeros((n, n))
+    Z[[pos[k] for k in zip(z["regiao_origem"], z["setor_origem"])],
+      [pos[k] for k in zip(z["regiao_destino"], z["setor_ou_coluna_destino"])]] = z["valor"].to_numpy(float)
+    dfc = {c: i for i, c in enumerate(COLUNAS_DF["codigo"])}
+    fd = df[df["bloco"] == "demanda_final"]
+    F = np.zeros((n, len(COLUNAS_DF)))
+    F[[pos[k] for k in zip(fd["regiao_origem"], fd["setor_origem"])], [dfc[c] for c in fd["setor_ou_coluna_destino"]]] = \
+        fd["valor"].to_numpy(float)
+
+    def vetor(bloco, item):
+        v = np.zeros(n)
+        b = df[(df["bloco"] == bloco) & (df["setor_origem"] == item)]
+        v[[pos[k] for k in zip(b["regiao_destino"], b["setor_ou_coluna_destino"])]] = b["valor"].to_numpy(float)
+        return v
+
+    def vetor_df(bloco, item):
+        v = np.zeros(len(COLUNAS_DF))
+        b = df[(df["bloco"] == bloco) & (df["setor_origem"] == item)]
+        v[[dfc[c] for c in b["setor_ou_coluna_destino"]]] = b["valor"].to_numpy(float)
+        return v
+
+    V = np.vstack([vetor("insumos_primarios", it) for it in ITENS_PRIMARIOS])
+    X = vetor("vbp", "vbp")
+    S = np.vstack([vetor("satelite", it) for it in ITENS_SATELITE])
+    V_df = np.vstack([vetor_df("insumos_primarios_df", it) for it in ITENS_PRIMARIOS_DF])
+    X_df = vetor_df("total_demanda_final", "total")
+    coef = None
+    cand = Path(caminho_coef_latentes) if caminho_coef_latentes else \
+        caminho.with_name(caminho.name.replace("_longo.csv", "_coef_latentes.csv"))
+    if cand.exists() and cand != caminho:
+        coef = pd.read_csv(cand)
+    totais = {it: float(V[k].sum()) for k, it in enumerate(ITENS_PRIMARIOS)} | {"vbp": float(X.sum())}
+    return MIP(setores=setores, Z=Z, F=F, total_linha=Z.sum(axis=1) + F.sum(axis=1), X=X, V=V, V_df=V_df, X_df=X_df,
+               S=S, totais_ev=totais, coef_latentes=coef)

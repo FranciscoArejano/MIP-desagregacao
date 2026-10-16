@@ -1,0 +1,273 @@
+checagem,status,valor,tolerancia,detalhe,versao
+reagregacao_Z,OK,4.5929482439532876e-10,1e-06,máx |Σ subsetores − original|,v02
+reagregacao_F,OK,4.547473508864641e-13,1e-06,máx |Σ subsetores − original|,v02
+reagregacao_X,OK,5.820766091346741e-11,1e-06,máx |Σ subsetores − original|,v02
+reagregacao_total_linha,OK,5.820766091346741e-11,1e-06,máx |Σ subsetores − original|,v02
+reagregacao_V,OK,2.106389729306102e-09,1e-06,máx |Σ subsetores − original|,v02
+reagregacao_S,OK,1.8189894035458565e-12,1e-06,máx |Σ subsetores − original|,v02
+reagregacao_V_df,OK,0.0,1e-06,máx |Σ subsetores − original|,v02
+reagregacao_X_df,OK,0.0,1e-06,máx |Σ subsetores − original|,v02
+reagregacao_totais_EV,OK,0.0,1e-06,,v02
+balanco_linha_subsetores,OK,9.200448403134942e-09,1e-06,máx |Σ vendas − VBP| nos subsetores (tolerância + resíduo original × participação),v02
+balanco_coluna_subsetores,OK,9.45431020797638e-11,1e-06,máx |resíduo da coluna − participação × resíduo original| (o resíduo original é repartido pelo VBP),v02
+identidade_VA_subsetores,OK,6.366462912410498e-12,1e-06,VA − (remunerações + EOB + impostos sobre a produção),v02
+nao_negatividade,OK,0.0,0.0,"negativos só onde a original já tem (coluna de discrepância, EOB, impostos sobre a produção); nenhum negativo novo",v02
+satelite_ocupacoes_preservado,OK,1.8189894035458565e-12,1e-06,,v02
+satelite_co2e_preservado,OK,0.0,1e-06,,v02
+satelite_agua_preservado,OK,1.7763568394002505e-15,1e-06,,v02
+satelite_energia_preservado,OK,9.094947017729282e-13,1e-06,,v02
+niveis_residuo_nao_negativo,OK,0.0,0.0,"RS co2e (residuo): identificado 3862147.8290, resíduo 1975857.7254; RB co2e (residuo): identificado 34828615.1621, resíduo 49689733.8945",v02
+EOB_nao_negativo_subsetores,OK,0.0,0.0,todos ≥ 0,v02
+subsetores_producao_zero_zerados,OK,3.0,0.0,"3 subsetor(es) com produção zero: RS_S38_SOL, RS_S38_PET, RS_S38_NUC",v02
+L_nao_negativa,OK,0.0,-1e-10,,v02
+L_diagonal_maior_igual_1,OK,1.0,1.0,,v02
+A_soma_colunas_menor_1,OK,0.8333826740734934,1.0,Σ coeficientes técnicos de cada coluna (inclui latentes),v02
+RAS_convergencia,OK,40.0,20000.0,"linhas RS S38: necessário, convergiu em 28 iterações, erro 8.94e-09 (inicial 7.91e+01); linhas RB S38: necessário, convergiu em 40 iterações, erro 9.20e-09 (inicial 7.68e+02); reequilibrio_EOB RS (η = 0.1): necessário, convergiu em 7 iterações, erro 1.06e-09 (inicial 1.26e+02); reequilibrio_EOB RB (η = 0.1): necessário, convergiu em 8 iterações, erro 2.11e-09 (inicial 3.50e+03)",v02
+roteamento_vendas_geracao_igual_E,OK,0.0,1e-06,Σ vendas da geração de r dentro do bloco = E_r = F_r − T_r − G_r,v02
+roteamento_vendas_transmissao_igual_T,OK,0.0,1e-06,Σ vendas da transmissão de r dentro do bloco = T_r,v02
+roteamento_geracao_e_transmissao_nao_vendem_fora,OK,0.0,1e-06,Σ |vendas| da geração e da transmissão fora do bloco e à demanda final (Seção 6.4),v02
+roteamento_fracao_transmissao,OK,7.781984822181929e-17,1e-09,fração da transmissão paga pela distribuição e pela geração das regiões desagregadas (o S38 agregado de região não desagregada recebe a sua parte inteira),v02
+bloco_fluxos_regionais_preservados,OK,1.4551915228366852e-11,1e-06,"os fluxos alvo→alvo entre as regiões (ex.: RS→RS, RS→RB, RB→RS, RB→RB) são os da original",v02
+subsetores_latentes,OK,2.0,0.0,"colunas de coeficientes guardadas à parte: RS_S38_SOL, RS_S38_PET",v02
+piso_vbp_combustivel,OK,0.0,0.0,VBP ≥ combustível ÷ κ (κ = 0.7); RS_S38_BIO: combustível/VBP = 0.0256; RS_S38_CAR: combustível/VBP = 0.0219; RS_S38_GN: combustível/VBP = 0.6241; RB_S38_BIO: combustível/VBP = 0.0212; RB_S38_CAR: combustível/VBP = 0.1118; RB_S38_GN: combustível/VBP = 0.6129; RB_S38_PET: combustível/VBP = 0.6129,v02
+EOB_minimo_eta,OK,0.09999999999999999,0.1,EOB ≥ η × VBP (η = 0.1) em todo subsetor com produção,v02
+reequilibrio_soma_EOB_regiao,OK,7.275957614183426e-11,1e-06,Σ EOB dos subsetores de cada região = EOB original do setor-alvo; RB: Σ EOB = 103643.5529; RS: Σ EOB = 6737.4468,v02
+multiplicador_producao_subsetores,ALERTA,2.620443567247455,2.2,"multiplicador de produção (Σ coluna de L, inclui latentes) ≤ 2.2: acima em RS_S38_GN (2.327), RS_S38_PET (2.620), RS_S38_GAS (2.344), RB_S38_PET (2.620)",v02
+reagregacao_Z,OK,4.6475179260596633e-10,1e-06,máx |Σ subsetores − original|,v02_P2
+reagregacao_F,OK,4.547473508864641e-13,1e-06,máx |Σ subsetores − original|,v02_P2
+reagregacao_X,OK,5.820766091346741e-11,1e-06,máx |Σ subsetores − original|,v02_P2
+reagregacao_total_linha,OK,5.820766091346741e-11,1e-06,máx |Σ subsetores − original|,v02_P2
+reagregacao_V,OK,2.1391315385699272e-09,1e-06,máx |Σ subsetores − original|,v02_P2
+reagregacao_S,OK,2.9103830456733704e-11,1e-06,máx |Σ subsetores − original|,v02_P2
+reagregacao_V_df,OK,0.0,1e-06,máx |Σ subsetores − original|,v02_P2
+reagregacao_X_df,OK,0.0,1e-06,máx |Σ subsetores − original|,v02_P2
+reagregacao_totais_EV,OK,0.0,1e-06,,v02_P2
+balanco_linha_subsetores,OK,9.200448403134942e-09,1e-06,máx |Σ vendas − VBP| nos subsetores (tolerância + resíduo original × participação),v02_P2
+balanco_coluna_subsetores,OK,9.45431020797638e-11,1e-06,máx |resíduo da coluna − participação × resíduo original| (o resíduo original é repartido pelo VBP),v02_P2
+identidade_VA_subsetores,OK,6.59383658785373e-12,1e-06,VA − (remunerações + EOB + impostos sobre a produção),v02_P2
+nao_negatividade,OK,0.0,0.0,"negativos só onde a original já tem (coluna de discrepância, EOB, impostos sobre a produção); nenhum negativo novo",v02_P2
+satelite_ocupacoes_preservado,OK,3.637978807091713e-12,1e-06,,v02_P2
+satelite_co2e_preservado,OK,0.0,1e-06,,v02_P2
+satelite_agua_preservado,OK,1.7763568394002505e-15,1e-06,,v02_P2
+satelite_energia_preservado,OK,9.094947017729282e-13,1e-06,,v02_P2
+niveis_residuo_nao_negativo,OK,0.0,0.0,"RS co2e (residuo): identificado 3862147.8290, resíduo 1975857.7254; RB co2e (residuo): identificado 34828615.1621, resíduo 49689733.8945",v02_P2
+EOB_nao_negativo_subsetores,OK,0.0,0.0,todos ≥ 0,v02_P2
+subsetores_producao_zero_zerados,OK,3.0,0.0,"3 subsetor(es) com produção zero: RS_S38_SOL, RS_S38_PET, RS_S38_NUC",v02_P2
+L_nao_negativa,OK,0.0,-1e-10,,v02_P2
+L_diagonal_maior_igual_1,OK,1.0,1.0,,v02_P2
+A_soma_colunas_menor_1,OK,0.8333826740734934,1.0,Σ coeficientes técnicos de cada coluna (inclui latentes),v02_P2
+RAS_convergencia,OK,40.0,20000.0,"linhas RS S38: necessário, convergiu em 28 iterações, erro 8.94e-09 (inicial 7.91e+01); linhas RB S38: necessário, convergiu em 40 iterações, erro 9.20e-09 (inicial 7.68e+02); reequilibrio_EOB RS (η = 0.1): necessário, convergiu em 7 iterações, erro 1.06e-09 (inicial 1.26e+02); reequilibrio_EOB RB (η = 0.1): necessário, convergiu em 8 iterações, erro 2.14e-09 (inicial 3.50e+03)",v02_P2
+roteamento_vendas_geracao_igual_E,OK,0.0,1e-06,Σ vendas da geração de r dentro do bloco = E_r = F_r − T_r − G_r,v02_P2
+roteamento_vendas_transmissao_igual_T,OK,0.0,1e-06,Σ vendas da transmissão de r dentro do bloco = T_r,v02_P2
+roteamento_geracao_e_transmissao_nao_vendem_fora,OK,0.0,1e-06,Σ |vendas| da geração e da transmissão fora do bloco e à demanda final (Seção 6.4),v02_P2
+roteamento_fracao_transmissao,OK,1.5067197518713482e-16,1e-09,fração da transmissão paga pela distribuição e pela geração das regiões desagregadas (o S38 agregado de região não desagregada recebe a sua parte inteira),v02_P2
+bloco_fluxos_regionais_preservados,OK,4.547473508864641e-13,1e-06,"os fluxos alvo→alvo entre as regiões (ex.: RS→RS, RS→RB, RB→RS, RB→RB) são os da original",v02_P2
+subsetores_latentes,OK,2.0,0.0,"colunas de coeficientes guardadas à parte: RS_S38_SOL, RS_S38_PET",v02_P2
+piso_vbp_combustivel,OK,0.0,0.0,VBP ≥ combustível ÷ κ (κ = 0.7); RS_S38_BIO: combustível/VBP = 0.0296; RS_S38_CAR: combustível/VBP = 0.0309; RS_S38_GN: combustível/VBP = 0.6241; RB_S38_BIO: combustível/VBP = 0.0251; RB_S38_CAR: combustível/VBP = 0.1619; RB_S38_GN: combustível/VBP = 0.6129; RB_S38_PET: combustível/VBP = 0.6129,v02_P2
+EOB_minimo_eta,OK,0.09999999999999999,0.1,EOB ≥ η × VBP (η = 0.1) em todo subsetor com produção,v02_P2
+reequilibrio_soma_EOB_regiao,OK,1.4551915228366852e-11,1e-06,Σ EOB dos subsetores de cada região = EOB original do setor-alvo; RB: Σ EOB = 103643.5529; RS: Σ EOB = 6737.4468,v02_P2
+multiplicador_producao_subsetores,ALERTA,2.6204434534148264,2.2,"multiplicador de produção (Σ coluna de L, inclui latentes) ≤ 2.2: acima em RS_S38_GN (2.327), RS_S38_PET (2.620), RS_S38_GAS (2.344), RB_S38_PET (2.620)",v02_P2
+reagregacao_Z,OK,4.5929482439532876e-10,1e-06,máx |Σ subsetores − original|,v02_E2
+reagregacao_F,OK,4.547473508864641e-13,1e-06,máx |Σ subsetores − original|,v02_E2
+reagregacao_X,OK,5.820766091346741e-11,1e-06,máx |Σ subsetores − original|,v02_E2
+reagregacao_total_linha,OK,5.820766091346741e-11,1e-06,máx |Σ subsetores − original|,v02_E2
+reagregacao_V,OK,2.106389729306102e-09,1e-06,máx |Σ subsetores − original|,v02_E2
+reagregacao_S,OK,1.4901161193847656e-08,1e-06,máx |Σ subsetores − original|,v02_E2
+reagregacao_V_df,OK,0.0,1e-06,máx |Σ subsetores − original|,v02_E2
+reagregacao_X_df,OK,0.0,1e-06,máx |Σ subsetores − original|,v02_E2
+reagregacao_totais_EV,OK,0.0,1e-06,,v02_E2
+balanco_linha_subsetores,OK,9.200448403134942e-09,1e-06,máx |Σ vendas − VBP| nos subsetores (tolerância + resíduo original × participação),v02_E2
+balanco_coluna_subsetores,OK,9.45431020797638e-11,1e-06,máx |resíduo da coluna − participação × resíduo original| (o resíduo original é repartido pelo VBP),v02_E2
+identidade_VA_subsetores,OK,6.366462912410498e-12,1e-06,VA − (remunerações + EOB + impostos sobre a produção),v02_E2
+nao_negatividade,OK,0.0,0.0,"negativos só onde a original já tem (coluna de discrepância, EOB, impostos sobre a produção); nenhum negativo novo",v02_E2
+satelite_ocupacoes_preservado,OK,1.8189894035458565e-12,1e-06,,v02_E2
+satelite_co2e_preservado,OK,1.4901161193847656e-08,1e-06,,v02_E2
+satelite_agua_preservado,OK,1.7763568394002505e-15,1e-06,,v02_E2
+satelite_energia_preservado,OK,9.094947017729282e-13,1e-06,,v02_E2
+niveis_residuo_nao_negativo,OK,0.0,0.0,"RS co2e (proporcional): identificado 3862147.8290, resíduo 1975857.7254; RB co2e (proporcional): identificado 34828615.1621, resíduo 49689733.8945",v02_E2
+EOB_nao_negativo_subsetores,OK,0.0,0.0,todos ≥ 0,v02_E2
+subsetores_producao_zero_zerados,OK,3.0,0.0,"3 subsetor(es) com produção zero: RS_S38_SOL, RS_S38_PET, RS_S38_NUC",v02_E2
+L_nao_negativa,OK,0.0,-1e-10,,v02_E2
+L_diagonal_maior_igual_1,OK,1.0,1.0,,v02_E2
+A_soma_colunas_menor_1,OK,0.8333826740734934,1.0,Σ coeficientes técnicos de cada coluna (inclui latentes),v02_E2
+RAS_convergencia,OK,40.0,20000.0,"linhas RS S38: necessário, convergiu em 28 iterações, erro 8.94e-09 (inicial 7.91e+01); linhas RB S38: necessário, convergiu em 40 iterações, erro 9.20e-09 (inicial 7.68e+02); reequilibrio_EOB RS (η = 0.1): necessário, convergiu em 7 iterações, erro 1.06e-09 (inicial 1.26e+02); reequilibrio_EOB RB (η = 0.1): necessário, convergiu em 8 iterações, erro 2.11e-09 (inicial 3.50e+03)",v02_E2
+roteamento_vendas_geracao_igual_E,OK,0.0,1e-06,Σ vendas da geração de r dentro do bloco = E_r = F_r − T_r − G_r,v02_E2
+roteamento_vendas_transmissao_igual_T,OK,0.0,1e-06,Σ vendas da transmissão de r dentro do bloco = T_r,v02_E2
+roteamento_geracao_e_transmissao_nao_vendem_fora,OK,0.0,1e-06,Σ |vendas| da geração e da transmissão fora do bloco e à demanda final (Seção 6.4),v02_E2
+roteamento_fracao_transmissao,OK,7.781984822181929e-17,1e-09,fração da transmissão paga pela distribuição e pela geração das regiões desagregadas (o S38 agregado de região não desagregada recebe a sua parte inteira),v02_E2
+bloco_fluxos_regionais_preservados,OK,1.4551915228366852e-11,1e-06,"os fluxos alvo→alvo entre as regiões (ex.: RS→RS, RS→RB, RB→RS, RB→RB) são os da original",v02_E2
+subsetores_latentes,OK,2.0,0.0,"colunas de coeficientes guardadas à parte: RS_S38_SOL, RS_S38_PET",v02_E2
+piso_vbp_combustivel,OK,0.0,0.0,VBP ≥ combustível ÷ κ (κ = 0.7); RS_S38_BIO: combustível/VBP = 0.0256; RS_S38_CAR: combustível/VBP = 0.0219; RS_S38_GN: combustível/VBP = 0.6241; RB_S38_BIO: combustível/VBP = 0.0212; RB_S38_CAR: combustível/VBP = 0.1118; RB_S38_GN: combustível/VBP = 0.6129; RB_S38_PET: combustível/VBP = 0.6129,v02_E2
+EOB_minimo_eta,OK,0.09999999999999999,0.1,EOB ≥ η × VBP (η = 0.1) em todo subsetor com produção,v02_E2
+reequilibrio_soma_EOB_regiao,OK,7.275957614183426e-11,1e-06,Σ EOB dos subsetores de cada região = EOB original do setor-alvo; RB: Σ EOB = 103643.5529; RS: Σ EOB = 6737.4468,v02_E2
+multiplicador_producao_subsetores,ALERTA,2.620443567247455,2.2,"multiplicador de produção (Σ coluna de L, inclui latentes) ≤ 2.2: acima em RS_S38_GN (2.327), RS_S38_PET (2.620), RS_S38_GAS (2.344), RB_S38_PET (2.620)",v02_E2
+reagregacao_Z,OK,4.5929482439532876e-10,1e-06,máx |Σ subsetores − original|,v02_E3
+reagregacao_F,OK,4.547473508864641e-13,1e-06,máx |Σ subsetores − original|,v02_E3
+reagregacao_X,OK,5.820766091346741e-11,1e-06,máx |Σ subsetores − original|,v02_E3
+reagregacao_total_linha,OK,5.820766091346741e-11,1e-06,máx |Σ subsetores − original|,v02_E3
+reagregacao_V,OK,2.106389729306102e-09,1e-06,máx |Σ subsetores − original|,v02_E3
+reagregacao_S,OK,1.8189894035458565e-12,1e-06,"máx |Σ subsetores − original|; para ['co2e'] sem resíduo (E3), o esperado no setor-alvo é a soma dos níveis (original − resíduo)",v02_E3
+reagregacao_V_df,OK,0.0,1e-06,máx |Σ subsetores − original|,v02_E3
+reagregacao_X_df,OK,0.0,1e-06,máx |Σ subsetores − original|,v02_E3
+reagregacao_totais_EV,OK,0.0,1e-06,,v02_E3
+balanco_linha_subsetores,OK,9.200448403134942e-09,1e-06,máx |Σ vendas − VBP| nos subsetores (tolerância + resíduo original × participação),v02_E3
+balanco_coluna_subsetores,OK,9.45431020797638e-11,1e-06,máx |resíduo da coluna − participação × resíduo original| (o resíduo original é repartido pelo VBP),v02_E3
+identidade_VA_subsetores,OK,6.366462912410498e-12,1e-06,VA − (remunerações + EOB + impostos sobre a produção),v02_E3
+nao_negatividade,OK,0.0,0.0,"negativos só onde a original já tem (coluna de discrepância, EOB, impostos sobre a produção); nenhum negativo novo",v02_E3
+satelite_ocupacoes_preservado,OK,1.8189894035458565e-12,1e-06,,v02_E3
+satelite_co2e_preservado,ALERTA,49689733.89448698,1e-06,"NÃO PRESERVA O TOTAL DA BASE (níveis sem resíduo, E3): diferença total = -51665591.6198; a diferença é exatamente o resíduo",v02_E3
+satelite_agua_preservado,OK,1.7763568394002505e-15,1e-06,,v02_E3
+satelite_energia_preservado,OK,9.094947017729282e-13,1e-06,,v02_E3
+niveis_residuo_nao_negativo,OK,0.0,0.0,"RS co2e (sem_residuo): identificado 3862147.8290, resíduo 1975857.7254; RB co2e (sem_residuo): identificado 34828615.1621, resíduo 49689733.8945",v02_E3
+EOB_nao_negativo_subsetores,OK,0.0,0.0,todos ≥ 0,v02_E3
+subsetores_producao_zero_zerados,OK,3.0,0.0,"3 subsetor(es) com produção zero: RS_S38_SOL, RS_S38_PET, RS_S38_NUC",v02_E3
+L_nao_negativa,OK,0.0,-1e-10,,v02_E3
+L_diagonal_maior_igual_1,OK,1.0,1.0,,v02_E3
+A_soma_colunas_menor_1,OK,0.8333826740734934,1.0,Σ coeficientes técnicos de cada coluna (inclui latentes),v02_E3
+RAS_convergencia,OK,40.0,20000.0,"linhas RS S38: necessário, convergiu em 28 iterações, erro 8.94e-09 (inicial 7.91e+01); linhas RB S38: necessário, convergiu em 40 iterações, erro 9.20e-09 (inicial 7.68e+02); reequilibrio_EOB RS (η = 0.1): necessário, convergiu em 7 iterações, erro 1.06e-09 (inicial 1.26e+02); reequilibrio_EOB RB (η = 0.1): necessário, convergiu em 8 iterações, erro 2.11e-09 (inicial 3.50e+03)",v02_E3
+roteamento_vendas_geracao_igual_E,OK,0.0,1e-06,Σ vendas da geração de r dentro do bloco = E_r = F_r − T_r − G_r,v02_E3
+roteamento_vendas_transmissao_igual_T,OK,0.0,1e-06,Σ vendas da transmissão de r dentro do bloco = T_r,v02_E3
+roteamento_geracao_e_transmissao_nao_vendem_fora,OK,0.0,1e-06,Σ |vendas| da geração e da transmissão fora do bloco e à demanda final (Seção 6.4),v02_E3
+roteamento_fracao_transmissao,OK,7.781984822181929e-17,1e-09,fração da transmissão paga pela distribuição e pela geração das regiões desagregadas (o S38 agregado de região não desagregada recebe a sua parte inteira),v02_E3
+bloco_fluxos_regionais_preservados,OK,1.4551915228366852e-11,1e-06,"os fluxos alvo→alvo entre as regiões (ex.: RS→RS, RS→RB, RB→RS, RB→RB) são os da original",v02_E3
+subsetores_latentes,OK,2.0,0.0,"colunas de coeficientes guardadas à parte: RS_S38_SOL, RS_S38_PET",v02_E3
+piso_vbp_combustivel,OK,0.0,0.0,VBP ≥ combustível ÷ κ (κ = 0.7); RS_S38_BIO: combustível/VBP = 0.0256; RS_S38_CAR: combustível/VBP = 0.0219; RS_S38_GN: combustível/VBP = 0.6241; RB_S38_BIO: combustível/VBP = 0.0212; RB_S38_CAR: combustível/VBP = 0.1118; RB_S38_GN: combustível/VBP = 0.6129; RB_S38_PET: combustível/VBP = 0.6129,v02_E3
+EOB_minimo_eta,OK,0.09999999999999999,0.1,EOB ≥ η × VBP (η = 0.1) em todo subsetor com produção,v02_E3
+reequilibrio_soma_EOB_regiao,OK,7.275957614183426e-11,1e-06,Σ EOB dos subsetores de cada região = EOB original do setor-alvo; RB: Σ EOB = 103643.5529; RS: Σ EOB = 6737.4468,v02_E3
+multiplicador_producao_subsetores,ALERTA,2.620443567247455,2.2,"multiplicador de produção (Σ coluna de L, inclui latentes) ≤ 2.2: acima em RS_S38_GN (2.327), RS_S38_PET (2.620), RS_S38_GAS (2.344), RB_S38_PET (2.620)",v02_E3
+reagregacao_Z,OK,4.4656189857050776e-10,1e-06,máx |Σ subsetores − original|,v02_k060
+reagregacao_F,OK,4.547473508864641e-13,1e-06,máx |Σ subsetores − original|,v02_k060
+reagregacao_X,OK,3.637978807091713e-12,1e-06,máx |Σ subsetores − original|,v02_k060
+reagregacao_total_linha,OK,3.637978807091713e-12,1e-06,máx |Σ subsetores − original|,v02_k060
+reagregacao_V,OK,2.0481820683926344e-09,1e-06,máx |Σ subsetores − original|,v02_k060
+reagregacao_S,OK,2.9103830456733704e-11,1e-06,máx |Σ subsetores − original|,v02_k060
+reagregacao_V_df,OK,0.0,1e-06,máx |Σ subsetores − original|,v02_k060
+reagregacao_X_df,OK,0.0,1e-06,máx |Σ subsetores − original|,v02_k060
+reagregacao_totais_EV,OK,0.0,1e-06,,v02_k060
+balanco_linha_subsetores,OK,9.200448403134942e-09,1e-06,máx |Σ vendas − VBP| nos subsetores (tolerância + resíduo original × participação),v02_k060
+balanco_coluna_subsetores,OK,9.45431020797638e-11,1e-06,máx |resíduo da coluna − participação × resíduo original| (o resíduo original é repartido pelo VBP),v02_k060
+identidade_VA_subsetores,OK,6.59383658785373e-12,1e-06,VA − (remunerações + EOB + impostos sobre a produção),v02_k060
+nao_negatividade,OK,0.0,0.0,"negativos só onde a original já tem (coluna de discrepância, EOB, impostos sobre a produção); nenhum negativo novo",v02_k060
+satelite_ocupacoes_preservado,OK,2.9103830456733704e-11,1e-06,,v02_k060
+satelite_co2e_preservado,OK,0.0,1e-06,,v02_k060
+satelite_agua_preservado,OK,1.7763568394002505e-15,1e-06,,v02_k060
+satelite_energia_preservado,OK,9.094947017729282e-13,1e-06,,v02_k060
+niveis_residuo_nao_negativo,OK,0.0,0.0,"RS co2e (residuo): identificado 3862147.8290, resíduo 1975857.7254; RB co2e (residuo): identificado 34828615.1621, resíduo 49689733.8945",v02_k060
+EOB_nao_negativo_subsetores,OK,0.0,0.0,todos ≥ 0,v02_k060
+subsetores_producao_zero_zerados,OK,3.0,0.0,"3 subsetor(es) com produção zero: RS_S38_SOL, RS_S38_PET, RS_S38_NUC",v02_k060
+L_nao_negativa,OK,0.0,-1e-10,,v02_k060
+L_diagonal_maior_igual_1,OK,1.0,1.0,,v02_k060
+A_soma_colunas_menor_1,OK,0.8333826740734934,1.0,Σ coeficientes técnicos de cada coluna (inclui latentes),v02_k060
+RAS_convergencia,OK,40.0,20000.0,"linhas RS S38: necessário, convergiu em 28 iterações, erro 8.94e-09 (inicial 7.91e+01); linhas RB S38: necessário, convergiu em 40 iterações, erro 9.20e-09 (inicial 7.68e+02); reequilibrio_EOB RS (η = 0.1): necessário, convergiu em 7 iterações, erro 1.05e-09 (inicial 1.26e+02); reequilibrio_EOB RB (η = 0.1): necessário, convergiu em 8 iterações, erro 2.04e-09 (inicial 3.39e+03)",v02_k060
+roteamento_vendas_geracao_igual_E,OK,9.094947017729282e-13,1e-06,Σ vendas da geração de r dentro do bloco = E_r = F_r − T_r − G_r,v02_k060
+roteamento_vendas_transmissao_igual_T,OK,2.2737367544323206e-13,1e-06,Σ vendas da transmissão de r dentro do bloco = T_r,v02_k060
+roteamento_geracao_e_transmissao_nao_vendem_fora,OK,0.0,1e-06,Σ |vendas| da geração e da transmissão fora do bloco e à demanda final (Seção 6.4),v02_k060
+roteamento_fracao_transmissao,OK,7.781984822181929e-17,1e-09,fração da transmissão paga pela distribuição e pela geração das regiões desagregadas (o S38 agregado de região não desagregada recebe a sua parte inteira),v02_k060
+bloco_fluxos_regionais_preservados,OK,2.9103830456733704e-11,1e-06,"os fluxos alvo→alvo entre as regiões (ex.: RS→RS, RS→RB, RB→RS, RB→RB) são os da original",v02_k060
+subsetores_latentes,OK,2.0,0.0,"colunas de coeficientes guardadas à parte: RS_S38_SOL, RS_S38_PET",v02_k060
+piso_vbp_combustivel,OK,0.0,0.0,VBP ≥ combustível ÷ κ (κ = 0.6); RS_S38_BIO: combustível/VBP = 0.0256; RS_S38_CAR: combustível/VBP = 0.0219; RS_S38_GN: combustível/VBP = 0.6000; RB_S38_BIO: combustível/VBP = 0.0213; RB_S38_CAR: combustível/VBP = 0.1126; RB_S38_GN: combustível/VBP = 0.6000; RB_S38_PET: combustível/VBP = 0.6000,v02_k060
+EOB_minimo_eta,OK,0.1,0.1,EOB ≥ η × VBP (η = 0.1) em todo subsetor com produção,v02_k060
+reequilibrio_soma_EOB_regiao,OK,1.4551915228366852e-11,1e-06,Σ EOB dos subsetores de cada região = EOB original do setor-alvo; RB: Σ EOB = 103643.5529; RS: Σ EOB = 6737.4468,v02_k060
+multiplicador_producao_subsetores,ALERTA,2.6029178939932196,2.2,"multiplicador de produção (Σ coluna de L, inclui latentes) ≤ 2.2: acima em RS_S38_GN (2.309), RS_S38_PET (2.603), RS_S38_GAS (2.344), RB_S38_PET (2.602)",v02_k060
+reagregacao_Z,OK,4.5929482439532876e-10,1e-06,máx |Σ subsetores − original|,v02_k080
+reagregacao_F,OK,4.547473508864641e-13,1e-06,máx |Σ subsetores − original|,v02_k080
+reagregacao_X,OK,5.820766091346741e-11,1e-06,máx |Σ subsetores − original|,v02_k080
+reagregacao_total_linha,OK,5.820766091346741e-11,1e-06,máx |Σ subsetores − original|,v02_k080
+reagregacao_V,OK,2.106389729306102e-09,1e-06,máx |Σ subsetores − original|,v02_k080
+reagregacao_S,OK,1.8189894035458565e-12,1e-06,máx |Σ subsetores − original|,v02_k080
+reagregacao_V_df,OK,0.0,1e-06,máx |Σ subsetores − original|,v02_k080
+reagregacao_X_df,OK,0.0,1e-06,máx |Σ subsetores − original|,v02_k080
+reagregacao_totais_EV,OK,0.0,1e-06,,v02_k080
+balanco_linha_subsetores,OK,9.200448403134942e-09,1e-06,máx |Σ vendas − VBP| nos subsetores (tolerância + resíduo original × participação),v02_k080
+balanco_coluna_subsetores,OK,9.45431020797638e-11,1e-06,máx |resíduo da coluna − participação × resíduo original| (o resíduo original é repartido pelo VBP),v02_k080
+identidade_VA_subsetores,OK,6.366462912410498e-12,1e-06,VA − (remunerações + EOB + impostos sobre a produção),v02_k080
+nao_negatividade,OK,0.0,0.0,"negativos só onde a original já tem (coluna de discrepância, EOB, impostos sobre a produção); nenhum negativo novo",v02_k080
+satelite_ocupacoes_preservado,OK,1.8189894035458565e-12,1e-06,,v02_k080
+satelite_co2e_preservado,OK,0.0,1e-06,,v02_k080
+satelite_agua_preservado,OK,1.7763568394002505e-15,1e-06,,v02_k080
+satelite_energia_preservado,OK,9.094947017729282e-13,1e-06,,v02_k080
+niveis_residuo_nao_negativo,OK,0.0,0.0,"RS co2e (residuo): identificado 3862147.8290, resíduo 1975857.7254; RB co2e (residuo): identificado 34828615.1621, resíduo 49689733.8945",v02_k080
+EOB_nao_negativo_subsetores,OK,0.0,0.0,todos ≥ 0,v02_k080
+subsetores_producao_zero_zerados,OK,3.0,0.0,"3 subsetor(es) com produção zero: RS_S38_SOL, RS_S38_PET, RS_S38_NUC",v02_k080
+L_nao_negativa,OK,0.0,-1e-10,,v02_k080
+L_diagonal_maior_igual_1,OK,1.0,1.0,,v02_k080
+A_soma_colunas_menor_1,OK,0.8333826740734934,1.0,Σ coeficientes técnicos de cada coluna (inclui latentes),v02_k080
+RAS_convergencia,OK,40.0,20000.0,"linhas RS S38: necessário, convergiu em 28 iterações, erro 8.94e-09 (inicial 7.91e+01); linhas RB S38: necessário, convergiu em 40 iterações, erro 9.20e-09 (inicial 7.68e+02); reequilibrio_EOB RS (η = 0.1): necessário, convergiu em 7 iterações, erro 1.06e-09 (inicial 1.26e+02); reequilibrio_EOB RB (η = 0.1): necessário, convergiu em 8 iterações, erro 2.11e-09 (inicial 3.50e+03)",v02_k080
+roteamento_vendas_geracao_igual_E,OK,0.0,1e-06,Σ vendas da geração de r dentro do bloco = E_r = F_r − T_r − G_r,v02_k080
+roteamento_vendas_transmissao_igual_T,OK,0.0,1e-06,Σ vendas da transmissão de r dentro do bloco = T_r,v02_k080
+roteamento_geracao_e_transmissao_nao_vendem_fora,OK,0.0,1e-06,Σ |vendas| da geração e da transmissão fora do bloco e à demanda final (Seção 6.4),v02_k080
+roteamento_fracao_transmissao,OK,7.781984822181929e-17,1e-09,fração da transmissão paga pela distribuição e pela geração das regiões desagregadas (o S38 agregado de região não desagregada recebe a sua parte inteira),v02_k080
+bloco_fluxos_regionais_preservados,OK,1.4551915228366852e-11,1e-06,"os fluxos alvo→alvo entre as regiões (ex.: RS→RS, RS→RB, RB→RS, RB→RB) são os da original",v02_k080
+subsetores_latentes,OK,2.0,0.0,"colunas de coeficientes guardadas à parte: RS_S38_SOL, RS_S38_PET",v02_k080
+piso_vbp_combustivel,OK,0.0,0.0,VBP ≥ combustível ÷ κ (κ = 0.8); RS_S38_BIO: combustível/VBP = 0.0256; RS_S38_CAR: combustível/VBP = 0.0219; RS_S38_GN: combustível/VBP = 0.6241; RB_S38_BIO: combustível/VBP = 0.0212; RB_S38_CAR: combustível/VBP = 0.1118; RB_S38_GN: combustível/VBP = 0.6129; RB_S38_PET: combustível/VBP = 0.6129,v02_k080
+EOB_minimo_eta,OK,0.09999999999999999,0.1,EOB ≥ η × VBP (η = 0.1) em todo subsetor com produção,v02_k080
+reequilibrio_soma_EOB_regiao,OK,7.275957614183426e-11,1e-06,Σ EOB dos subsetores de cada região = EOB original do setor-alvo; RB: Σ EOB = 103643.5529; RS: Σ EOB = 6737.4468,v02_k080
+multiplicador_producao_subsetores,ALERTA,2.620443567247455,2.2,"multiplicador de produção (Σ coluna de L, inclui latentes) ≤ 2.2: acima em RS_S38_GN (2.327), RS_S38_PET (2.620), RS_S38_GAS (2.344), RB_S38_PET (2.620)",v02_k080
+reagregacao_Z,OK,4.1654857341200113e-10,1e-06,máx |Σ subsetores − original|,v02_eta005
+reagregacao_F,OK,4.547473508864641e-13,1e-06,máx |Σ subsetores − original|,v02_eta005
+reagregacao_X,OK,3.637978807091713e-12,1e-06,máx |Σ subsetores − original|,v02_eta005
+reagregacao_total_linha,OK,3.637978807091713e-12,1e-06,máx |Σ subsetores − original|,v02_eta005
+reagregacao_V,OK,1.902662916108966e-09,1e-06,máx |Σ subsetores − original|,v02_eta005
+reagregacao_S,OK,2.9103830456733704e-11,1e-06,máx |Σ subsetores − original|,v02_eta005
+reagregacao_V_df,OK,0.0,1e-06,máx |Σ subsetores − original|,v02_eta005
+reagregacao_X_df,OK,0.0,1e-06,máx |Σ subsetores − original|,v02_eta005
+reagregacao_totais_EV,OK,0.0,1e-06,,v02_eta005
+balanco_linha_subsetores,OK,9.200448403134942e-09,1e-06,máx |Σ vendas − VBP| nos subsetores (tolerância + resíduo original × participação),v02_eta005
+balanco_coluna_subsetores,OK,1.236469325364975e-10,1e-06,máx |resíduo da coluna − participação × resíduo original| (o resíduo original é repartido pelo VBP),v02_eta005
+identidade_VA_subsetores,OK,6.366462912410498e-12,1e-06,VA − (remunerações + EOB + impostos sobre a produção),v02_eta005
+nao_negatividade,OK,0.0,0.0,"negativos só onde a original já tem (coluna de discrepância, EOB, impostos sobre a produção); nenhum negativo novo",v02_eta005
+satelite_ocupacoes_preservado,OK,3.637978807091713e-12,1e-06,,v02_eta005
+satelite_co2e_preservado,OK,0.0,1e-06,,v02_eta005
+satelite_agua_preservado,OK,1.7763568394002505e-15,1e-06,,v02_eta005
+satelite_energia_preservado,OK,9.094947017729282e-13,1e-06,,v02_eta005
+niveis_residuo_nao_negativo,OK,0.0,0.0,"RS co2e (residuo): identificado 3862147.8290, resíduo 1975857.7254; RB co2e (residuo): identificado 34828615.1621, resíduo 49689733.8945",v02_eta005
+EOB_nao_negativo_subsetores,OK,0.0,0.0,todos ≥ 0,v02_eta005
+subsetores_producao_zero_zerados,OK,3.0,0.0,"3 subsetor(es) com produção zero: RS_S38_SOL, RS_S38_PET, RS_S38_NUC",v02_eta005
+L_nao_negativa,OK,0.0,-1e-10,,v02_eta005
+L_diagonal_maior_igual_1,OK,1.0,1.0,,v02_eta005
+A_soma_colunas_menor_1,OK,0.875124617123719,1.0,Σ coeficientes técnicos de cada coluna (inclui latentes),v02_eta005
+RAS_convergencia,OK,40.0,20000.0,"linhas RS S38: necessário, convergiu em 28 iterações, erro 8.94e-09 (inicial 7.91e+01); linhas RB S38: necessário, convergiu em 40 iterações, erro 9.20e-09 (inicial 7.68e+02); reequilibrio_EOB RS (η = 0.05): necessário, convergiu em 7 iterações, erro 6.85e-10 (inicial 8.07e+01); reequilibrio_EOB RB (η = 0.05): necessário, convergiu em 8 iterações, erro 1.90e-09 (inicial 3.31e+03)",v02_eta005
+roteamento_vendas_geracao_igual_E,OK,1.4551915228366852e-11,1e-06,Σ vendas da geração de r dentro do bloco = E_r = F_r − T_r − G_r,v02_eta005
+roteamento_vendas_transmissao_igual_T,OK,0.0,1e-06,Σ vendas da transmissão de r dentro do bloco = T_r,v02_eta005
+roteamento_geracao_e_transmissao_nao_vendem_fora,OK,0.0,1e-06,Σ |vendas| da geração e da transmissão fora do bloco e à demanda final (Seção 6.4),v02_eta005
+roteamento_fracao_transmissao,OK,7.781984822181929e-17,1e-09,fração da transmissão paga pela distribuição e pela geração das regiões desagregadas (o S38 agregado de região não desagregada recebe a sua parte inteira),v02_eta005
+bloco_fluxos_regionais_preservados,OK,4.547473508864641e-13,1e-06,"os fluxos alvo→alvo entre as regiões (ex.: RS→RS, RS→RB, RB→RS, RB→RB) são os da original",v02_eta005
+subsetores_latentes,OK,2.0,0.0,"colunas de coeficientes guardadas à parte: RS_S38_SOL, RS_S38_PET",v02_eta005
+piso_vbp_combustivel,OK,0.0,0.0,VBP ≥ combustível ÷ κ (κ = 0.7); RS_S38_BIO: combustível/VBP = 0.0255; RS_S38_CAR: combustível/VBP = 0.0219; RS_S38_GN: combustível/VBP = 0.6741; RB_S38_BIO: combustível/VBP = 0.0207; RB_S38_CAR: combustível/VBP = 0.1093; RB_S38_GN: combustível/VBP = 0.6629; RB_S38_PET: combustível/VBP = 0.6629,v02_eta005
+EOB_minimo_eta,OK,0.04999999999999999,0.05,EOB ≥ η × VBP (η = 0.05) em todo subsetor com produção,v02_eta005
+reequilibrio_soma_EOB_regiao,OK,7.275957614183426e-11,1e-06,Σ EOB dos subsetores de cada região = EOB original do setor-alvo; RB: Σ EOB = 103643.5529; RS: Σ EOB = 6737.4468,v02_eta005
+multiplicador_producao_subsetores,ALERTA,2.7339167695551527,2.2,"multiplicador de produção (Σ coluna de L, inclui latentes) ≤ 2.2: acima em RS_S38_GN (2.409), RS_S38_PET (2.734), RS_S38_GAS (2.394), RB_S38_PET (2.734)",v02_eta005
+reagregacao_Z,OK,4.674802767112851e-10,1e-06,máx |Σ subsetores − original|,v02_sem_viabilidade
+reagregacao_F,OK,4.547473508864641e-13,1e-06,máx |Σ subsetores − original|,v02_sem_viabilidade
+reagregacao_X,OK,3.637978807091713e-12,1e-06,máx |Σ subsetores − original|,v02_sem_viabilidade
+reagregacao_total_linha,OK,3.637978807091713e-12,1e-06,máx |Σ subsetores − original|,v02_sem_viabilidade
+reagregacao_V,OK,2.1500454749912024e-09,1e-06,máx |Σ subsetores − original|,v02_sem_viabilidade
+reagregacao_S,OK,2.9103830456733704e-11,1e-06,máx |Σ subsetores − original|,v02_sem_viabilidade
+reagregacao_V_df,OK,0.0,1e-06,máx |Σ subsetores − original|,v02_sem_viabilidade
+reagregacao_X_df,OK,0.0,1e-06,máx |Σ subsetores − original|,v02_sem_viabilidade
+reagregacao_totais_EV,OK,0.0,1e-06,,v02_sem_viabilidade
+balanco_linha_subsetores,OK,9.200448403134942e-09,1e-06,máx |Σ vendas − VBP| nos subsetores (tolerância + resíduo original × participação),v02_sem_viabilidade
+balanco_coluna_subsetores,OK,3.633544116629639e-11,1e-06,máx |resíduo da coluna − participação × resíduo original| (o resíduo original é repartido pelo VBP),v02_sem_viabilidade
+identidade_VA_subsetores,OK,6.59383658785373e-12,1e-06,VA − (remunerações + EOB + impostos sobre a produção),v02_sem_viabilidade
+nao_negatividade,OK,0.0,0.0,"negativos só onde a original já tem (coluna de discrepância, EOB, impostos sobre a produção); nenhum negativo novo",v02_sem_viabilidade
+satelite_ocupacoes_preservado,OK,2.9103830456733704e-11,1e-06,,v02_sem_viabilidade
+satelite_co2e_preservado,OK,0.0,1e-06,,v02_sem_viabilidade
+satelite_agua_preservado,OK,1.7763568394002505e-15,1e-06,,v02_sem_viabilidade
+satelite_energia_preservado,OK,9.094947017729282e-13,1e-06,,v02_sem_viabilidade
+niveis_residuo_nao_negativo,OK,0.0,0.0,"RS co2e (residuo): identificado 3862147.8290, resíduo 1975857.7254; RB co2e (residuo): identificado 34828615.1621, resíduo 49689733.8945",v02_sem_viabilidade
+EOB_nao_negativo_subsetores,OK,0.0,0.0,todos ≥ 0,v02_sem_viabilidade
+subsetores_producao_zero_zerados,OK,3.0,0.0,"3 subsetor(es) com produção zero: RS_S38_SOL, RS_S38_PET, RS_S38_NUC",v02_sem_viabilidade
+L_nao_negativa,OK,0.0,-1e-10,,v02_sem_viabilidade
+L_diagonal_maior_igual_1,OK,1.0,1.0,,v02_sem_viabilidade
+A_soma_colunas_menor_1,OK,0.9010201700394344,1.0,Σ coeficientes técnicos de cada coluna (inclui latentes),v02_sem_viabilidade
+RAS_convergencia,OK,40.0,20000.0,"linhas RS S38: necessário, convergiu em 28 iterações, erro 8.94e-09 (inicial 7.91e+01); linhas RB S38: necessário, convergiu em 40 iterações, erro 9.20e-09 (inicial 7.68e+02); reequilibrio_EOB RS (η = 0.1): necessário, convergiu em 7 iterações, erro 1.06e-09 (inicial 1.26e+02); reequilibrio_EOB RB (η = 0.1): necessário, convergiu em 8 iterações, erro 2.15e-09 (inicial 3.19e+03)",v02_sem_viabilidade
+roteamento_vendas_geracao_igual_E,OK,9.094947017729282e-13,1e-06,Σ vendas da geração de r dentro do bloco = E_r = F_r − T_r − G_r,v02_sem_viabilidade
+roteamento_vendas_transmissao_igual_T,OK,2.2737367544323206e-13,1e-06,Σ vendas da transmissão de r dentro do bloco = T_r,v02_sem_viabilidade
+roteamento_geracao_e_transmissao_nao_vendem_fora,OK,0.0,1e-06,Σ |vendas| da geração e da transmissão fora do bloco e à demanda final (Seção 6.4),v02_sem_viabilidade
+roteamento_fracao_transmissao,OK,7.781984822181929e-17,1e-09,fração da transmissão paga pela distribuição e pela geração das regiões desagregadas (o S38 agregado de região não desagregada recebe a sua parte inteira),v02_sem_viabilidade
+bloco_fluxos_regionais_preservados,OK,1.4551915228366852e-11,1e-06,"os fluxos alvo→alvo entre as regiões (ex.: RS→RS, RS→RB, RB→RS, RB→RB) são os da original",v02_sem_viabilidade
+subsetores_latentes,OK,2.0,0.0,"colunas de coeficientes guardadas à parte: RS_S38_SOL, RS_S38_PET",v02_sem_viabilidade
+piso_vbp_combustivel,OK,0.0,0.0,VBP ≥ combustível ÷ κ (κ = 0.7); RS_S38_BIO: combustível/VBP = 0.0255; RS_S38_CAR: combustível/VBP = 0.0219; RS_S38_GN: combustível/VBP = 0.7000; RB_S38_BIO: combustível/VBP = 0.0204; RB_S38_CAR: combustível/VBP = 0.1077; RB_S38_GN: combustível/VBP = 0.7000; RB_S38_PET: combustível/VBP = 0.7000,v02_sem_viabilidade
+EOB_minimo_eta,ALERTA,0.012908220247973362,0.1,"EOB ≥ η × VBP (η = 0.1) em todo subsetor com produção: abaixo em RS_S38_GN (0.0241), RB_S38_GN (0.0129), RB_S38_PET (0.0129)",v02_sem_viabilidade
+reequilibrio_soma_EOB_regiao,OK,1.8189894035458565e-12,1e-06,Σ EOB dos subsetores de cada região = EOB original do setor-alvo; RB: Σ EOB = 103643.5529; RS: Σ EOB = 6737.4468,v02_sem_viabilidade
+multiplicador_producao_subsetores,ALERTA,2.820282707279275,2.2,"multiplicador de produção (Σ coluna de L, inclui latentes) ≤ 2.2: acima em RS_S38_GN (2.454), RS_S38_PET (2.820), RS_S38_GAS (2.344), RB_S38_PET (2.820)",v02_sem_viabilidade
