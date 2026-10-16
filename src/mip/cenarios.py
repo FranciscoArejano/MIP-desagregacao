@@ -150,10 +150,15 @@ def _resumo(res, modelo: ModeloLeontief) -> dict:
 
 
 def executar(mip: MIP, cenarios: pd.DataFrame, versao: str = "", reparticao: str | dict = "vendas_df",
-             n_top: int = 10) -> dict[str, pd.DataFrame]:
-    """Roda todos os cenários numa MIP e devolve as tabelas no formato do artigo."""
+             n_top: int = 10, setor_destaque: str = "S38") -> dict[str, pd.DataFrame]:
+    """Roda todos os cenários numa MIP e devolve as tabelas no formato do artigo.
+
+    `setor_destaque`: setor cuja participação nas emissões induzidas vai à tabela `participacao_setor` (o setor
+    agregado da original ou os seus subsetores, `S38_*`, numa MIP desagregada), por região e no total."""
     modelo = ModeloLeontief(mip)
-    imp, top, regs, di, rep = [], [], [], [], []
+    imp, top, regs, di, rep, part = [], [], [], [], [], []
+    cods = mip.setores["codigo"].to_numpy()
+    destaque = (cods == setor_destaque) | np.char.startswith(cods.astype(str), f"{setor_destaque}_")
     for nome, g in cenarios.groupby("cenario", sort=False):
         choques, r_ = resolver_choques(mip, g, reparticao)
         if len(r_):
@@ -178,8 +183,16 @@ def executar(mip: MIP, cenarios: pd.DataFrame, versao: str = "", reparticao: str
         di.append({"versao": versao, "cenario": nome, "co2e_total": d["co2e_total"], "co2e_diretas": d["co2e_diretas"],
                    "co2e_indiretas": d["co2e_indiretas"], "pct_diretas": 100 - d["pct_indiretas"],
                    "pct_indiretas": d["pct_indiretas"]})
+        tot = d["co2e_total"]
+        for k in np.flatnonzero(destaque):
+            part.append({"versao": versao, "cenario": nome, "regiao": reg_arr[k], "codigo": cods[k],
+                         "dX": float(res.dX[k]), "co2e": float(em[k]),
+                         "pct_co2e_total": 100 * float(em[k]) / tot if tot else np.nan})
+        part.append({"versao": versao, "cenario": nome, "regiao": "RS + RB", "codigo": f"{setor_destaque} (total)",
+                     "dX": float(res.dX[destaque].sum()), "co2e": float(em[destaque].sum()),
+                     "pct_co2e_total": 100 * float(em[destaque].sum()) / tot if tot else np.nan})
     return {"impactos": pd.DataFrame(imp), "top10": pd.concat(top, ignore_index=True), "regioes": pd.DataFrame(regs),
-            "diretas_indiretas": pd.DataFrame(di),
+            "diretas_indiretas": pd.DataFrame(di), "participacao_setor": pd.DataFrame(part),
             "reparticao": pd.concat(rep, ignore_index=True) if rep else pd.DataFrame(
                 columns=["cenario", "regiao", "setor_agregado", "subsetor", "peso", "valor_R$mi", "regra", "versao"])}
 

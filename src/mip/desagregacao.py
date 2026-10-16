@@ -41,7 +41,9 @@ from .modelo import ModeloLeontief
 TIPOS_SUBSETOR = ("geracao", "transmissao", "distribuicao", "gas_utilidades", "rede")
 REGRAS_COLUNA = ("proporcional_vbp", "fixa", "indicador", "fixa_com_teto")
 REGRAS_LINHA = ("proporcional_vbp", "somente_rede_e_gas", "somente_distribuicao_e_gas", "fixa_por_comprador")
-REGRAS_PRIMARIOS = ("proporcional_vbp", "fixa", "indicador", "proporcional_ci", "niveis", "fixa_por_tipo")
+REGRAS_PRIMARIOS = ("proporcional_vbp", "fixa", "indicador", "proporcional_ci", "niveis", "fixa_por_tipo",
+                    "fixa_por_tipo_sem_combustivel")
+REGRAS_POR_TIPO = ("fixa_por_tipo", "fixa_por_tipo_sem_combustivel")
 OPCOES_BLOCO = ("proporcional", "geracao_vende_para_rede", "roteamento_por_componentes")
 MODOS_VBP = ("participacoes", "ancora_bloco", "ancora_componentes")
 MODOS_NIVEIS = ("residuo", "proporcional", "sem_residuo")
@@ -69,6 +71,7 @@ COLS_REGRAS_PRIMARIOS = ["regiao", "item", "regra", "subsetor", "valor", "fonte"
 COLS_COEF_LATENTES = ["regiao", "subsetor", "tipo_linha", "regiao_linha", "codigo_linha", "coeficiente", "fonte"]
 COLS_LATENTES_ESPELHO = ["regiao", "subsetor", "regiao_espelho", "fonte"]
 COLS_COMPONENTES = ["regiao", "componente", "valor", "fonte"]
+COLS_PESOS_TUST = ["regiao", "subsetor", "valor", "fonte"]
 
 
 def tipo_canonico(tipo: str) -> str:
@@ -132,6 +135,9 @@ class Especificacao:
     piso_vbp: dict = field(default_factory=dict)  # {kappa, combustiveis: {subsetor: [fornecedores | 'importacoes']}, viabilidade_eta, max_iter}
     reequilibrio: dict = field(default_factory=dict)  # {eta, linhas_fixas, primarios_ajustaveis, importacoes, se_inviavel}
     alerta_multiplicador: float | None = None  # ALERTA se o multiplicador de produção de um subsetor passar deste valor
+    # Rodada 04 — V1: TUST paga pela geração repartida por pesos próprios (ex.: MWh no SIN), e não pelo VBP
+    pesos_tust_geracao: pd.DataFrame | None = None  # colunas regiao, subsetor, valor, fonte
+    alerta_insumos_nao_energeticos: float | None = None  # T12: ALERTA se insumos não energéticos ÷ VBP < este valor
     ras_tolerancia: float = 1e-8
     ras_max_iter: int = 10000
     aviso: str | None = None
@@ -152,6 +158,8 @@ class Especificacao:
         self.niveis = dict(self.niveis or {})
         self.piso_vbp = dict(self.piso_vbp or {})
         self.reequilibrio = dict(self.reequilibrio or {})
+        if self.pesos_tust_geracao is not None:
+            self.pesos_tust_geracao = _tabela(self.pesos_tust_geracao, COLS_PESOS_TUST)
 
     def componente(self, regiao: str, nome: str) -> float | None:
         """Valor de um componente do bloco para a região (linha da região vence a linha '*')."""
@@ -215,6 +223,9 @@ def ler_especificacao(caminho_yaml: str | Path) -> Especificacao:
         reequilibrio=cfg.get("reequilibrio") or {},
         alerta_multiplicador=(float(cfg["alerta_multiplicador_producao"])
                               if cfg.get("alerta_multiplicador_producao") is not None else None),
+        pesos_tust_geracao=ler("pesos_tust_geracao"),
+        alerta_insumos_nao_energeticos=(float(cfg["alerta_insumos_nao_energeticos"])
+                                        if cfg.get("alerta_insumos_nao_energeticos") is not None else None),
         ras_tolerancia=float(ras.get("tolerancia", 1e-8)),
         ras_max_iter=int(ras.get("max_iter", 10000)),
         aviso=cfg.get("aviso"),
@@ -322,7 +333,7 @@ def validar_especificacao(espec: Especificacao, mip: MIP) -> None:
         if inv:
             erros.append(f"{nome}: regras inválidas {sorted(inv)} (válidas: {validas})")
         tipos_validos = {tipo_canonico(x) for x in TIPOS_SUBSETOR}
-        por_tipo = tab["regra"] == "fixa_por_tipo"
+        por_tipo = tab["regra"].isin(REGRAS_POR_TIPO)
         subs_inv = (set(tab.loc[~por_tipo, "subsetor"]) - codigos - {""}) | \
                    (set(tab.loc[por_tipo, "subsetor"]) - codigos - tipos_validos)
         if subs_inv:
@@ -406,6 +417,26 @@ def validar_especificacao(espec: Especificacao, mip: MIP) -> None:
                          "(eletricidade e gás, regra do Comex), fixas pelo D9-r; não há importação não energética a mover")
         if rq.get("se_inviavel", "erro") not in ("erro", "limitar"):
             erros.append("reequilibrio.se_inviavel ∈ {erro, limitar}")
+    if (espec.regras_primarios["regra"] == "fixa_por_tipo_sem_combustivel").any() and not (pv or {}).get("combustiveis"):
+        erros.append("regra fixa_por_tipo_sem_combustivel exige piso_vbp.combustiveis (o combustível de cada subsetor)")
+    pt = espec.pesos_tust_geracao
+    if pt is not None and len(pt):
+        tipos_sub = dict(zip(subs["codigo"], subs["tipo"].map(tipo_canonico)))
+        inv = sorted(set(pt["subsetor"]) - codigos)
+        if inv:
+            erros.append(f"pesos_tust_geracao: subsetores inexistentes {inv}")
+        nao_ger = sorted(c for c in set(pt["subsetor"]) & codigos if tipos_sub[c] != "geracao")
+        if nao_ger:
+            erros.append(f"pesos_tust_geracao: só subsetores de geração (inválidos: {nao_ger})")
+        if pt["valor"].isna().any() or (pt["valor"] < 0).any():
+            erros.append("pesos_tust_geracao: pesos vazios ou negativos")
+        if set(pt["regiao"]) - set(espec.regioes):
+            erros.append(f"pesos_tust_geracao: regiões não desagregadas {sorted(set(pt['regiao']) - set(espec.regioes))}")
+        if pt.duplicated(["regiao", "subsetor"]).any():
+            erros.append("pesos_tust_geracao: (regiao, subsetor) repetido")
+        for r in espec.regioes:
+            if pt.loc[pt["regiao"] == r, "valor"].sum() <= 0:
+                erros.append(f"pesos_tust_geracao: região {r} sem peso positivo")
     if pv and pv.get("viabilidade_eta") is not None:
         if not rq:
             erros.append("piso_vbp.viabilidade_eta exige o bloco reequilibrio (o piso de viabilidade só existe para ele)")
@@ -534,8 +565,12 @@ class _GrupoAlvo:
     desagregado: bool
 
 
-def _pesos(grupo: _Grupo | None, ga: _GrupoAlvo, descricao: str) -> tuple[np.ndarray, str, str]:
-    """Pesos de repartição entre os subsetores (somam 1). Devolve (pesos, regra, fonte)."""
+def _pesos(grupo: _Grupo | None, ga: _GrupoAlvo, descricao: str, base_tipo: np.ndarray | None = None
+           ) -> tuple[np.ndarray, str, str]:
+    """Pesos de repartição entre os subsetores (somam 1). Devolve (pesos, regra, fonte).
+
+    `base_tipo`: base da repartição dentro do tipo nas regras por tipo (padrão: o VBP; na
+    fixa_por_tipo_sem_combustivel, VBP − combustível)."""
     s = ga.s
     if not ga.desagregado:
         return np.ones(1), "agregado", ""
@@ -547,21 +582,23 @@ def _pesos(grupo: _Grupo | None, ga: _GrupoAlvo, descricao: str) -> tuple[np.nda
         w = np.array([grupo.valores.get(c, 0.0) for c in ga.codigos])
         if (w < 0).any() or abs(w.sum() - 1) > TOL_SOMA:
             raise EspecificacaoInvalida(f"{descricao}: participações fixas devem ser ≥ 0 e somar 1 (soma = {w.sum()})")
-    elif regra == "fixa_por_tipo":
+    elif regra in REGRAS_POR_TIPO:
         # valor por subsetor (código) ou por tipo (geracao, transmissao, ...): dentro do tipo, na proporção do VBP
+        # (fixa_por_tipo) ou de VBP − combustível (fixa_por_tipo_sem_combustivel; base_tipo)
+        b = s if base_tipo is None else np.maximum(np.asarray(base_tipo, dtype=float), 0.0) * (s > 0)
         w = np.zeros(len(ga.codigos))
         tipos = [tipo_canonico(x) for x in ga.tipos]
         for chave, v in grupo.valores.items():
             if chave in ga.codigos:
                 w[ga.codigos.index(chave)] += v
                 continue
-            membros = [k for k, tk in enumerate(tipos) if tk == tipo_canonico(chave) and s[k] > 0]
+            membros = [k for k, tk in enumerate(tipos) if tk == tipo_canonico(chave) and s[k] > 0 and b[k] > 0]
             if v > 0 and not membros:
-                raise EspecificacaoInvalida(f"{descricao}: fixa_por_tipo dá {v} ao tipo '{chave}', sem subsetor com VBP > 0")
+                raise EspecificacaoInvalida(f"{descricao}: {regra} dá {v} ao tipo '{chave}', sem subsetor com base > 0")
             if membros:
-                w[membros] += v * s[membros] / s[membros].sum()
+                w[membros] += v * b[membros] / b[membros].sum()
         if (w < 0).any() or abs(w.sum() - 1) > TOL_SOMA:
-            raise EspecificacaoInvalida(f"{descricao}: fixa_por_tipo deve somar 1 (soma = {w.sum()})")
+            raise EspecificacaoInvalida(f"{descricao}: {regra} deve somar 1 (soma = {w.sum()})")
     elif regra == "indicador":
         faltam = [c for c, sk in zip(ga.codigos, s) if sk > 0 and c not in grupo.valores]
         if faltam:
@@ -930,6 +967,16 @@ def _celulas_roteamento(espec: Especificacao, gv: _GrupoAlvo, gc: _GrupoAlvo, B:
         if (1 - alfa) * T * frac > 0 and sgc <= 0:
             raise EspecificacaoInvalida(f"roteamento: a geração de {gc.regiao} tem VBP zero e não pode pagar transmissão")
         w_ger_c = np.where(ger_c, gc.s / sgc, 0.0) if sgc > 0 else np.zeros(len(tc))
+        pt = espec.pesos_tust_geracao
+        if pt is not None and len(pt):  # V1 (Rodada 04): TUST da geração por pesos próprios (MWh no SIN)
+            pr = pt[pt["regiao"] == gc.regiao].set_index("subsetor")["valor"]
+            p = np.array([float(pr.get(c, 0.0)) if g else 0.0 for c, g in zip(gc.codigos, ger_c)])
+            sem_base = [c for c, pk, sk in zip(gc.codigos, p, gc.s) if pk > 0 and sk <= 0]
+            if sem_base:
+                raise EspecificacaoInvalida(f"pesos_tust_geracao em {gc.regiao}: peso para subsetor sem produção {sem_base}")
+            if (1 - alfa) * T * frac > 0 and p.sum() <= 0:
+                raise EspecificacaoInvalida(f"pesos_tust_geracao em {gc.regiao}: soma zero")
+            w_ger_c = p / p.sum() if p.sum() > 0 else w_ger_c
         w_gn_c = (np.array(gc.codigos) == espec.subsetor_termica_gas).astype(float)
     else:
         w_dis_c = w_ger_c = w_gn_c = np.ones(1)
@@ -1088,6 +1135,22 @@ def _custos_fixos_e_combustivel(espec: Especificacao, m2: MIP, mapa: pd.DataFram
         linhas = np.isin(cod_orig, [c for c in forn if c != "importacoes"]) & ~bloco
         comb[n] = m2.Z[linhas, k].sum() + (m2.V[ip["importacoes"], k] if "importacoes" in forn else 0.0)
     return fixos, comb
+
+
+def _combustivel_nas_colunas(espec: Especificacao, Z2: np.ndarray, V2: np.ndarray, mapa: pd.DataFrame,
+                            idx: list[int], ip: dict) -> np.ndarray:
+    """Combustível de cada coluna em `idx` (linhas de piso_vbp.combustiveis, de todas as origens, e as importações
+    se listadas), com as matrizes em construção — usado pela regra fixa_por_tipo_sem_combustivel (V1, Rodada 04)."""
+    cod_orig = mapa["codigo_original"].to_numpy()
+    cod_novo = list(mapa["codigo_novo"])
+    bloco = cod_orig == espec.setor_alvo
+    comb_cfg = espec.piso_vbp.get("combustiveis") or {}
+    out = np.zeros(len(idx))
+    for n, k in enumerate(idx):
+        forn = comb_cfg.get(cod_novo[k]) or []
+        linhas = np.isin(cod_orig, [c for c in forn if c != "importacoes"]) & ~bloco
+        out[n] = Z2[linhas, k].sum() + (V2[ip["importacoes"], k] if "importacoes" in forn else 0.0)
+    return out
 
 
 def _eob_maximo(espec: Especificacao, m2: MIP, mapa: pd.DataFrame, idx: list[int]) -> np.ndarray:
@@ -1531,6 +1594,10 @@ def _desagregar_passo(mip: MIP, espec: Especificacao, reequilibrar: bool = True)
                 w = base / base.sum()
                 vals = w * total
                 regra, fonte = g.regra, g.fonte
+            elif g is not None and g.regra == "fixa_por_tipo_sem_combustivel":
+                comb = _combustivel_nas_colunas(espec, Z2, V2, mapa, idx, ip)
+                w, regra, fonte = _pesos(g, ga, desc, base_tipo=X_sub - comb)
+                vals = w * total
             else:
                 w, regra, fonte = _pesos(g, ga, desc)
                 vals = w * total
@@ -1632,6 +1699,24 @@ def _desagregar_passo(mip: MIP, espec: Especificacao, reequilibrar: bool = True)
 # =============================================================================================
 # Verificação
 # =============================================================================================
+def insumos_nao_energeticos(res: ResultadoDesagregacao) -> pd.DataFrame:
+    """T12 (Rodada 04): compras de cada subsetor com produção a setores fora do bloco, exceto as linhas de
+    combustível (reequilibrio.linhas_fixas e piso_vbp.combustiveis), em valor e ÷ VBP."""
+    e, m2, mapa = res.especificacao, res.mip, res.mapa
+    cod = mapa["codigo_original"].to_numpy()
+    comb = set(e.reequilibrio.get("linhas_fixas") or []) | {
+        c for v in (e.piso_vbp.get("combustiveis") or {}).values() for c in v if c != "importacoes"}
+    linhas = ~np.isin(cod, sorted(comb)) & (cod != e.setor_alvo)
+    out = []
+    for row in mapa[mapa["desagregado"]].itertuples(index=False):
+        k = int(row.indice_novo)
+        if m2.X[k] > 0:
+            v = float(m2.Z[linhas, k].sum())
+            out.append({"regiao": row.regiao, "subsetor": row.codigo_novo, "insumos_nao_energeticos": v,
+                        "insumos_nao_energeticos / VBP": v / m2.X[k], "VBP": float(m2.X[k])})
+    return pd.DataFrame(out, columns=["regiao", "subsetor", "insumos_nao_energeticos", "insumos_nao_energeticos / VBP", "VBP"])
+
+
 def verificar(res: ResultadoDesagregacao) -> pd.DataFrame:
     """Checagens obrigatórias ao final da desagregação. Status: OK | ALERTA | FALHA."""
     m2, m1, mapa = res.mip, res.original, res.mapa
@@ -1860,6 +1945,16 @@ def verificar(res: ResultadoDesagregacao) -> pd.DataFrame:
             det.append(f"{r}: Σ EOB = {eob[ks].sum():.4f}")
         add("reequilibrio_soma_EOB_regiao", dmax <= TOL_REAGREGACAO, dmax, TOL_REAGREGACAO,
             "Σ EOB dos subsetores de cada região = EOB original do setor-alvo; " + "; ".join(det))
+    if e.alerta_insumos_nao_energeticos is not None:
+        lim = float(e.alerta_insumos_nao_energeticos)
+        tab_ne = insumos_nao_energeticos(res)
+        baixo = tab_ne[tab_ne["insumos_nao_energeticos / VBP"] < lim - 1e-12]
+        add("insumos_nao_energeticos_minimo", not len(baixo), float(tab_ne["insumos_nao_energeticos / VBP"].min()), lim,
+            f"compras a setores fora do bloco, exceto combustíveis, ÷ VBP ≥ {lim} em todo subsetor com produção"
+            + (": abaixo em " + ", ".join(f"{a}_{b} ({c:.4f})" for a, b, c in
+                                          zip(baixo["regiao"], baixo["subsetor"], baixo["insumos_nao_energeticos / VBP"]))
+               if len(baixo) else ""),
+            alerta=True)
     if e.alerta_multiplicador is not None:
         mult = mod.L.sum(axis=0)
         cols = [int(k) for k in sub]

@@ -1,0 +1,23 @@
+regiao,subsetor,participacao,fonte
+RS,S38_HID,14542.551927,"GWh (ONS 2019 (dados abertos), sem autoprodução, Canoas → GN (D8: RS pelo ONS)); o piso de VBP (D9-f) redistribui depois, no motor [igual à v02]"
+RS,S38_EOL,5266.917537,"GWh (ONS 2019 (dados abertos), sem autoprodução, Canoas → GN (D8: RS pelo ONS)); o piso de VBP (D9-f) redistribui depois, no motor [igual à v02]"
+RS,S38_SOL,0.0,produção zero no RS em 2019 (D6 = A: latente; nuclear zerado) [igual à v02]
+RS,S38_BIO,68.233445,"GWh (ONS 2019 (dados abertos), sem autoprodução, Canoas → GN (D8: RS pelo ONS)); o piso de VBP (D9-f) redistribui depois, no motor [igual à v02]"
+RS,S38_CAR,2625.22361,"GWh (ONS 2019 (dados abertos), sem autoprodução, Canoas → GN (D8: RS pelo ONS)); o piso de VBP (D9-f) redistribui depois, no motor [igual à v02]"
+RS,S38_GN,174.56229000000002,"GWh (ONS 2019 (dados abertos), sem autoprodução, Canoas → GN (D8: RS pelo ONS)); o piso de VBP (D9-f) redistribui depois, no motor [igual à v02]"
+RS,S38_PET,0.0,produção zero no RS em 2019 (D6 = A: latente; nuclear zerado) [igual à v02]
+RS,S38_NUC,0.0,produção zero no RS em 2019 (D6 = A: latente; nuclear zerado) [igual à v02]
+RS,S38_TRA,,não usado (ancora_componentes: VBP por componente/resíduo) [igual à v02]
+RS,S38_DIS,,não usado (ancora_componentes: VBP por componente/resíduo) [igual à v02]
+RS,S38_GAS,,não usado (ancora_componentes: VBP por componente/resíduo) [igual à v02]
+RB,S38_HID,363907.448073,"GWh (EPE, BEN 2020, Tabela 5.4 (serviço público) − RS pelo ONS (D8); PET = diesel + óleo combustível + outras não renováveis; BIO = lenha + biodiesel + outras renováveis); o piso de VBP (D9-f) redistribui depois, no motor [igual à v02]"
+RB,S38_EOL,50687.082463,"GWh (EPE, BEN 2020, Tabela 5.4 (serviço público) − RS pelo ONS (D8); PET = diesel + óleo combustível + outras não renováveis; BIO = lenha + biodiesel + outras renováveis); o piso de VBP (D9-f) redistribui depois, no motor [igual à v02]"
+RB,S38_SOL,4978.0,"GWh (EPE, BEN 2020, Tabela 5.4 (serviço público) − RS pelo ONS (D8); PET = diesel + óleo combustível + outras não renováveis; BIO = lenha + biodiesel + outras renováveis); o piso de VBP (D9-f) redistribui depois, no motor [igual à v02]"
+RB,S38_BIO,1771.766555,"GWh (EPE, BEN 2020, Tabela 5.4 (serviço público) − RS pelo ONS (D8); PET = diesel + óleo combustível + outras não renováveis; BIO = lenha + biodiesel + outras renováveis); o piso de VBP (D9-f) redistribui depois, no motor [igual à v02]"
+RB,S38_CAR,11197.77639,"GWh (EPE, BEN 2020, Tabela 5.4 (serviço público) − RS pelo ONS (D8); PET = diesel + óleo combustível + outras não renováveis; BIO = lenha + biodiesel + outras renováveis); o piso de VBP (D9-f) redistribui depois, no motor [igual à v02]"
+RB,S38_GN,47422.43771,"GWh (EPE, BEN 2020, Tabela 5.4 (serviço público) − RS pelo ONS (D8); PET = diesel + óleo combustível + outras não renováveis; BIO = lenha + biodiesel + outras renováveis); o piso de VBP (D9-f) redistribui depois, no motor [igual à v02]"
+RB,S38_PET,5174.0,"GWh (EPE, BEN 2020, Tabela 5.4 (serviço público) − RS pelo ONS (D8); PET = diesel + óleo combustível + outras não renováveis; BIO = lenha + biodiesel + outras renováveis); o piso de VBP (D9-f) redistribui depois, no motor [igual à v02]"
+RB,S38_NUC,16129.0,"GWh (EPE, BEN 2020, Tabela 5.4 (serviço público) − RS pelo ONS (D8); PET = diesel + óleo combustível + outras não renováveis; BIO = lenha + biodiesel + outras renováveis); o piso de VBP (D9-f) redistribui depois, no motor [igual à v02]"
+RB,S38_TRA,,não usado (ancora_componentes: VBP por componente/resíduo) [igual à v02]
+RB,S38_DIS,,não usado (ancora_componentes: VBP por componente/resíduo) [igual à v02]
+RB,S38_GAS,,não usado (ancora_componentes: VBP por componente/resíduo) [igual à v02]

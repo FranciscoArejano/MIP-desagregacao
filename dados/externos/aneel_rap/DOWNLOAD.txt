@@ -50,3 +50,24 @@ sha256: 567cfa4d69a8005385313bc25fff303d789dd631af604747147c40079ea1ebd5
 uso: informativo (descreve a REN 559/2013 e o rateio 50/50 entre geração e carga)
 
 não acessados: www2.aneel.gov.br/cedoc (anexo da REH 2.565/2019 e notas técnicas) e www.canalenergia.com.br — ambos respondem com desafio anti-robô (Cloudflare, 403); não houve tentativa de contornar.
+
+# Rodada 04
+arquivo: ons_seamse_201812/SEAMSE_201812.pdf
+url: https://www.ons.org.br/AcervoDigitalDocumentosEPublicacoes/SEAMSE_201812.pdf
+data_acesso_utc: 2026-10-16T15:56:25Z
+sha256: bf15544642f1a315862e78ac6372195e4202e176cfd03a74d2990d5f00d88515
+uso: V3 (variante _rap_ons): "Total Encargos de Uso", Total Ciclo 18/19 acumulado jul–dez/2018 = R$ 10.576.544.162,01 (p. 8 do PDF, seção 4 "Encargos pagos pelos usuários"; sem PIS/Pasep e Cofins)
+
+arquivo: ons_seamse_201906/SEAMSE_201906.pdf
+url: https://www.ons.org.br/AcervoDigitalDocumentosEPublicacoes/SEAMSE_201906.pdf
+data_acesso_utc: 2026-10-16T15:56:25Z
+sha256: 4f6593756800300edf83681968ed355f47d92dd0d3deff80313738f00deda6d8
+uso: V3: "Total Encargos de Uso", Total Ciclo 18/19 (jul/2018–jun/2019) = R$ 21.367.058.292,17 (p. 8 do PDF, seção 4)
+
+arquivo: ons_seamse_201912/SEAMSE_201912.pdf (o mesmo da Rodada 02b; baixado de novo em 2026-10-16T15:56:25Z, SHA-256 igual)
+uso na Rodada 04: V3: "Total Encargos de Uso", Total Ciclo 19/20 acumulado jul–dez/2019 = R$ 12.145.090.044,99 (p. 7 do PDF, seção 4)
+
+arquivo: reh_2565_2019_texto/reh20192565ti.pdf
+origem: enviado pelo Francisco na conversa da Rodada 04 (16/10/2026); é o "texto integral" da REH 2.565/2019 na biblioteca da ANEEL (nome de arquivo reh20192565ti.pdf; criado em 27/05/2020)
+sha256: 0021f7efb8a02078d4476a482657cd54b3dfd4aa5d512ad9246340546b243ae1
+uso: confirma a REH 2.565/2019 (vigência a partir de 1º/07/2019; RAP pelos Anexos I, IV, V e VIII). As 3 páginas NÃO trazem o total da RAP (fica nos Anexos, não incluídos). O valor de 2019-2020 continua o da fonte secundária (25700). A tentativa de baixar o Anexo (www2.aneel.gov.br/cedoc/areh20192565_1.pdf) recebeu 403 (desafio anti-robô; não contornado) em 2026-10-16
