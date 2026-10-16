@@ -240,6 +240,14 @@ def formato_longo(mip: MIP) -> pd.DataFrame:
     return pd.concat(partes, ignore_index=True)
 
 
+def caminho_coef_latentes_ao_lado(caminho_longo: str | Path) -> Path:
+    """Arquivo dos coeficientes latentes que acompanha um CSV longo: x_longo.csv → x_coef_latentes.csv
+    (outro nome: x.csv → x_coef_latentes.csv). Usado por quem grava e por quem lê."""
+    p = Path(caminho_longo)
+    base = p.name[: -len("_longo.csv")] if p.name.endswith("_longo.csv") else p.stem
+    return p.with_name(base + "_coef_latentes.csv")
+
+
 def ler_mip_longo(caminho: str | Path, caminho_coef_latentes: str | Path | None = None) -> MIP:
     """Reconstrói uma MIP a partir do CSV em formato longo (ver `formato_longo`).
 
@@ -282,9 +290,10 @@ def ler_mip_longo(caminho: str | Path, caminho_coef_latentes: str | Path | None 
     V_df = np.vstack([vetor_df("insumos_primarios_df", it) for it in ITENS_PRIMARIOS_DF])
     X_df = vetor_df("total_demanda_final", "total")
     coef = None
-    cand = Path(caminho_coef_latentes) if caminho_coef_latentes else \
-        caminho.with_name(caminho.name.replace("_longo.csv", "_coef_latentes.csv"))
-    if cand.exists() and cand != caminho:
+    if caminho_coef_latentes and not Path(caminho_coef_latentes).exists():
+        raise FileNotFoundError(f"coeficientes latentes não encontrados: {caminho_coef_latentes}")
+    cand = Path(caminho_coef_latentes) if caminho_coef_latentes else caminho_coef_latentes_ao_lado(caminho)
+    if cand.exists():
         coef = pd.read_csv(cand)
     totais = {it: float(V[k].sum()) for k, it in enumerate(ITENS_PRIMARIOS)} | {"vbp": float(X.sum())}
     return MIP(setores=setores, Z=Z, F=F, total_linha=Z.sum(axis=1) + F.sum(axis=1), X=X, V=V, V_df=V_df, X_df=X_df,

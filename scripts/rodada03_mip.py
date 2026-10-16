@@ -6,7 +6,8 @@ Uso (na raiz do repositório, depois de scripts/rodada03.py e scripts/rodada03_p
 Saídas em resultados/rodada03/:
 - MIP_RS_RB_2019_S38_11sub_v02.xlsx (+ _longo.csv)       principal: P1 + E1 + D9 (κ = 0.70, η = 0.10)
 - MIP_RS_RB_2019_S38_11sub_v02_P2 / _E2 / _E3             sensibilidades (.xlsx e _longo.csv)
-- MIP_RS_RB_2019_S38_11sub_v02_k060 / _k080 / _eta005 / _sem_viabilidade   só _longo.csv (+ _coef_latentes.csv)
+- MIP_RS_RB_2019_S38_11sub_v02_k060 / _k080 / _eta005 / _sem_viabilidade / _gas_sulgas
+                                                         só _longo.csv (+ _coef_latentes.csv; as completas também)
 - checagens_v02.csv                                      checagens de todas as versões
 - quadro_subsetores_v02.xlsx                             quadro por subsetor + abas v01_x_v02, reequilibrio_RAS,
                                                          pisos_atingidos e variantes
@@ -35,12 +36,14 @@ SAIDA = PASTA_RESULTADOS / "rodada03"
 NOME = "MIP_RS_RB_2019_S38_11sub"
 V01_XLSX = PASTA_RESULTADOS / "rodada02" / f"{NOME}_v01.xlsx"
 COMPLETAS = {"v02": "", "v02_P2": "_P2", "v02_E2": "_E2", "v02_E3": "_E3"}  # .xlsx + CSV longo
-SO_LONGO = {"v02_k060": "_k060", "v02_k080": "_k080", "v02_eta005": "_eta005", "v02_sem_viabilidade": "_sem_viabilidade"}
+SO_LONGO = {"v02_k060": "_k060", "v02_k080": "_k080", "v02_eta005": "_eta005", "v02_sem_viabilidade": "_sem_viabilidade",
+            "v02_gas_sulgas": "_gas_sulgas"}
 LIMITE_XLSX_MB = 50
 # faixas de plausibilidade E1 (t CO2e/MWh) — Seção 4 da Rodada 03
 FAIXAS_E1 = {"S38_CAR": (0.8, 1.6), "S38_GN": (0.35, 0.65), "S38_PET": (0.65, 1.1), "S38_BIO": (0.0, 0.1),
              "S38_HID": (0.0, 0.0), "S38_EOL": (0.0, 0.0), "S38_SOL": (0.0, 0.0), "S38_NUC": (0.0, 0.0)}
 ALERTA_MULT = 2.2
+ROTULO_EMISSOES = {"v02_E2": "E2", "v02_E3": "E3"}  # nível de emissões de cada versão (as demais: E1)
 ip = {it: k for k, it in enumerate(ITENS_PRIMARIOS)}
 ks = {it: k for k, it in enumerate(ITENS_SATELITE)}
 
@@ -112,8 +115,8 @@ def tabela_subsetores(r, nome, G, res_em=None) -> pd.DataFrame:
             alertas.append("produção zero" + (" (latente)" if lat else ""))
         if x > 0 and m2.V[ip["eob"], j] < 0:
             alertas.append("EOB negativo")
-        rot1 = "E1"
-        if c in FAIXAS_E1 and pd.notna(d.get(f"t CO2e/MWh {rot1}")):
+        rot1 = (res_em or [(r, "E1")])[0][1]  # as faixas da Seção 4 são do fator E1: só valem com o rótulo E1
+        if rot1 == "E1" and c in FAIXAS_E1 and pd.notna(d.get(f"t CO2e/MWh {rot1}")):
             lo, hi = FAIXAS_E1[c]
             if not (lo - 1e-9 <= d[f"t CO2e/MWh {rot1}"] <= hi + 1e-9):
                 alertas.append(f"E1 fora da faixa [{lo}, {hi}] t/MWh")
@@ -126,6 +129,33 @@ def tabela_subsetores(r, nome, G, res_em=None) -> pd.DataFrame:
                 alertas.append(f"piso de VBP atingido ({p['piso_que_manda'].iloc[0]})")
         d["alertas"] = "; ".join(alertas)
         linhas.append(d)
+    return pd.DataFrame(linhas)
+
+
+def gas_realizado(r, nome: str) -> pd.DataFrame:
+    """Vendas do S38 de cada região aos compradores da própria região (setores e famílias): GAS × DIS, depois do RAS."""
+    from mip.estrutura import COLUNAS_DF
+
+    m2 = r.mip
+    dfc = list(COLUNAS_DF["codigo"])
+    linhas = []
+    for reg in ("RS", "RB"):
+        gas, dis = m2.indice(reg, "S38_GAS"), m2.indice(reg, "S38_DIS")
+        lin_s38 = r.mapa.loc[(r.mapa["regiao"] == reg) & r.mapa["desagregado"], "indice_novo"].to_numpy()
+        comp = [(c, m2.indice(reg, c)) for c in m2.setores.loc[m2.setores["regiao"] == reg, "codigo"] if not c.startswith("S38")]
+        for c, j in comp + [("FAM", None)]:
+            tot = m2.Z[lin_s38, j].sum() if j is not None else m2.F[lin_s38, dfc.index(f"FAM_{reg}")].sum()
+            g = m2.Z[gas, j] if j is not None else m2.F[gas, dfc.index(f"FAM_{reg}")]
+            d = m2.Z[dis, j] if j is not None else m2.F[dis, dfc.index(f"FAM_{reg}")]
+            if tot <= 0:
+                continue
+            n = int(c[1:]) if c.startswith("S") and c[1:].isdigit() else None
+            grupo = ("famílias" if c == "FAM" else "indústria (S04–S37)" if n is not None and 4 <= n <= 37 else
+                     "S19" if c == "S19" else "S43 (transporte terrestre)" if c == "S43" else
+                     "serviços (S41–S68, sem S43)" if n is not None and 41 <= n <= 68 else "demais")
+            linhas.append({"versao": nome, "regiao": reg, "comprador": c, "grupo": grupo, "compras_ao_S38": tot,
+                           "gas (GAS)": g, "eletricidade (DIS)": d, "gas ÷ compras ao S38": g / tot,
+                           "sem eletricidade": bool(d <= 1e-9)})
     return pd.DataFrame(linhas)
 
 
@@ -202,7 +232,8 @@ def main():
     r01 = desagregar(mip, ler_especificacao(RAIZ / "parametros" / "especificacao_v01.yaml"), estrito=False)
     q01 = tabela_subsetores(r01, "v01", G01)
     comp = v01_x_v02(q01, q02)
-    variantes = pd.concat([tabela_subsetores(res[n], n, G) for n in res if n != "v02"], ignore_index=True)
+    variantes = pd.concat([tabela_subsetores(res[n], n, G, [(res[n], ROTULO_EMISSOES.get(n, "E1"))])
+                           for n in res if n != "v02"], ignore_index=True)
     resumo_var = []
     for n, r in res.items():
         c = r.checagens
@@ -216,12 +247,16 @@ def main():
                            "multiplicador de produção máximo": float(
                                variantes.loc[variantes["versao"] == n, "multiplicador de produção"].max()
                                if n != "v02" else q02["multiplicador de produção"].max())})
+    gas = pd.concat([gas_realizado(res[n], n) for n in ("v02", "v02_gas_sulgas")] + [gas_realizado(r01, "v01")],
+                    ignore_index=True)
+    gas_grupos = (gas.groupby(["versao", "regiao", "grupo"])["gas (GAS)"].sum()
+                  / gas.groupby(["versao", "regiao"])["gas (GAS)"].sum()).rename("participacao_nas_vendas_do_GAS").reset_index()
     salvar_tabelas(
         SAIDA / "quadro_subsetores_v02.xlsx",
         {"quadro": q, "v01_x_v02": comp, "reequilibrio_RAS": res["v02"].extras["reequilibrio_RAS"],
          "reequilibrio_insumos": res["v02"].extras["reequilibrio_insumos"],
          "pisos_atingidos": res["v02"].extras["pisos_vbp"], "variantes_resumo": pd.DataFrame(resumo_var),
-         "variantes_subsetores": variantes, "checagens": chk,
+         "variantes_subsetores": variantes, "gas_por_comprador": gas, "gas_por_grupo": gas_grupos, "checagens": chk,
          "componentes_bloco": res["v02"].extras["componentes_bloco"],
          "niveis_emissoes": pd.concat([r.extras["niveis"].assign(versao=n) for n, r in res.items() if "niveis" in r.extras],
                                       ignore_index=True)},
@@ -232,7 +267,9 @@ def main():
                 f"multiplicador de produção > {ALERTA_MULT}.",
                 "Abas: v01_x_v02 (comparativo por subsetor), reequilibrio_RAS (EOB antes e depois; D9-r), reequilibrio_insumos "
                 "(valor movido por insumo), pisos_atingidos (D9-f), variantes_resumo e variantes_subsetores (P2, E2, E3, "
-                "κ = 0.60 e 0.80, η = 0.05, sem extensão de viabilidade), checagens de todas as versões.",
+                "κ = 0.60 e 0.80 e sem extensão de viabilidade — as três só com o piso κ —, η = 0.05 e GAS-RB pelo preço da "
+                "Sulgás), gas_por_comprador e gas_por_grupo (vendas do GAS e da DIS a cada comprador da região, depois "
+                "do RAS; v01, v02 e a variante do preço da Sulgás), checagens de todas as versões.",
                 "Gerado por scripts/rodada03_mip.py."])
     p = previa(res, mip, mip_v01)
     salvar_tabelas(SAIDA / "previa_multiplicadores_v02.xlsx", p,

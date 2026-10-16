@@ -1,5 +1,6 @@
 """Rodada 03 — MIP v02: T2 (re-agregação com a especificação v02), T9 (EOB mínimo), T10 (geração por fonte = BEN),
-T11 (executor de cenários) e testes das peças novas do motor (piso de VBP, reequilíbrio, fixa_por_tipo, leitor longo).
+T11 (executor de cenários) e testes das peças novas do motor (piso de VBP, reequilíbrio, fixa_por_tipo, leitor longo)
+e das correções da revisão adversarial (teto do gás por comprador, validações, executor, latentes no formato longo).
 
 Os testes com a especificação real são pulados se os parâmetros v02 ainda não tiverem sido gerados
 (scripts/rodada03.py e scripts/rodada03_parametros.py).
@@ -27,7 +28,7 @@ from mip.modelo import ModeloLeontief, ranking_setorial
 
 TOL = 1e-6
 ARRAYS = ["Z", "F", "X", "total_linha", "V", "V_df", "X_df"]
-VARIANTES = ["", "_P2", "_E2", "_E3", "_k060", "_k080", "_eta005", "_sem_viabilidade"]
+VARIANTES = ["", "_P2", "_E2", "_E3", "_k060", "_k080", "_eta005", "_sem_viabilidade", "_gas_sulgas"]
 IP = {it: k for k, it in enumerate(ITENS_PRIMARIOS)}
 
 
@@ -273,3 +274,198 @@ def test_passo_sem_reequilibrio_tem_eob_negativo(mip):
     r = _desagregar_passo(mip, replace(e, reequilibrio={}), reequilibrar=False)
     k = r.mip.indice("RB", "S38_GN")
     assert r.mip.V[IP["eob"], k] < 0
+
+
+
+# ---------------------------------------------------------------------------------------------
+# Revisão adversarial da Rodada 03
+# ---------------------------------------------------------------------------------------------
+def _vendas_s38(res, r):
+    """{comprador: (compras ao S38-r, venda da DIS-r, venda do GAS-r)} para setores e famílias da região r."""
+    from mip.estrutura import COLUNAS_DF
+
+    m = res.mip
+    dfc = list(COLUNAS_DF["codigo"])
+    lin = res.mapa.loc[(res.mapa["regiao"] == r) & res.mapa["desagregado"], "indice_novo"].to_numpy()
+    dis, gas = m.indice(r, "S38_DIS"), m.indice(r, "S38_GAS")
+    out = {}
+    for c in m.setores.loc[m.setores["regiao"] == r, "codigo"]:
+        if not c.startswith("S38"):
+            j = m.indice(r, c)
+            out[c] = (m.Z[lin, j].sum(), m.Z[dis, j], m.Z[gas, j])
+    f = dfc.index(f"FAM_{r}")
+    out["FAM"] = (m.F[lin, f].sum(), m.F[dis, f], m.F[gas, f])
+    return out
+
+
+@pytest.mark.parametrize("suf", ["", "_gas_sulgas"])
+def test_todo_comprador_de_s38_compra_eletricidade(mip, suf):
+    """Teto do gás: ninguém que compra do S38 fica sem eletricidade (antes, S17, S21–S24 e S27 do RB ficavam)."""
+    res = desagregar(mip, _espec(suf), estrito=False)
+    w_max = 0.90
+    for r in ("RS", "RB"):
+        for c, (tot, dis, gas) in _vendas_s38(res, r).items():
+            if tot > 1e-9:
+                assert dis > 0, (suf, r, c)
+                assert gas <= w_max * tot * (1 + 1e-4) + 1e-6, (suf, r, c, gas / tot)
+
+
+def test_teto_gas_preserva_total_e_grupo():
+    import importlib.util
+
+    from mip.caminhos import RAIZ
+
+    spec = importlib.util.spec_from_file_location("r03p", RAIZ / "scripts" / "rodada03_parametros.py")
+    r03p = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(r03p)
+    compra = {"A": 10.0, "B": 100.0, "C": 100.0, "D": 50.0}
+    contrib = {"ind": {"A": 12.0, "B": 20.0, "C": 30.0}, "serv": {"D": 48.0}}
+    c, presos = r03p.teto_gas(contrib, compra, 0.9)
+    tot = lambda k: sum(d.get(k, 0.0) for d in c.values())  # noqa: E731
+    assert presos == {"A", "D"}
+    assert tot("A") == pytest.approx(9.0) and tot("D") == pytest.approx(45.0)
+    assert sum(c["ind"].values()) == pytest.approx(62.0)  # o excedente de A fica no grupo
+    assert c["ind"]["B"] / c["ind"]["C"] == pytest.approx((20 + 3 * 20 / 50) / (30 + 3 * 30 / 50))
+    assert sum(c["serv → demais (grupo no teto)"].values()) == pytest.approx(3.0)  # grupo inteiro no teto → demais
+    assert sum(tot(k) for k in compra) == pytest.approx(110.0)
+    with pytest.raises(SystemExit, match="não cabe"):
+        r03p.teto_gas({"g": {"A": 50.0}}, {"A": 10.0}, 0.9)
+
+
+def test_d10_rs_sem_consumo_nao_energetico():
+    gc = pd.read_excel(PASTA_PARAMETROS / "quadro_parametros_v02.xlsx", sheet_name="gas_grupos_teto")
+    rs = gc[gc["regiao"] == "RS"].set_index("grupo")
+    seg = pd.read_csv(PASTA_EXTERNOS / "gas" / "sulgas_segmentos_2019_v01.csv").set_index("segmento")["receita_liquida_rs"]
+    assert rs.loc["indústria + cogeração", "participacao_original"] == pytest.approx(
+        (seg["Industrial"] + seg["Cogeração"]) / seg.sum())
+    lin = pd.read_csv(PASTA_PARAMETROS / "regras_linha_v02.csv")
+    fonte = lin[(lin["regiao"] == "RS") & (lin["subsetor"] == "S38_GAS")]["fonte"].iloc[0]
+    assert "sem o consumo final não energético" in fonte
+
+
+def test_consumo_especifico_d8_pet():
+    ce = pd.read_csv(PASTA_INTERMEDIARIOS / "ben_2019_consumo_especifico_v02.csv").set_index("subsetor")
+    assert ce.loc["S38_PET", "tep_por_mwh"] == pytest.approx((999 + 267 + 137) / 5174)
+    assert ce.loc["S38_BIO", "tep_por_mwh"] == pytest.approx((72 + 108 + 254) / 1840)
+
+
+def test_validacoes_novas(mip):
+    e = _espec("")
+    e.reequilibrio = dict(e.reequilibrio, importacoes="ajustaveis")
+    with pytest.raises(EspecificacaoInvalida, match="importacoes"):
+        desagregar(mip, e, estrito=False)
+    e = _espec("")
+    e.piso_vbp = dict(e.piso_vbp, viabilidade_eta=0.05)
+    with pytest.raises(EspecificacaoInvalida, match="viabilidade_eta"):
+        desagregar(mip, e, estrito=False)
+    e = _espec("")
+    e.reequilibrio = {}
+    with pytest.raises(EspecificacaoInvalida, match="exige o bloco reequilibrio"):
+        desagregar(mip, e, estrito=False)
+
+
+def test_reequilibrio_nao_mexe_nos_fixos_e_registra_pesos(v02):
+    c = v02.checagens.set_index("checagem")
+    assert c.loc["reequilibrio_insumos_fixos", "status"] == "OK"
+    p = v02.pesos
+    apos = p[p["etapa"] == "apos_reequilibrio"]
+    assert len(apos) and {"coluna", "primarios_satelite"} <= set(apos["dimensao"])
+    eob = apos[(apos["chave"] == "eob") & (apos["regiao"] == "RB")].iloc[0]
+    m = v02.mip
+    assert eob["S38_GN"] * v02.original.V[IP["eob"], v02.original.indice("RB", "S38")] == pytest.approx(
+        m.V[IP["eob"], m.indice("RB", "S38_GN")])
+    assert any("reequilíbrio" in x for x in v02.leiame())
+
+
+def test_variantes_kappa_atuam(mip, v02):
+    """As variantes κ (só o piso κ) mudam os VBPs; com a viabilidade ligada, κ = 0.80 não mudaria nada."""
+    k = v02.mip.indice("RB", "S38_GN")
+    x = {suf: desagregar(mip, _espec(suf), estrito=False).mip.X[k] for suf in ("_k060", "_sem_viabilidade", "_k080")}
+    assert x["_k060"] > x["_sem_viabilidade"] > x["_k080"]
+
+
+def test_longo_publicado_tem_latentes(v02):
+    from mip.caminhos import PASTA_RESULTADOS
+
+    caminho = PASTA_RESULTADOS / "rodada03" / "MIP_RS_RB_2019_S38_11sub_v02_longo.csv"
+    if not caminho.exists():
+        pytest.skip("MIP v02 ainda não exportada (scripts/rodada03_mip.py)")
+    m = ler_mip_longo(caminho)
+    assert m.coef_latentes is not None and len(m.coef_latentes)
+    for s in ("S38_SOL", "S38_PET"):
+        a = ModeloLeontief(m).simular_choques({("RS", s): 1.0})
+        b = ModeloLeontief(v02.mip).simular_choques({("RS", s): 1.0})
+        assert a.dX.sum() == pytest.approx(b.dX.sum()) and a.emissoes.sum() == pytest.approx(b.emissoes.sum())
+    with pytest.raises(FileNotFoundError):
+        ler_mip_longo(caminho, caminho_coef_latentes=caminho.with_name("nao_existe.csv"))
+
+
+def test_exportar_grava_latentes_ao_lado(tmp_path, v02):
+    v02.exportar(tmp_path / "y.xlsx", tmp_path / "y_longo.csv")
+    assert (tmp_path / "y_coef_latentes.csv").exists()
+    assert ler_mip_longo(tmp_path / "y_longo.csv").coef_latentes is not None
+
+
+def test_executor_recusa_entradas_invalidas(tmp_path, mip, v02):
+    um = lambda s, v=1.0: pd.DataFrame({"cenario": ["X"], "regiao": ["RS"], "setor": [s], "valor_R$mi": [v]})  # noqa: E731
+    with pytest.raises(cen.CenarioInvalido, match="produção zero"):
+        cen.resolver_choques(v02.mip, um("S38_NUC"))
+    with pytest.raises(cen.CenarioInvalido, match="produção zero"):
+        cen.resolver_choques(mip, um("S05"))
+    cen.resolver_choques(v02.mip, um("S38_SOL"))  # latente: aceito
+    with pytest.raises(cen.CenarioInvalido, match="negativos"):
+        cen.resolver_choques(v02.mip, um("S38"), {"S38_DIS": 1.0, "S38_GAS": -0.5})
+    with pytest.raises(cen.CenarioInvalido, match="inexistentes"):
+        cen.resolver_choques(v02.mip, um("S38"), {"S38_DIS": 0.5, "S38_GAs": 0.5})
+    with pytest.raises(cen.CenarioInvalido, match="produção zero"):
+        cen.resolver_choques(v02.mip, um("S38"), {"S38_NUC": 1.0})
+    csv = tmp_path / "c.csv"
+    csv.write_text("cenario,regiao,setor,valor_R$mi\nE1,RS,S38,1000\nE1,RS,S43,\n,RS,S19,500\n", encoding="utf-8")
+    with pytest.raises(cen.CenarioInvalido, match="vazia"):
+        cen.ler_cenarios(csv)
+
+
+def test_cli_cenarios_valida_argumentos(tmp_path):
+    import importlib.util
+
+    from mip.caminhos import RAIZ
+
+    spec = importlib.util.spec_from_file_location("rc", RAIZ / "scripts" / "rodar_cenarios.py")
+    rc = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(rc)
+    csv = tmp_path / "c.csv"
+    csv.write_text("cenario,regiao,setor,valor_R$mi\nE1,RS,S43,1000\n", encoding="utf-8")
+    with pytest.raises(SystemExit):
+        rc.main(["--cenarios", str(csv), "--mip", "original", "--mip", "original=x.xlsx", "--saida", str(tmp_path / "o.xlsx")])
+    with pytest.raises(SystemExit):
+        rc.main(["--cenarios", str(csv), "--mip", "original", "--reparticao", "S38_DIS=0.5,,S38_GAS=0.5",
+                 "--saida", str(tmp_path / "o.xlsx")])
+    rc.main(["--cenarios", str(csv), "--mip", "original", "--reparticao", " S43=0.5, S44=0.5 ",  # espaços são aceitos
+             "--saida", str(tmp_path / "o.xlsx")])
+    assert (tmp_path / "o.xlsx").exists()
+
+
+
+def test_reparticao_explicita_com_a_original(mip, v02):
+    """A mesma repartição serve à original (S38 agregado, sem repartir) e à v02 (verificação das correções)."""
+    tab = cen.executar_versoes({"original": mip, "v02": v02.mip}, cen.cenarios_da_rodada01(), {"S38_DIS": 0.9, "S38_GAS": 0.1})
+    rep = tab["reparticao"]
+    e1 = rep[(rep["versao"] == "v02") & (rep["cenario"] == "E1")].set_index("subsetor")["valor_R$mi"]
+    assert e1["S38_DIS"] == pytest.approx(900.0) and e1["S38_GAS"] == pytest.approx(100.0)
+
+
+def test_latentes_com_csv_de_outro_nome(tmp_path, v02):
+    from mip.leitura import caminho_coef_latentes_ao_lado
+
+    v02.exportar(tmp_path / "z.xlsx", tmp_path / "z.csv")
+    assert caminho_coef_latentes_ao_lado(tmp_path / "z.csv").name == "z_coef_latentes.csv"
+    assert caminho_coef_latentes_ao_lado(tmp_path / "z_longo.csv").name == "z_coef_latentes.csv"
+    assert ler_mip_longo(tmp_path / "z.csv").coef_latentes is not None
+
+
+def test_fonte_do_gas_separa_o_transbordo():
+    lin = pd.read_csv(PASTA_PARAMETROS / "regras_linha_v02.csv")
+    fam = lin[(lin["regiao"] == "RS") & (lin["comprador"] == "FAM") & (lin["subsetor"] == "S38_GAS")]["fonte"].iloc[0]
+    assert "grupo 'serviço' inteiro no teto" in fam and "próprio grupo" not in fam
+    s21 = lin[(lin["regiao"] == "RS") & (lin["comprador"] == "S21") & (lin["subsetor"] == "S38_GAS")]["fonte"].iloc[0]
+    assert "próprio grupo" in s21 and "inteiro no teto" in s21

@@ -46,6 +46,11 @@ def ler_cenarios(caminho: str | Path) -> pd.DataFrame:
     df["valor_R$mi"] = pd.to_numeric(df["valor_R$mi"], errors="raise")
     for c in ("cenario", "regiao", "setor"):
         df[c] = df[c].str.strip()
+    vazias = df[df[["cenario", "regiao", "setor"]].isna().any(axis=1) | (df[["cenario", "regiao", "setor"]] == "").any(axis=1)
+                | df["valor_R$mi"].isna()]
+    if len(vazias):
+        raise CenarioInvalido(f"{caminho}: célula vazia em cenario, regiao, setor ou valor_R$mi nas linhas de dados "
+                              f"{[int(i) + 1 for i in vazias.index]} (contadas sem o cabeçalho e os comentários)")
     return df
 
 
@@ -77,9 +82,23 @@ def carregar_mip(fonte: str | Path | MIP) -> MIP:
 def resolver_choques(mip: MIP, df: pd.DataFrame, reparticao: str | dict = "vendas_df") -> tuple[dict, pd.DataFrame]:
     """Converte as linhas de um cenário em {(regiao, codigo): valor}, repartindo setores agregados."""
     existentes = set(zip(mip.setores["regiao"], mip.setores["codigo"]))
+    if isinstance(reparticao, dict):
+        neg = {c: w for c, w in reparticao.items() if not float(w) >= 0}
+        if neg:
+            raise CenarioInvalido(f"repartição: pesos negativos ou inválidos {neg}")
+    lat = set()
+    if mip.coef_latentes is not None and len(mip.coef_latentes):
+        lat = set(zip(mip.coef_latentes["regiao"], mip.coef_latentes["subsetor"]))
+
+    def sem_base(r, c):  # produção zero e sem coluna latente: A e intensidade nulas, choque sem insumos nem emissões
+        return mip.X[mip.indice(r, c)] <= 0 and (r, c) not in lat
+
     choques, reg = {}, []
     for cen, r, s, v in zip(df["cenario"], df["regiao"], df["setor"], df["valor_R$mi"].astype(float)):
         if (r, s) in existentes:
+            if sem_base(r, s):
+                raise CenarioInvalido(f"cenário {cen}: {r} {s} tem produção zero e não tem coluna latente "
+                                      "(o choque sairia sem insumos e sem emissões)")
             choques[(r, s)] = choques.get((r, s), 0.0) + v
             continue
         subs = [c for (rr, c) in existentes if rr == r and c.startswith(f"{s}_")]
@@ -87,10 +106,17 @@ def resolver_choques(mip: MIP, df: pd.DataFrame, reparticao: str | dict = "venda
             raise CenarioInvalido(f"cenário {cen}: setor {r} {s} não existe na MIP (nem como agregado)")
         subs = sorted(subs)
         if isinstance(reparticao, dict):
+            # a mesma repartição serve a várias versões (na original o S38 nem é repartido); aqui, toda chave com o
+            # prefixo do setor chocado tem de ser subsetor desta MIP (pega erro de digitação)
+            desconhecidos = sorted(c for c in reparticao if c.startswith(f"{s}_") and c not in subs)
+            if desconhecidos:
+                raise CenarioInvalido(f"cenário {cen}: repartição de {r} {s} com subsetores inexistentes na MIP "
+                                      f"{desconhecidos} (existentes: {subs})")
             pesos = np.array([float(reparticao.get(c, 0.0)) for c in subs])
             regra = "pesos informados"
         elif reparticao == "vendas_df":
-            pesos = np.array([mip.F[mip.indice(r, c)].sum() for c in subs])
+            # vendas líquidas à demanda final (a discrepância pode ser negativa); negativo conta como zero
+            pesos = np.array([max(float(mip.F[mip.indice(r, c)].sum()), 0.0) for c in subs])
             regra = "∝ vendas de cada subsetor à demanda final"
         else:
             raise CenarioInvalido(f"repartição desconhecida: {reparticao}")
@@ -99,9 +125,15 @@ def resolver_choques(mip: MIP, df: pd.DataFrame, reparticao: str | dict = "venda
         pesos = pesos / pesos.sum()
         for c, w in zip(subs, pesos):
             if w > 0:
+                if sem_base(r, c):
+                    raise CenarioInvalido(f"cenário {cen}: a repartição de {r} {s} manda {w:.4f} para {r} {c}, que tem "
+                                          "produção zero e não tem coluna latente")
                 choques[(r, c)] = choques.get((r, c), 0.0) + v * w
                 reg.append({"cenario": cen, "regiao": r, "setor_agregado": s, "subsetor": c, "peso": w,
                             "valor_R$mi": v * w, "regra": regra})
+    total = float(df["valor_R$mi"].astype(float).sum())
+    if abs(sum(choques.values()) - total) > 1e-9 * max(1.0, abs(total)):
+        raise CenarioInvalido(f"repartição não preservou o choque: {sum(choques.values())} ≠ {total}")
     return choques, pd.DataFrame(reg)
 
 

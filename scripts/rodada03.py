@@ -9,6 +9,10 @@ Saídas:
 - dados/intermediarios/geracao_2019_regiao_subsetor_v03.csv  D8: BRASIL (BEN 2020, Tabela 5.4), RS (ONS), RB = BRASIL − RS
 - resultados/rodada03/comparacao_referencias_v03.csv         referências da Seção 2.1 da Rodada 03
 - resultados/rodada03/reconciliacao_epe_v02.csv              BEN × montagem da 02b (ONS + isolados) × D8
+- dados/intermediarios/ben_2019_consumo_especifico_v02.csv   consumo específico com o mapeamento da D8 (PET com
+                                                             'outras não renováveis')
+- dados/intermediarios/ben_2019_gas_eletricidade_por_setor_v01.csv  BEN 2020, consumo final de gás natural e de
+                                                             eletricidade por setor (evidência do teto do gás por comprador)
 """
 from __future__ import annotations
 
@@ -27,6 +31,13 @@ from mip.externos.ons import ORDEM_SUBSETORES_GERACAO  # noqa: E402
 INT = PASTA_INTERMEDIARIOS
 SAIDA = PASTA_RESULTADOS / "rodada03"
 TAB54 = PASTA_EXTERNOS / "epe" / "ben2020_tabela_5_4_v01.csv"
+BEN_MATRIZ = PASTA_EXTERNOS / "epe" / "ben_2020" / "BEN2020_Matriz_ab2019.xlsx"
+FONTE_TAB54 = "EPE, BEN 2020, Tabela 5.4 – Centrais Elétricas de Serviço Público (p. 112); acesso 2026-10-15T19:38:26Z"
+FONTE_MATRIZ = "EPE, BEN 2020 (ano-base 2019), Matriz ab2019.xlsx, aba Consolidada (mil tep); acesso 2026-10-15T19:38:26Z"
+SETORES_BEN = ["CONSUMO FINAL NÃO ENERGÉTICO", "SETOR ENERGÉTICO", "RESIDENCIAL", "COMERCIAL", "PÚBLICO", "AGROPECUÁRIO",
+               "RODOVIÁRIO", "FERROVIÁRIO", "AÉREO", "HIDROVIÁRIO", "CIMENTO", "FERRO GUSA E AÇO", "FERRO LIGAS",
+               "MINERAÇÃO E PELOTIZAÇÃO", "NÃO FERROSOS E OUT. METALURG.", "QUÍMICA", "ALIMENTOS E BEBIDAS", "TÊXTIL",
+               "PAPEL E CELULOSE", "CERÂMICA", "OUTRAS INDÚSTRIAS", "CONSUMO NÃO IDENTIFICADO"]
 
 
 def main():
@@ -58,6 +69,19 @@ def main():
     rec["nota"] = ("BEN 2020, Tabela 5.4; PET inclui 'outras não renováveis' (405 GWh) e BIO = lenha + biodiesel + "
                    "outras renováveis (D8). A montagem da 02b usava ONS + isolados (diesel e óleo).")
     rec.to_csv(SAIDA / "reconciliacao_epe_v02.csv", index=False)
+
+    # consumo específico com o mapeamento da D8 (revisão da Rodada 03: o PET passa a incluir 'outras não renováveis')
+    ce = ben.consumo_especifico_d8(tab54)
+    ce["fonte"] = FONTE_TAB54 + ": consumo de combustível ÷ geração, por fonte, com o mapeamento da D8 (" + ce.pop("fontes_ben") + ")"
+    ce.to_csv(INT / "ben_2019_consumo_especifico_v02.csv", index=False)
+    # gás natural e eletricidade por setor (mil tep): evidência para o teto do gás por comprador
+    cons = ben.ler_matriz_consolidada(BEN_MATRIZ)
+    gn = [c for c in cons.columns if c.startswith("GÁS NA")][0]
+    el = [c for c in cons.columns if c.startswith("ELETRICIDADE")][0]
+    ge = pd.DataFrame({"setor_ben": SETORES_BEN, "gas_natural_mil_tep": [float(cons.loc[x, gn]) for x in SETORES_BEN],
+                       "eletricidade_mil_tep": [float(cons.loc[x, el]) for x in SETORES_BEN]})
+    ge["fonte"] = FONTE_MATRIZ + ", colunas GÁS NATURAL e ELETRICIDADE"
+    ge.to_csv(INT / "ben_2019_gas_eletricidade_por_setor_v01.csv", index=False)
 
     ok = int(comp["confere"].sum())
     print(f"[D8] RS {d8.loc[d8.regiao == 'RS', 'Total'].iloc[0]:.1f} GWh; RB {d8.loc[d8.regiao == 'RB', 'Total'].iloc[0]:.1f}; "

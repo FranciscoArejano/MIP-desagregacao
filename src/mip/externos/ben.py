@@ -89,3 +89,29 @@ def comparar_com_referencia_d8(tab: pd.DataFrame) -> pd.DataFrame:
             linhas.append({"grupo": f"{regiao} (D8)", "item": c, "esperado_gwh": e, "obtido_gwh": o,
                            "diferenca": o - e, "tolerancia": TOLERANCIA_GWH, "confere": abs(o - e) <= TOLERANCIA_GWH})
     return pd.DataFrame(linhas)
+
+
+def consumo_especifico_d8(tab54: pd.DataFrame) -> pd.DataFrame:
+    """Consumo específico (mil tep ÷ GWh → tep/MWh) por subsetor térmico com o mapeamento da D8.
+
+    Diferença para a v01 (Rodada 02b): o PET inclui as 'outras não renováveis' (405 GWh, 137 mil tep), como a
+    geração do PET na D8; assim a energia do satélite e os GWh usam a mesma base.
+    """
+    t = tab54.copy()
+    t["subsetor"] = t["fonte_ben"].map(FONTE_BEN_PARA_SUBSETOR_D8)
+    t = t[t["subsetor"].notna() & t["consumo_mil_tep_2019"].notna()]
+    g = t.groupby("subsetor")[["consumo_mil_tep_2019", "geracao_gwh_2019"]].sum()
+    g["tep_por_mwh"] = g["consumo_mil_tep_2019"] / g["geracao_gwh_2019"]
+    g["fontes_ben"] = t.groupby("subsetor")["fonte_ben"].agg(" + ".join)
+    return g.reset_index()
+
+
+def ler_matriz_consolidada(caminho: str | Path) -> pd.DataFrame:
+    """Aba Consolidada da matriz do BEN 2020 (ano-base 2019): linhas = fluxos, colunas = fontes (mil tep)."""
+    bruto = pd.read_excel(caminho, sheet_name="Consolidada", header=None)
+    nomes = [f"{a or ''} {b or ''}".replace("- ", "").replace("-", "").strip()
+             for a, b in zip(bruto.iloc[1].fillna(""), bruto.iloc[2].fillna(""))]
+    tab = bruto.iloc[3:].copy()
+    tab.columns = ["fluxo"] + nomes[1:]
+    tab["fluxo"] = tab["fluxo"].astype(str).str.strip()
+    return tab.set_index("fluxo")

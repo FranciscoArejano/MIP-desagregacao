@@ -23,8 +23,9 @@ sensibilidades), D7 = A, D8 = A (geração por fonte: Brasil pelo BEN 2020, RS p
 (correção do EOB negativo), D10 = gás por comprador no RS pela Sulgás.
 
 A versão **atual** é a v02 (Rodada 03): `resultados/rodada03/MIP_RS_RB_2019_S38_11sub_v02.xlsx` (principal:
-P1 + E1 + D9, κ = 0.70, η = 0.10), com as variantes P2, E2, E3 (.xlsx) e κ = 0.60/0.80, η = 0.05 e sem extensão de
-viabilidade (CSV longo), o quadro `resultados/rodada03/quadro_subsetores_v02.xlsx` (com o comparativo v01 × v02) e a
+P1 + E1 + D9, κ = 0.70, η = 0.10, teto do gás por comprador 0.90), com as variantes P2, E2, E3 (.xlsx) e
+κ = 0.60/0.80 e κ = 0.70 sem a extensão de viabilidade (as três só com o piso κ), η = 0.05 e GAS-RB pelo preço da
+Sulgás (CSV longo + `_coef_latentes.csv`), o quadro `resultados/rodada03/quadro_subsetores_v02.xlsx` (com o comparativo v01 × v02) e a
 prévia `previa_multiplicadores_v02.xlsx` (PRÉVIA). Para simular choques, use o executor de cenários (abaixo).
 
 A **primeira desagregação real** foi a v01 (Rodada 02b): `resultados/rodada02/MIP_RS_RB_2019_S38_11sub_v01.xlsx`

@@ -83,8 +83,8 @@ Não acessados nesta rodada (sem contornar):
   **secundária** indicada nas instruções.
 - `www.sulgas.rs.gov.br`: certificado TLS vencido. As demonstrações da Sulgás vieram da cópia oficial publicada pela
   CAGE/Sefaz-RS (Prestação de Contas do Governador 2019).
-- Receita agregada das demais distribuidoras de gás: não existe fonte oficial (ANP, MME e ABEGÁS não publicam). Vale o
-  fallback das instruções (margem de 0.25 como hipótese).
+- Receita agregada das demais distribuidoras de gás: não existe fonte oficial (ANP, MME e ABEGÁS não publicam). Na v01
+  valeu o fallback das instruções (margem de 0.25 como hipótese); na v02 a D9-b o substitui (preço médio × volume).
 
 ## Rodada 03 — fontes novas ou com uso novo
 
@@ -97,6 +97,9 @@ Nenhum download novo de rede; todos os números abaixo vêm de arquivos já baix
 | D9-b: volume não térmico do RB = (40.482 − 2.214) × 365 milhões m³ | MME, Boletim do gás nº 154 (dez/2019) | p. 16, "TOTAL DISTRIBUIDORAS SEM O SEGMENTO TERMELÉTRICO" e "Sulgás (RS)", média 2019 | `gas/mme_boletim_dez2019/boletim_gn_dez2019.pdf` |
 | D9-b: preço médio do gás (4 distribuidoras) | DFP 2019 na CVM: Comgás (seq. 90958; Relatório da Administração p. 14 e nota 5 p. 27), CEG (seq. 91986; nota 22 p. 99), Gasmig (seq. 92390; nota 19 p. 93); Sulgás (Nota 18, p. 86 da cópia da CAGE) | receita líquida de venda de gás e volume, sem térmico, construção e serviços | `brutos/gas/cvm_rad_*` e `brutos/gas/cage_rs_2019/` (fora do git; SHA-256 na tabela de valores) |
 | D10: gás por comprador no RS | Sulgás, Demonstrações Contábeis 2019, Nota 18 (receita líquida por segmento) | PDF p. 86 | `gas/sulgas_segmentos_2019_v01.csv` (transcrição, com fonte por linha) |
+| Energia do satélite: consumo específico com o mapeamento da D8 (PET com "outras não renováveis") | EPE, BEN 2020, Tabela 5.4 | PDF p. 112 | `epe/ben2020_tabela_5_4_v01.csv` → `dados/intermediarios/ben_2019_consumo_especifico_v02.csv` |
+| Evidência para o teto do gás por comprador (não entra na MIP): gás natural e eletricidade por setor | EPE, BEN 2020, Matriz ab2019.xlsx | aba Consolidada, colunas GÁS NATURAL e ELETRICIDADE | `epe/ben_2020/BEN2020_Matriz_ab2019.xlsx` → `dados/intermediarios/ben_2019_gas_eletricidade_por_setor_v01.csv` |
+| Idem: tarifa média industrial 2019 (479.16 R$/MWh) | EPE, Anuário Estatístico de Energia Elétrica 2020, Tabela 2.15 (fonte: ANEEL, SAD; mercado cativo) | aba Tabela 2.15, linha Industrial, coluna 2019 | `epe/anuario_2020/…Workbook.xlsx` (linha `tarifa_media_industrial_2019` em `valores_documentais_v02.csv`) |
 
 Observações: o preço da Gasmig sem o térmico é **aproximação** (a companhia não divulga deduções por segmento; foram
 rateadas na proporção da receita bruta). Os volumes por segmento da CEG e da Gasmig são marcados "não auditados" nas DFP.

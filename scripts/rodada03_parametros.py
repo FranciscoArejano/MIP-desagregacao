@@ -7,13 +7,14 @@ Entradas:
 - MIP original (dados/original/)
 - dados/intermediarios/geracao_2019_regiao_subsetor_v03.csv (D8: Brasil = BEN, RS = ONS, RB = Brasil − RS)
 - dados/intermediarios/precos_2019_subsetor_v01.csv, cempre_2019_composicao_v01.csv, seeg_2019_emissoes_v01.csv,
-  ben_2019_gas_natural_por_setor_v01.csv, ben_2019_consumo_especifico_v01.csv (Rodada 02b)
+  ben_2019_gas_natural_por_setor_v01.csv (Rodada 02b); ben_2019_consumo_especifico_v02.csv e
+  ben_2019_gas_eletricidade_por_setor_v01.csv (scripts/rodada03.py)
 - dados/externos/valores_documentais_v02.csv (RAP, θ, Sulgás, MME, Comex, Angra, TUST; preço médio do gás, se houver)
 - dados/externos/gas/sulgas_segmentos_2019_v01.csv (Nota 18 das demonstrações da Sulgás 2019; D10)
 
 Saídas (todas com coluna `fonte`), em parametros/:
 - especificacao_v02.yaml (principal: P1 + E1 + D9, κ = 0.70, η = 0.10) e as variantes _P2, _E2, _E3, _k060, _k080,
-  _eta005 e _sem_viabilidade;
+  _eta005, _sem_viabilidade e _gas_sulgas (com componentes/regras_linha/regras_primarios_v02_gas_sulgas.csv);
 - subsetores_v02.csv, participacoes_vbp_v02.csv (P1) e _v02_P2.csv, componentes_v02.csv, regras_coluna_v02.csv,
   regras_linha_v02.csv, regras_primarios_v02.csv, latentes_espelho_v02.csv, correspondencia_ben_mip_v02.csv;
 - quadro_parametros_v02.xlsx: cada número, com unidade, fonte e cálculo.
@@ -28,6 +29,11 @@ Mudanças em relação à v01 (instruções da Rodada 03, Seção 2):
   custos fixos + η × VBP cabem no VBP (ver o relatório da Rodada 03).
 - D9-r: reequilíbrio dos insumos não energéticos (RAS) com EOB mínimo η = 0.10 (`reequilibrio`, no motor).
 - D10: gás por comprador no RS pela estrutura de receita da Sulgás (Nota 18); no RB, o BEN nacional (como na v01).
+- Revisão da Rodada 03: teto do gás por comprador (W_MAX_GAS = 0.90 das compras ao S38, HIPÓTESE), com o excedente
+  redistribuído no mesmo grupo (D10 no RS; indústria do BEN no RB) ou, se o grupo inteiro estiver no teto, entre os
+  demais compradores da região; consumo específico do PET com 'outras não
+  renováveis' (ben_2019_consumo_especifico_v02.csv); variante _gas_sulgas (VBP do GAS-RB pelo preço da Sulgás);
+  variantes κ sem a extensão de viabilidade.
 - Remunerações e ocupações: composição do CEMPRE com a geração repartida na proporção do VBP final (`fixa_por_tipo`).
 """
 from __future__ import annotations
@@ -57,6 +63,9 @@ V = "v02"
 KAPPA = 0.70  # HIPÓTESE das instruções (D9-f): participação máxima do combustível na receita das térmicas
 ETA = 0.10    # HIPÓTESE das instruções (D9-r): EOB mínimo ÷ VBP
 ALERTA_MULTIPLICADOR = 2.2  # Seção 4 da Rodada 03
+W_MAX_GAS = 0.90  # HIPÓTESE (revisão da Rodada 03): gás ≤ 90% das compras de cada comprador ao S38
+M3_POR_TEP_GAS = 1e7 / 8800  # BEN: gás natural seco, 8800 kcal/m³ (1 tep = 10^7 kcal)
+MWH_POR_TEP = 1 / 0.086      # BEN: 1 MWh = 0.086 tep
 
 SUBSETORES = [
     ("S38_HID", "Geração hidrelétrica (UHE, PCH, CGH)", "geracao"),
@@ -113,6 +122,8 @@ CORRESPONDENCIA_BEN = [
 BEN_INDUSTRIA = ["CIMENTO", "CERÂMICA", "FERRO GUSA E AÇO", "FERRO LIGAS", "MINERAÇÃO E PELOTIZAÇÃO",
                  "NÃO FERROSOS E OUT. METALURG.", "QUÍMICA", "CONSUMO FINAL NÃO ENERGÉTICO", "ALIMENTOS E BEBIDAS",
                  "TÊXTIL", "PAPEL E CELULOSE", "OUTRAS INDÚSTRIAS"]
+# D10 (RS): "consumo industrial de gás do BEN" — sem o consumo final não energético, que no BEN não é do setor industrial
+BEN_INDUSTRIA_RS = [x for x in BEN_INDUSTRIA if x != "CONSUMO FINAL NÃO ENERGÉTICO"]
 SERVICOS_RS = "|".join(f"S{k}" for k in range(41, 69))  # D10: residencial + comercial → famílias e S41–S68
 
 quadro = []
@@ -151,18 +162,83 @@ def compras_ao_s38(mip, r: str, codigos: list[str]) -> dict[str, float]:
     return {k: float(mip.F[i, df.index(f"{k}_{r}")]) if k == "FAM" else float(mip.Z[i, mip.indice(r, k)]) for k in codigos}
 
 
-def regras_gas(alvo: dict[str, float], compra: dict[str, float], r: str, fonte_base: str, lin: list, gas_comp: list):
+def teto_gas(contrib: dict, compra: dict, w_max: float) -> tuple[dict, set]:
+    """Teto do gás por comprador (HIPÓTESE W_MAX_GAS) com redistribuição do excedente dentro do grupo.
+
+    contrib = {grupo: {comprador: alvo de gás}}. Quem passa de w_max × compras ao S38 fica no teto; o excedente vai
+    aos demais compradores do mesmo grupo, na proporção do alvo; se o grupo inteiro estiver no teto, aos demais
+    compradores da região, na proporção do alvo total (grupo '… → demais'). Repete até ninguém passar do teto.
+    O total (VBP do GAS) não muda. Devolve (contrib final, compradores no teto).
+    """
+    c = {g: {k: float(v) for k, v in d.items() if v > 0 and compra.get(k, 0.0) > 0} for g, d in contrib.items()}
+
+    def total(k):
+        return sum(d.get(k, 0.0) for d in c.values())
+
+    presos: set = set()
+    for _ in range(10 * (len(compra) + 1)):
+        todos = sorted({k for d in c.values() for k in d})
+        novos = [k for k in todos if k not in presos and total(k) > w_max * compra[k] * (1 + 1e-12)]
+        if not novos:
+            return c, presos
+        excesso = {}
+        for k in novos:
+            f = w_max * compra[k] / total(k)
+            for g, d in c.items():
+                if k in d:
+                    excesso[g] = excesso.get(g, 0.0) + d[k] * (1 - f)
+                    d[k] *= f
+            presos.add(k)
+        for g, e in excesso.items():
+            livres = {k: v for k, v in c[g].items() if k not in presos}
+            destino = g
+            if not livres:
+                livres = {k: total(k) for k in todos if k not in presos}
+                destino = f"{g.split(' → ')[0]} → demais (grupo no teto)"
+            if not livres:
+                raise SystemExit("teto do gás: todos os compradores no teto; o VBP do GAS não cabe nas compras ao S38")
+            soma = sum(livres.values())
+            c.setdefault(destino, {})
+            for k, v in livres.items():
+                c[destino][k] = c[destino].get(k, 0.0) + e * v / soma
+    raise SystemExit("teto do gás: a redistribuição não estabilizou")
+
+
+def regras_gas(contrib: dict, compra: dict, r: str, fonte_base: str, lin: list, gas_comp: list, grupos: list):
+    alvo0 = {k: sum(d.get(k, 0.0) for d in contrib.values()) for k in compra}
+    c, presos = teto_gas(contrib, compra, W_MAX_GAS)
+    alvo = {k: sum(d.get(k, 0.0) for d in c.values()) for k in compra}
+    if abs(sum(alvo.values()) - sum(alvo0.values())) > 1e-9 * max(1.0, sum(alvo0.values())):
+        raise SystemExit(f"teto do gás em {r}: o total mudou")
     for k in sorted(alvo):
         if alvo[k] <= 0 or compra.get(k, 0.0) <= 0:
             continue
-        w = min(alvo[k] / compra[k], 1.0)
-        fonte = (f"{fonte_base}; alvo {alvo[k]:.4f} ÷ compras ao S38 {compra[k]:.4f}"
-                 f"{' (limitado a 1)' if alvo[k] > compra[k] else ''}; HIPÓTESE: mesmo preço por unidade de gás entre "
-                 "compradores; o GAS só vende na própria região; o RAS fecha o VBP do GAS")
+        w = alvo[k] / compra[k]
+        if k in presos:
+            nota = (f"alvo {alvo0[k]:.4f} acima do teto: fica em {W_MAX_GAS} × compras ao S38 = {alvo[k]:.4f} "
+                    f"(HIPÓTESE: ≥ {1 - W_MAX_GAS:.2f} das compras ao S38 ficam com a eletricidade; o excedente vai aos "
+                    "demais compradores do grupo)")
+        elif abs(alvo[k] - alvo0[k]) > 1e-9:
+            transb = {g: d[k] for g, d in c.items() if " → demais" in g and d.get(k, 0.0) > 0}
+            proprio = alvo[k] - alvo0[k] - sum(transb.values())
+            partes = ([f"{proprio:.4f} do excedente do teto no próprio grupo"] if proprio > 1e-9 else []) + \
+                [f"{v:.4f} do grupo '{g.split(' → ')[0]}' inteiro no teto (aos demais compradores da região)"
+                 for g, v in transb.items()]
+            nota = f"alvo {alvo0[k]:.4f} + " + " + ".join(partes) + f" = {alvo[k]:.4f}"
+        else:
+            nota = f"alvo {alvo[k]:.4f}"
+        fonte = (f"{fonte_base}; {nota} ÷ compras ao S38 {compra[k]:.4f}; HIPÓTESE: mesmo preço por unidade de gás "
+                 "entre compradores; o GAS só vende na própria região; o RAS fecha o VBP do GAS")
         lin += [(r, k, r, "fixa_por_comprador", "S38_GAS", w, "nao", fonte),
                 (r, k, r, "fixa_por_comprador", "S38_DIS", 1 - w, "nao", fonte)]
-        gas_comp.append({"regiao": r, "comprador": k, "compras_ao_S38": compra[k], "alvo_gas": alvo[k],
-                         "participacao_gas": w, "fonte": fonte_base})
+        gas_comp.append({"regiao": r, "comprador": k, "compras_ao_S38": compra[k], "alvo_gas_original": alvo0[k],
+                         "alvo_gas": alvo[k], "participacao_gas": w, "no_teto": k in presos, "fonte": fonte_base})
+    tot = sum(alvo0.values())
+    for g in dict.fromkeys(list(contrib) + list(c)):
+        a0, a1 = sum(contrib.get(g, {}).values()), sum(c.get(g, {}).values())
+        grupos.append({"regiao": r, "grupo": g, "alvo_original": a0, "alvo_depois_do_teto": a1,
+                       "participacao_original": a0 / tot, "participacao_depois_do_teto": a1 / tot,
+                       "compradores_no_teto": ", ".join(sorted(k for k in presos if k in contrib.get(g, {})))})
 
 
 def main():
@@ -260,21 +336,6 @@ def main():
         anotar("gás", "RB", "VBP_GAS-RB (D9-b, usado)", vbp_gas_rb, "R$ mi", fonte_gas_rb)
     vbp_gas = {"RS": sul, "RB": vbp_gas_rb}
 
-    componentes = []
-    for r in REGIOES:
-        componentes += [
-            (r, "vbp_transmissao", T[r], fonte_rap + "; × participação no VBP do S38"),
-            (r, "vbp_gas", vbp_gas[r], fsul if r == "RS" else fonte_gas_rb),
-            (r, "gas_termicas", 0.0, "G = 0 (padrão das instruções; as térmicas compram gás direto do S05 ou importado)"),
-        ]
-    componentes.append(("*", "fracao_transmissao_distribuicao", alfa, falfa))
-    componentes = pd.DataFrame(componentes, columns=["regiao", "componente", "valor", "fonte"])
-    for r in REGIOES:
-        E = F[r] - T[r]
-        anotar("VBP", r, "VBP da geração = E_r = F_r − T_r − G_r", E, "R$ mi", "âncora por componentes (D3 = A)")
-        anotar("VBP", r, "VBP da distribuição = X_r − E_r − T_r − VBP_GAS", X[r] - E - T[r] - vbp_gas[r], "R$ mi",
-               "resíduo (Seção 6.3 da Rodada 02)")
-
     # ---- regras de coluna (D9-f: combustíveis integrais, sem teto) ---------------------------------
     col = [("*", "*", "*", "proporcional_vbp", "", np.nan, np.nan, "", "", "padrão: na proporção do VBP")]
     col += [("*", "S04", "*", "fixa", "S38_CAR", 1.0, np.nan, "", "", "D9-f: S04 (carvão) → 100% CAR, sem teto")]
@@ -290,116 +351,171 @@ def main():
     regras_coluna = pd.DataFrame(col, columns=["regiao", "fornecedor", "regiao_fornecedor", "regra", "subsetor", "valor",
                                                "teto_vbp", "destino_excedente", "grupo_teto", "fonte"])
 
-    # ---- regras de linha: gás por comprador (RB: BEN nacional; RS: Sulgás, D10) ---------------------
-    lin = [("*", "*", "*", "fixa_por_comprador", "S38_DIS", 1.0, "nao",
-            "padrão: energia elétrica vendida pela distribuição (geração e TRA não vendem fora do bloco)")]
+    # ---- gás por comprador (RB: BEN nacional; RS: Sulgás, D10) com teto por comprador ------------------
     gb = pd.read_csv(INT / "ben_2019_gas_natural_por_setor_v01.csv").set_index("setor_ben")["gas_natural_mil_tep"]
     corr = pd.DataFrame(CORRESPONDENCIA_BEN, columns=["setor_ben", "compradores_mip", "fonte"])
     corr["gas_natural_mil_tep"] = [float(gb.get(x, 0.0)) for x in corr["setor_ben"]]
     corr["entra"] = corr["compradores_mip"] != ""
     tep_total = corr.loc[corr["entra"], "gas_natural_mil_tep"].sum()
     corr["participacao_no_gas_distribuido"] = np.where(corr["entra"], corr["gas_natural_mil_tep"] / tep_total, 0.0)
-    gas_comp = []
-    # RB: BEN nacional (igual à v01)
     todos = sorted({c for x in corr["compradores_mip"] for c in x.split("|") if c})
     compra_rb = compras_ao_s38(mip, "RB", todos)
-    alvo = dict.fromkeys(todos, 0.0)
-    for x in corr[corr["entra"]].itertuples(index=False):
-        ks = x.compradores_mip.split("|")
-        base = sum(compra_rb[k] for k in ks)
-        for k in ks:
-            alvo[k] += vbp_gas["RB"] * x.participacao_no_gas_distribuido * compra_rb[k] / base
-    regras_gas(alvo, compra_rb, "RB", "BEN 2020 (gás por setor, sem o setor energético) × VBP_GAS_RB, ∝ compras ao S38 "
-               "dentro de cada setor do BEN (correspondencia_ben_mip_v02.csv)", lin, gas_comp)
+    fonte_rb = ("BEN 2020 (gás por setor, sem o setor energético) × VBP_GAS_RB, ∝ compras ao S38 dentro de cada setor do "
+                "BEN (correspondencia_ben_mip_v02.csv); grupos do teto: indústria (setores industriais do BEN) e cada "
+                "um dos demais setores do BEN")
+
+    def contrib_rb(vbp_rb):
+        c = {}
+        for x in corr[corr["entra"]].itertuples(index=False):
+            g = "indústria (BEN)" if x.setor_ben in BEN_INDUSTRIA else x.setor_ben.lower()
+            ks = x.compradores_mip.split("|")
+            base = sum(compra_rb[k] for k in ks)
+            for k in ks:
+                c.setdefault(g, {})
+                c[g][k] = c[g].get(k, 0.0) + vbp_rb * x.participacao_no_gas_distribuido * compra_rb[k] / base
+        return c
+
     # RS: estrutura de receita da Sulgás (D10)
     seg = pd.read_csv(SULGAS_SEG).set_index("segmento")["receita_liquida_rs"] / 1e6
     fonte_seg = ("Sulgás 2019, Nota 18 (receita líquida por segmento; dados/externos/gas/sulgas_segmentos_2019_v01.csv)")
-    grupos = {
+    grupos_d10 = {
         "indústria + cogeração": float(seg["Industrial"] + seg["Cogeração"]),
         "automotivo": float(seg["Automotivo"]),
         "residencial + comercial": float(seg["Residencial"] + seg["Comercial"]),
         "serviço": float(seg["Serviço"]),
     }
-    for nome, v in grupos.items():
+    for nome, v in grupos_d10.items():
         anotar("gás por comprador (RS, D10)", "RS", f"participação: {nome}", v / seg.sum(), "fração", fonte_seg)
-    ind = corr[corr["setor_ben"].isin(BEN_INDUSTRIA)]
+    ind = corr[corr["setor_ben"].isin(BEN_INDUSTRIA_RS)]
     todos_rs = sorted({c for x in ind["compradores_mip"] for c in x.split("|")} | {"S43", "FAM", "S19"}
                       | set(SERVICOS_RS.split("|")))
     compra_rs = compras_ao_s38(mip, "RS", todos_rs)
-    alvo = dict.fromkeys(todos_rs, 0.0)
+    contrib_rs = {g: {} for g in grupos_d10}
     tep_ind = ind["gas_natural_mil_tep"].sum()
     for x in ind.itertuples(index=False):  # indústria + cogeração ∝ consumo industrial de gás do BEN, por ramo
         ks = x.compradores_mip.split("|")
         base = sum(compra_rs[k] for k in ks)
         for k in ks:
-            alvo[k] += sul * grupos["indústria + cogeração"] / seg.sum() * (x.gas_natural_mil_tep / tep_ind) * compra_rs[k] / base
+            d_ = contrib_rs["indústria + cogeração"]
+            d_[k] = d_.get(k, 0.0) + (sul * grupos_d10["indústria + cogeração"] / seg.sum() * (x.gas_natural_mil_tep / tep_ind)
+                                      * compra_rs[k] / base)
     for nome, ks in (("automotivo", ["S43", "FAM"]), ("residencial + comercial", ["FAM"] + SERVICOS_RS.split("|")),
                      ("serviço", ["S19"])):
         base = sum(compra_rs[k] for k in ks)
         for k in ks:
-            alvo[k] += sul * grupos[nome] / seg.sum() * compra_rs[k] / base
-    regras_gas(alvo, compra_rs, "RS",
-               f"D10: {fonte_seg}; indústria + cogeração → setores industriais ∝ consumo industrial de gás do BEN 2020 e, "
-               "no ramo, ∝ compras ao S38; automotivo → S43 e famílias; residencial + comercial → famílias e S41–S68, "
-               "∝ compras ao S38; serviço (transporte do gás da REFAP, HIPÓTESE) → S19", lin, gas_comp)
-    lin += [("*", "INV", "*", "fixa_por_comprador", "S38_DIS", 1.0, "nao", "investimento → DIS"),
-            ("*", "EXP", "*", "fixa_por_comprador", "S38_DIS", 1.0, "nao", "exportações → DIS"),
-            ("*", "DISCREP", "*", "somente_distribuicao_e_gas", "", np.nan, "nao",
-             "discrepância estatística → DIS e GAS na proporção do VBP")]
-    regras_linha = pd.DataFrame(lin, columns=["regiao", "comprador", "regiao_comprador", "regra", "subsetor", "valor",
-                                              "fixar_no_ras", "fonte"])
-    gas_comp = pd.DataFrame(gas_comp)
+            contrib_rs[nome][k] = contrib_rs[nome].get(k, 0.0) + sul * grupos_d10[nome] / seg.sum() * compra_rs[k] / base
+    fonte_rs = (f"D10: {fonte_seg}; indústria + cogeração → setores industriais ∝ consumo industrial de gás do BEN 2020 "
+                "(sem o consumo final não energético) e, no ramo, ∝ compras ao S38; automotivo → S43 e famílias; "
+                "residencial + comercial → famílias e S41–S68, ∝ compras ao S38; serviço (transporte do gás da REFAP, "
+                "HIPÓTESE) → S19")
+    anotar("gás por comprador", "*", "teto: gás ÷ compras ao S38 de cada comprador", W_MAX_GAS, "fração",
+           "HIPÓTESE (revisão da Rodada 03): com o VBP do GAS-RB da D9-b, o alvo de gás de S17, S21–S24 e S27 no RB "
+           "passava das compras ao S38 (eletricidade zero); o excedente vai aos demais compradores do mesmo grupo e, "
+           "se o grupo inteiro estiver no teto, aos demais compradores da região, na proporção do alvo")
 
-    # ---- primários e satélites ---------------------------------------------------------------------
-    pri = [("*", "*", "proporcional_vbp", "", np.nan, "padrão: na proporção do VBP"),
-           ("*", "impostos_producao", "proporcional_vbp", "", np.nan, "impostos sobre a produção ∝ VBP")]
-    pri += [("*", it, "proporcional_ci", "", np.nan, "impostos sobre produtos ∝ compras intermediárias domésticas + importadas")
-            for it in ("ipi", "icms", "outros_impostos")]
-    pri += [("RS", "importacoes", "fixa", "S38_DIS", 1.0, "D9-a: importações do S38-RS → 100% DIS (energia elétrica)")]
-    pri += [("RB", "importacoes", "fixa", "S38_DIS", s_elet, fonte_imp + "; energia elétrica → DIS"),
-            ("RB", "importacoes", "fixa", "S38_GN", (1 - s_elet) * theta["RB"], fonte_imp + "; gás × θ_RB → GN"),
-            ("RB", "importacoes", "fixa", "S38_GAS", (1 - s_elet) * (1 - theta["RB"]), fonte_imp + "; gás × (1 − θ_RB) → GAS")]
-    cem = pd.read_csv(INT / "cempre_2019_composicao_v01.csv")
-    cem = cem[cem["nivel"] == "subsetor"]
-    for r in REGIOES:
-        for var, item in (("salarios_mil", "remuneracoes"), ("pessoal_ocupado", "ocupacoes")):
-            c = cem[(cem["territorio"] == r) & (cem["variavel"] == var)].set_index("item")["participacao"]
-            pri.append((r, item, "fixa_por_tipo", "geracao", float(c["geracao"]),
-                        f"{FONTE_CEMPRE}: geração {c['geracao']:.4f}, repartida entre as fontes na proporção do VBP final"))
-            for sub in ("S38_TRA", "S38_DIS", "S38_GAS"):
-                pri.append((r, item, "fixa_por_tipo", sub, float(c[sub]), f"{FONTE_CEMPRE}: {sub}"))
-            anotar("CEMPRE", r, f"composição {item}", ", ".join(f"{k} {v:.4f}" for k, v in c.items()), "fração", FONTE_CEMPRE)
-    ce_ben = pd.read_csv(INT / "ben_2019_consumo_especifico_v01.csv").set_index("subsetor")
-    for c in TERMICAS:
-        anotar("energia", "*", f"consumo específico {c}", float(ce_ben.loc[c, "tep_por_mwh"]), "tep/MWh", ce_ben.loc[c, "fonte"])
-    for r in REGIOES:
-        base_e = {c: gwh[r][c] * float(ce_ben.loc[c, "tep_por_mwh"]) for c in TERMICAS}
-        base_a = {c: gwh[r][c] for c in TERMICAS}
-        se, sa = sum(base_e.values()), sum(base_a.values())
+    def montar_gas(vbp_gas: dict, an, fonte_gas: str) -> tuple:
+        """Componentes, regras de linha, gás por comprador e regras de primários, que dependem do VBP do GAS."""
+        componentes = []
+        for r in REGIOES:
+            componentes += [
+                (r, "vbp_transmissao", T[r], fonte_rap + "; × participação no VBP do S38"),
+                (r, "vbp_gas", vbp_gas[r], fsul if r == "RS" else fonte_gas),
+                (r, "gas_termicas", 0.0, "G = 0 (padrão das instruções; as térmicas compram gás direto do S05 ou importado)"),
+            ]
+        componentes.append(("*", "fracao_transmissao_distribuicao", alfa, falfa))
+        componentes = pd.DataFrame(componentes, columns=["regiao", "componente", "valor", "fonte"])
+        for r in REGIOES:
+            E = F[r] - T[r]
+            an("VBP", r, "VBP da geração = E_r = F_r − T_r − G_r", E, "R$ mi", "âncora por componentes (D3 = A)")
+            an("VBP", r, "VBP da distribuição = X_r − E_r − T_r − VBP_GAS", X[r] - E - T[r] - vbp_gas[r], "R$ mi",
+                   "resíduo (Seção 6.3 da Rodada 02)")
+
+        lin = [("*", "*", "*", "fixa_por_comprador", "S38_DIS", 1.0, "nao",
+                "padrão: energia elétrica vendida pela distribuição (geração e TRA não vendem fora do bloco)")]
+        gas_comp, gas_grupos = [], []
+        regras_gas(contrib_rb(vbp_gas["RB"]), compra_rb, "RB", fonte_rb, lin, gas_comp, gas_grupos)
+        regras_gas(contrib_rs, compra_rs, "RS", fonte_rs, lin, gas_comp, gas_grupos)
+        lin += [("*", "INV", "*", "fixa_por_comprador", "S38_DIS", 1.0, "nao", "investimento → DIS"),
+                ("*", "EXP", "*", "fixa_por_comprador", "S38_DIS", 1.0, "nao", "exportações → DIS"),
+                ("*", "DISCREP", "*", "somente_distribuicao_e_gas", "", np.nan, "nao",
+                 "discrepância estatística → DIS e GAS na proporção do VBP")]
+        regras_linha = pd.DataFrame(lin, columns=["regiao", "comprador", "regiao_comprador", "regra", "subsetor", "valor",
+                                                  "fixar_no_ras", "fonte"])
+        # ---- primários e satélites ---------------------------------------------------------------------
+        pri = [("*", "*", "proporcional_vbp", "", np.nan, "padrão: na proporção do VBP"),
+               ("*", "impostos_producao", "proporcional_vbp", "", np.nan, "impostos sobre a produção ∝ VBP")]
+        pri += [("*", it, "proporcional_ci", "", np.nan, "impostos sobre produtos ∝ compras intermediárias domésticas + importadas")
+                for it in ("ipi", "icms", "outros_impostos")]
+        pri += [("RS", "importacoes", "fixa", "S38_DIS", 1.0, "D9-a: importações do S38-RS → 100% DIS (energia elétrica)")]
+        pri += [("RB", "importacoes", "fixa", "S38_DIS", s_elet, fonte_imp + "; energia elétrica → DIS"),
+                ("RB", "importacoes", "fixa", "S38_GN", (1 - s_elet) * theta["RB"], fonte_imp + "; gás × θ_RB → GN"),
+                ("RB", "importacoes", "fixa", "S38_GAS", (1 - s_elet) * (1 - theta["RB"]), fonte_imp + "; gás × (1 − θ_RB) → GAS")]
+        cem = pd.read_csv(INT / "cempre_2019_composicao_v01.csv")
+        cem = cem[cem["nivel"] == "subsetor"]
+        for r in REGIOES:
+            for var, item in (("salarios_mil", "remuneracoes"), ("pessoal_ocupado", "ocupacoes")):
+                c = cem[(cem["territorio"] == r) & (cem["variavel"] == var)].set_index("item")["participacao"]
+                pri.append((r, item, "fixa_por_tipo", "geracao", float(c["geracao"]),
+                            f"{FONTE_CEMPRE}: geração {c['geracao']:.4f}, repartida entre as fontes na proporção do VBP final"))
+                for sub in ("S38_TRA", "S38_DIS", "S38_GAS"):
+                    pri.append((r, item, "fixa_por_tipo", sub, float(c[sub]), f"{FONTE_CEMPRE}: {sub}"))
+                an("CEMPRE", r, f"composição {item}", ", ".join(f"{k} {v:.4f}" for k, v in c.items()), "fração", FONTE_CEMPRE)
+        ce_ben = pd.read_csv(INT / "ben_2019_consumo_especifico_v02.csv").set_index("subsetor")
         for c in TERMICAS:
-            if base_e[c] > 0:
-                pri.append((r, "energia", "fixa", c, base_e[c] / se,
-                            f"GWh (D8) × consumo específico (BEN 2020, Tabela 5.4); {FONTE_GER[r]}"))
-            if base_a[c] > 0:
-                pri.append((r, "agua", "fixa", c, base_a[c] / sa, f"HIPÓTESE: água ∝ GWh das térmicas; {FONTE_GER[r]}"))
-    em = pd.read_csv(INT / "seeg_2019_emissoes_v01.csv")
-    por_sub = em[em["tabela"].str.startswith("por_subsetor")].set_index("regiao")
-    sf6 = float(em.loc[em["tabela"] == "sf6_nacional_mil_t", "valor"].iloc[0]) * 1000
-    for r in REGIOES:
-        for c in ("S38_CAR", "S38_GN", "S38_PET", "S38_BIO"):
-            v = float(por_sub.loc[r, c]) * 1000
-            if v > 0:
-                obs = ("; PET do RS (diesel + óleo, 17.8 mil t) realocado a CAR e GN ∝ GWh" if r == "RS"
-                       else "; 'Não alocado' somado ao RB")
-                pri.append((r, "co2e", "niveis", c, v, FONTE_SEEG + obs))
-                anotar("emissões", r, f"CO2e SEEG {c}", v, "t CO2e", FONTE_SEEG + obs,
-                       f"fator E1 = {v / (gwh[r][c] * 1000):.4f} t/MWh" if gwh[r][c] > 0 else "")
-        vbp_tra, vbp_dis = T[r], X[r] - (F[r] - T[r]) - T[r] - vbp_gas[r]
-        sf6_r = sf6 * share_X[r]
-        for sub, v in (("S38_TRA", sf6_r * vbp_tra / (vbp_tra + vbp_dis)), ("S38_DIS", sf6_r * vbp_dis / (vbp_tra + vbp_dis))):
-            pri.append((r, "co2e", "niveis", sub, v, f"SF6 nacional ({FONTE_SEEG}) × participação de {r} no VBP do S38 "
-                        f"({share_X[r]:.4f}) × participação do {sub} no VBP de TRA + DIS"))
-    regras_primarios = pd.DataFrame(pri, columns=["regiao", "item", "regra", "subsetor", "valor", "fonte"])
+            an("energia", "*", f"consumo específico {c}", float(ce_ben.loc[c, "tep_por_mwh"]), "tep/MWh", ce_ben.loc[c, "fonte"])
+        for r in REGIOES:
+            base_e = {c: gwh[r][c] * float(ce_ben.loc[c, "tep_por_mwh"]) for c in TERMICAS}
+            base_a = {c: gwh[r][c] for c in TERMICAS}
+            se, sa = sum(base_e.values()), sum(base_a.values())
+            for c in TERMICAS:
+                if base_e[c] > 0:
+                    pri.append((r, "energia", "fixa", c, base_e[c] / se,
+                                f"GWh (D8) × consumo específico (BEN 2020, Tabela 5.4); {FONTE_GER[r]}"))
+                if base_a[c] > 0:
+                    pri.append((r, "agua", "fixa", c, base_a[c] / sa, f"HIPÓTESE: água ∝ GWh das térmicas; {FONTE_GER[r]}"))
+        em = pd.read_csv(INT / "seeg_2019_emissoes_v01.csv")
+        por_sub = em[em["tabela"].str.startswith("por_subsetor")].set_index("regiao")
+        sf6 = float(em.loc[em["tabela"] == "sf6_nacional_mil_t", "valor"].iloc[0]) * 1000
+        for r in REGIOES:
+            for c in ("S38_CAR", "S38_GN", "S38_PET", "S38_BIO"):
+                v = float(por_sub.loc[r, c]) * 1000
+                if v > 0:
+                    obs = ("; PET do RS (diesel + óleo, 17.8 mil t) realocado a CAR e GN ∝ GWh" if r == "RS"
+                           else "; 'Não alocado' somado ao RB")
+                    pri.append((r, "co2e", "niveis", c, v, FONTE_SEEG + obs))
+                    an("emissões", r, f"CO2e SEEG {c}", v, "t CO2e", FONTE_SEEG + obs,
+                           f"fator E1 = {v / (gwh[r][c] * 1000):.4f} t/MWh" if gwh[r][c] > 0 else "")
+            vbp_tra, vbp_dis = T[r], X[r] - (F[r] - T[r]) - T[r] - vbp_gas[r]
+            sf6_r = sf6 * share_X[r]
+            for sub, v in (("S38_TRA", sf6_r * vbp_tra / (vbp_tra + vbp_dis)), ("S38_DIS", sf6_r * vbp_dis / (vbp_tra + vbp_dis))):
+                pri.append((r, "co2e", "niveis", sub, v, f"SF6 nacional ({FONTE_SEEG}) × participação de {r} no VBP do S38 "
+                            f"({share_X[r]:.4f}) × participação do {sub} no VBP de TRA + DIS"))
+        regras_primarios = pd.DataFrame(pri, columns=["regiao", "item", "regra", "subsetor", "valor", "fonte"])
+        return componentes, regras_linha, pd.DataFrame(gas_comp), pd.DataFrame(gas_grupos), regras_primarios
+
+    componentes, regras_linha, gas_comp, gas_grupos, regras_primarios = montar_gas(vbp_gas, anotar, fonte_gas_rb)
+    # variante: VBP do GAS-RB com o preço da Sulgás (a outra opção da D9-b)
+    fonte_gas_sul = (f"D9-b (variante): preço da Sulgás 2019 ({preco_sul:.6f} R$/m³; {fsul}) × volume não térmico do RB "
+                     f"({fdist})")
+    comp_sul, lin_sul, gas_comp_sul, gas_grupos_sul, pri_sul = montar_gas({"RS": sul, "RB": vbp_gas_sul},
+                                                                          lambda *a, **k: a[3], fonte_gas_sul)
+    for nome_, gc_ in (("principal", gas_comp), ("preço da Sulgás", gas_comp_sul)):
+        for r in REGIOES:
+            n_teto = int(gc_.loc[gc_["regiao"] == r, "no_teto"].sum())
+            anotar("gás por comprador", r, f"compradores no teto ({nome_})", n_teto, "nº",
+                   ", ".join(gc_.loc[(gc_["regiao"] == r) & gc_["no_teto"], "comprador"]) or "nenhum")
+
+    # evidência física: participação do gás no gasto com gás + eletricidade de cada setor do BEN (não entra na MIP)
+    ge = pd.read_csv(INT / "ben_2019_gas_eletricidade_por_setor_v01.csv")
+    tarifa, ftar = exigir(D, "tarifa_media_industrial_2019")
+    p_gas = p4 if p4 is not None else preco_sul
+    ge = ge[ge["setor_ben"].isin(BEN_INDUSTRIA)].copy()
+    ge["gasto_gas_R$mi"] = ge["gas_natural_mil_tep"] * 1e3 * M3_POR_TEP_GAS * p_gas / 1e6
+    ge["gasto_eletricidade_R$mi"] = ge["eletricidade_mil_tep"] * 1e3 * MWH_POR_TEP * tarifa / 1e6
+    ge["gas_sobre_gas_mais_eletricidade"] = ge["gasto_gas_R$mi"] / (ge["gasto_gas_R$mi"] + ge["gasto_eletricidade_R$mi"])
+    ge["compradores_mip"] = ge["setor_ben"].map(dict(zip(corr["setor_ben"], corr["compradores_mip"])))
+    ge["nota"] = (f"INDICATIVO, não entra na MIP: gás a {p_gas:.4f} R$/m³ (preço médio usado na D9-b; 8800 kcal/m³) e "
+                  f"eletricidade a {tarifa} R$/MWh (tarifa média industrial 2019; {ftar}); 1 MWh = 0.086 tep")
     latentes = pd.DataFrame([("RS", s, "RB", f"D6 = A: {s}-RS latente; coluna do mesmo subsetor no RB") for s in LATENTES_RS],
                             columns=["regiao", "subsetor", "regiao_espelho", "fonte"])
     subsetores = pd.DataFrame(SUBSETORES, columns=["codigo", "nome", "tipo"])
@@ -418,6 +534,11 @@ def main():
     regras_primarios.to_csv(PAR / arquivos["regras_primarios"], index=False)
     latentes.to_csv(PAR / arquivos["latentes_espelho"], index=False)
     corr.to_csv(PAR / f"correspondencia_ben_mip_{V}.csv", index=False)
+    arq_sul = arquivos | {"componentes": f"componentes_{V}_gas_sulgas.csv", "regras_linha": f"regras_linha_{V}_gas_sulgas.csv",
+                          "regras_primarios": f"regras_primarios_{V}_gas_sulgas.csv"}
+    comp_sul.to_csv(PAR / arq_sul["componentes"], index=False)
+    lin_sul.to_csv(PAR / arq_sul["regras_linha"], index=False)
+    pri_sul.to_csv(PAR / arq_sul["regras_primarios"], index=False)
 
     def piso(kappa, eta_v):
         d = {"kappa": kappa, "combustiveis": COMBUSTIVEIS, "max_iter": 50}
@@ -438,12 +559,17 @@ def main():
                 piso(KAPPA, ETA), reeq(ETA)),
         "_E3": ("v02 — sensibilidade P1 + E3 (só níveis do SEEG; NÃO preserva o total da base)", "sem_residuo", arquivos,
                 piso(KAPPA, ETA), reeq(ETA)),
-        "_k060": ("v02 — sensibilidade κ = 0.60", "residuo", arquivos, piso(0.60, ETA), reeq(ETA)),
-        "_k080": ("v02 — sensibilidade κ = 0.80", "residuo", arquivos, piso(0.80, ETA), reeq(ETA)),
+        "_k060": ("v02 — sensibilidade κ = 0.60 (só o piso κ, sem a extensão de viabilidade; compare com "
+                  "_sem_viabilidade, κ = 0.70: com a viabilidade ligada, κ ≥ ≈ 0.62 não atua)", "residuo", arquivos,
+                  piso(0.60, None), reeq(ETA, "limitar")),
+        "_k080": ("v02 — sensibilidade κ = 0.80 (só o piso κ, sem a extensão de viabilidade; compare com "
+                  "_sem_viabilidade, κ = 0.70)", "residuo", arquivos, piso(0.80, None), reeq(ETA, "limitar")),
         "_eta005": ("v02 — sensibilidade η = 0.05", "residuo", arquivos, piso(KAPPA, 0.05), reeq(0.05)),
         "_sem_viabilidade": ("v02 — sensibilidade: só o piso κ = 0.70 das instruções, sem a extensão de viabilidade "
                              "(o EOB fica abaixo de η onde não cabe)", "residuo", arquivos, piso(KAPPA, None),
                              reeq(ETA, "limitar")),
+        "_gas_sulgas": ("v02 — sensibilidade D9-b: VBP do GAS-RB com o preço da Sulgás (1.39 R$/m³) em vez do preço "
+                        "médio das 4 distribuidoras", "residuo", arq_sul, piso(KAPPA, ETA), reeq(ETA)),
     }
     for suf, (nome, modo, arqs, pv, rq) in variantes.items():
         cfg = {"nome": nome,
@@ -467,7 +593,8 @@ def main():
         {"quadro": q, "participacoes_P1": part_p1, "participacoes_P2": part_p2, "componentes": componentes,
          "regras_coluna": regras_coluna, "regras_linha": regras_linha, "regras_primarios": regras_primarios,
          "latentes_espelho": latentes, "correspondencia_ben_mip": corr, "gas_por_comprador": gas_comp,
-         "valores_documentais": D},
+         "gas_grupos_teto": gas_grupos, "gas_por_comprador_sulgas": gas_comp_sul, "gas_grupos_teto_sulgas": gas_grupos_sul,
+         "gas_x_eletricidade_BEN": ge, "valores_documentais": D},
         leiame=["Rodada 03 — quadro de parâmetros da MIP v02 (S38 em 11 subsetores), para revisão.",
                 "Aba quadro: cada número usado, com unidade, fonte e cálculo. As demais abas são os CSVs de parametros/*_v02.",
                 "Os pisos de VBP (D9-f) e o reequilíbrio (D9-r) são aplicados pelo motor; os resultados ficam nas abas "

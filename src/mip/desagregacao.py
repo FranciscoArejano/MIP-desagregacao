@@ -401,10 +401,17 @@ def validar_especificacao(espec: Especificacao, mip: MIP) -> None:
         inv = set(rq.get("primarios_ajustaveis", ["ipi", "icms", "outros_impostos"])) - {"ipi", "icms", "outros_impostos"}
         if inv:
             erros.append(f"reequilibrio.primarios_ajustaveis: só ipi, icms e outros_impostos (inválidos: {sorted(inv)})")
-        if rq.get("importacoes", "fixas") not in ("fixas", "ajustaveis"):
-            erros.append("reequilibrio.importacoes ∈ {fixas, ajustaveis}")
+        if rq.get("importacoes", "fixas") != "fixas":
+            erros.append("reequilibrio.importacoes: só 'fixas' — as importações do setor-alvo são de energia "
+                         "(eletricidade e gás, regra do Comex), fixas pelo D9-r; não há importação não energética a mover")
         if rq.get("se_inviavel", "erro") not in ("erro", "limitar"):
             erros.append("reequilibrio.se_inviavel ∈ {erro, limitar}")
+    if pv and pv.get("viabilidade_eta") is not None:
+        if not rq:
+            erros.append("piso_vbp.viabilidade_eta exige o bloco reequilibrio (o piso de viabilidade só existe para ele)")
+        elif rq.get("eta") is not None and float(pv["viabilidade_eta"]) < float(rq["eta"]):
+            erros.append(f"piso_vbp.viabilidade_eta ({pv['viabilidade_eta']}) < reequilibrio.eta ({rq['eta']}): "
+                         "o piso não garantiria o EOB mínimo")
     if erros:
         raise EspecificacaoInvalida("especificação inválida:\n  - " + "\n  - ".join(erros))
 
@@ -740,7 +747,26 @@ class ResultadoDesagregacao:
             f"subsetores: {', '.join(e.subsetores['codigo'])}.",
             f"Bloco intrassetorial: {e.bloco}; modo do VBP: {e.modo_vbp}.",
             "A soma dos subsetores reproduz cada célula da MIP original (ver aba checagens).",
-            "EOB de cada subsetor = resíduo que fecha a coluna (EOB negativo é sinalizado em checagens, não corrigido).",
+        ]
+        if e.piso_vbp:
+            pv = e.piso_vbp
+            linhas.append(
+                f"Piso de VBP (D9-f): VBP de cada térmica ≥ combustível ÷ κ (κ = {pv['kappa']})"
+                + (f" e ≥ combustível ÷ (1 − η − φ) (viabilidade, η = {pv['viabilidade_eta']}; φ = custos que o "
+                   "reequilíbrio não pode mexer, fora o combustível, ÷ VBP)" if pv.get("viabilidade_eta") is not None else "")
+                + "; quem fica abaixo sobe e as demais fontes da região caem na proporção do VBP (VBP da geração fixo). "
+                "Aba pisos_vbp.")
+        if e.reequilibrio:
+            rq = e.reequilibrio
+            linhas.append(
+                f"EOB: resíduo que fecha a coluna, depois do reequilíbrio (D9-r): RAS dos insumos não energéticos "
+                f"(compras fora do bloco, exceto combustíveis; {', '.join(rq.get('primarios_ajustaveis', ['ipi', 'icms', 'outros_impostos']))}) "
+                f"para que EOB ≥ η × VBP (η = {rq['eta']}) em todo subsetor com produção; total de cada insumo na "
+                "região e Σ EOB da região preservados. Abas reequilibrio_RAS e reequilibrio_insumos; na aba parametros, "
+                "etapa 'regra' = pesos antes do reequilíbrio e 'apos_reequilibrio' = pesos realizados.")
+        else:
+            linhas.append("EOB de cada subsetor = resíduo que fecha a coluna (EOB negativo é sinalizado em checagens, não corrigido).")
+        linhas += [
             "Aba principal: mesmo layout da planilha original, com os subsetores no lugar do setor-alvo.",
             "Abas: mapa_setores (original → novo), parametros (todos os pesos usados, com fonte), "
             "checagens, ras (conciliação das linhas), coef_latentes (se houver subsetores latentes).",
@@ -776,6 +802,11 @@ class ResultadoDesagregacao:
         )
         if caminho_csv is not None:
             exportar_longo(self.mip, caminho_csv)
+            if self.mip.coef_latentes is not None and len(self.mip.coef_latentes):
+                # ler_mip_longo procura este arquivo ao lado do longo; sem ele, os latentes ficariam sem coluna
+                from .leitura import caminho_coef_latentes_ao_lado
+
+                self.mip.coef_latentes.to_csv(caminho_coef_latentes_ao_lado(caminho_csv), index=False)
 
 
 # =============================================================================================
@@ -1039,7 +1070,7 @@ def _custos_fixos_e_combustivel(espec: Especificacao, m2: MIP, mapa: pd.DataFram
     """(custos fixos, combustível) de cada coluna em `idx` — D9-f/r.
 
     Fixos: compras ao bloco (setor-alvo de todas as regiões), compras às linhas de combustível (`linhas_fixas`),
-    importações (se `importacoes: fixas`), remunerações e impostos sobre a produção. Combustível: as linhas de
+    importações (todas de energia), remunerações e impostos sobre a produção. Combustível: as linhas de
     `piso_vbp.combustiveis` de cada subsetor (e as importações, se listadas).
     """
     ip = {it: k for k, it in enumerate(ITENS_PRIMARIOS)}
@@ -1049,17 +1080,13 @@ def _custos_fixos_e_combustivel(espec: Especificacao, m2: MIP, mapa: pd.DataFram
     fixas = set(espec.reequilibrio.get("linhas_fixas") or []) | {c for v in comb_cfg.values() for c in v if c != "importacoes"}
     bloco = cod_orig == espec.setor_alvo
     linhas_fixas = np.isin(cod_orig, sorted(fixas)) & ~bloco
-    imp_fixas = espec.reequilibrio.get("importacoes", "fixas") == "fixas"
     fixos = (m2.Z[bloco][:, idx].sum(axis=0) + m2.Z[linhas_fixas][:, idx].sum(axis=0)
-             + m2.V[ip["remuneracoes"], idx] + m2.V[ip["impostos_producao"], idx]
-             + (m2.V[ip["importacoes"], idx] if imp_fixas else 0.0))
+             + m2.V[ip["remuneracoes"], idx] + m2.V[ip["impostos_producao"], idx] + m2.V[ip["importacoes"], idx])
     comb = np.zeros(len(idx))
     for n, k in enumerate(idx):
         forn = comb_cfg.get(cod_novo[k]) or []
         linhas = np.isin(cod_orig, [c for c in forn if c != "importacoes"]) & ~bloco
         comb[n] = m2.Z[linhas, k].sum() + (m2.V[ip["importacoes"], k] if "importacoes" in forn else 0.0)
-        if "importacoes" in forn and not imp_fixas:
-            fixos[n] += m2.V[ip["importacoes"], k]  # importação de combustível é fixa mesmo com importacoes: ajustaveis
     return fixos, comb
 
 
@@ -1071,8 +1098,6 @@ def _eob_maximo(espec: Especificacao, m2: MIP, mapa: pd.DataFrame, idx: list[int
         c for v in (espec.piso_vbp.get("combustiveis") or {}).values() for c in v if c != "importacoes"}
     aj = ~np.isin(cod_orig, sorted(fixas)) & (cod_orig != espec.setor_alvo)
     itens = list(espec.reequilibrio.get("primarios_ajustaveis", ["ipi", "icms", "outros_impostos"]))
-    if espec.reequilibrio.get("importacoes", "fixas") == "ajustaveis":
-        itens.append("importacoes")
     M = np.vstack([m2.Z[aj][:, idx], m2.V[[ip[x] for x in itens]][:, idx]])
     return m2.V[ip["eob"], idx] + np.where(M > 0, M, 0.0).sum(axis=0)
 
@@ -1171,17 +1196,15 @@ def _reequilibrar_eob(espec: Especificacao, ga: _GrupoAlvo, Z2: np.ndarray, V2: 
                       linhas_aj: list[int], rotulos: list[str], ip: dict) -> tuple[InfoRAS, pd.DataFrame, pd.DataFrame]:
     """D9-r: RAS dos insumos não energéticos das colunas dos subsetores de uma região (altera Z2 e V2).
 
-    Ajustáveis: compras a setores fora do bloco, exceto as linhas fixas (combustíveis); impostos sobre produtos
-    (e as importações, se `importacoes: ajustaveis`). Fixos: bloco, combustíveis, importações de energia,
-    remunerações e impostos sobre a produção. Totais de linha = total de cada insumo na região (preservado).
-    Alvo de coluna = ajustável_k − (EOB*_k − EOB_k), com EOB*_k = η × VBP_k para quem está abaixo e, para os demais,
-    EOB_k menos uma parte do déficit, na proporção da folga (EOB_k − η × VBP_k). A soma dos EOB da região não muda.
+    Ajustáveis: compras a setores fora do bloco, exceto as linhas fixas (combustíveis); impostos sobre produtos.
+    Fixos: bloco, combustíveis, importações (de energia), remunerações e impostos sobre a produção. Totais de
+    linha = total de cada insumo na região (preservado). Alvo de coluna = ajustável_k − (EOB*_k − EOB_k), com
+    EOB*_k = η × VBP_k para quem está abaixo e, para os demais, EOB_k menos uma parte do déficit, na proporção da
+    folga (EOB_k − η × VBP_k). A soma dos EOB da região não muda.
     """
     cfg = espec.reequilibrio
     eta = float(cfg["eta"])
     itens = list(cfg.get("primarios_ajustaveis", ["ipi", "icms", "outros_impostos"]))
-    if cfg.get("importacoes", "fixas") == "ajustaveis":
-        itens.append("importacoes")
     limitar = cfg.get("se_inviavel", "erro") == "limitar"
     idx = ga.idx_novo
     X = X2[idx]
@@ -1199,8 +1222,8 @@ def _reequilibrar_eob(espec: Especificacao, ga: _GrupoAlvo, Z2: np.ndarray, V2: 
     situacao = np.array(["sem produção" if not p_ else "" for p_ in prod], dtype=object)
     abaixo = prod & (eob < minimo - tol_eob)
     max_eob = eob + livre_pos.sum(axis=0)  # EOB máximo: todos os ajustáveis livres a zero
+    tol_viab = TOL_REAGREGACAO  # a mesma tolerância (absoluta) da checagem EOB_minimo_eta
     for k in np.flatnonzero(abaixo):
-        tol_viab = 1e-6 * max(1.0, X[k])  # folga numérica: o piso de viabilidade deixa o ajustável exatamente em zero
         if minimo[k] > max_eob[k] + tol_viab:
             msg = (f"reequilíbrio em {ga.regiao} {ga.codigos[k]}: mesmo com os insumos ajustáveis a zero, EOB = "
                    f"{max_eob[k]:.4f} < η × VBP = {minimo[k]:.4f} (custos fixos > (1 − η) × VBP)")
@@ -1532,7 +1555,29 @@ def _desagregar_passo(mip: MIP, espec: Especificacao, reequilibrar: bool = True)
             fixas_rq = set(espec.reequilibrio.get("linhas_fixas") or []) | {
                 c for v in (espec.piso_vbp.get("combustiveis") or {}).values() for c in v if c != "importacoes"}
             aj = [(i2, f"{reg_orig[i]} {cod_orig[i]}") for i, i2 in zip(fora, fora2) if cod_orig[i] not in fixas_rq]
+            antes_Z, antes_V = Z2[:, idx].copy(), V2[:, idx].copy()
             info_rq, tab_sub, tab_ins = _reequilibrar_eob(espec, ga, Z2, V2, X2, [a for a, _ in aj], [b for _, b in aj], ip)
+            # o que o reequilíbrio não pode mexer (bloco, combustíveis, importações, remunerações, impostos sobre a
+            # produção) tem de sair igual; a diferença máxima vai para a checagem reequilibrio_insumos_fixos
+            itens_rq = list(espec.reequilibrio.get("primarios_ajustaveis", ["ipi", "icms", "outros_impostos"]))
+            outras_lin = np.setdiff1d(np.arange(n2), [a for a, _ in aj])
+            outros_it = [ip[x] for x in ITENS_PRIMARIOS if x not in itens_rq + ["eob", "va"]]
+            tab_sub["delta_max_insumos_fixos"] = max(float(np.abs(Z2[outras_lin][:, idx] - antes_Z[outras_lin]).max()),
+                                                     float(np.abs(V2[outros_it][:, idx] - antes_V[outros_it]).max()))
+            # pesos realizados depois do reequilíbrio (os da etapa 'regra' são os de antes do RAS do D9-r)
+            fonte_rq = f"RAS do reequilíbrio do EOB (D9-r, η = {espec.reequilibrio['eta']})"
+            for i2, rot_ in aj:
+                if antes_Z[i2].any() or Z2[i2, idx].any():
+                    tot = Z2[i2, idx].sum()
+                    registrar("coluna", ga, rot_, "realizado_apos_reequilibrio", fonte_rq,
+                              Z2[i2, idx] / tot if tot else Z2[i2, idx] * 0.0, etapa="apos_reequilibrio")
+            for x in itens_rq:
+                tot = V2[ip[x], idx].sum()
+                registrar("primarios_satelite", ga, x, "realizado_apos_reequilibrio", fonte_rq,
+                          V2[ip[x], idx] / tot if tot else V2[ip[x], idx] * 0.0, etapa="apos_reequilibrio")
+            registrar("primarios_satelite", ga, "eob", "realizado_apos_reequilibrio", fonte_rq,
+                      V2[ip["eob"], idx] / mip.V[ip["eob"], j] if mip.V[ip["eob"], j] else V2[ip["eob"], idx] * 0,
+                      etapa="apos_reequilibrio")
             infos.append(info_rq)
             reequilibrio_sub.append(tab_sub)
             reequilibrio_ins.append(tab_ins)
@@ -1799,10 +1844,14 @@ def verificar(res: ResultadoDesagregacao) -> pd.DataFrame:
     if e.reequilibrio and res.extras.get("reequilibrio_RAS") is not None:
         eta = float(e.reequilibrio["eta"])
         limitar = e.reequilibrio.get("se_inviavel", "erro") == "limitar"
-        abaixo = [f"{ids[k]} ({eob[k] / m2.X[k]:.4f})" for k in sub if m2.X[k] > 0 and eob[k] < eta * m2.X[k] - TOL_REAGREGACAO]
+        abaixo = [f"{ids[k]} (EOB/VBP {eob[k] / m2.X[k]:.6f}; falta {eta * m2.X[k] - eob[k]:.6g} R$ mi)"
+                  for k in sub if m2.X[k] > 0 and eob[k] < eta * m2.X[k] - TOL_REAGREGACAO]
         add("EOB_minimo_eta", not abaixo, float(min((eob[k] / m2.X[k] for k in sub if m2.X[k] > 0), default=0.0)), eta,
-            f"EOB ≥ η × VBP (η = {eta}) em todo subsetor com produção" + (": abaixo em " + ", ".join(abaixo) if abaixo else ""),
-            alerta=limitar)
+            f"EOB ≥ η × VBP (η = {eta}; tolerância absoluta {TOL_REAGREGACAO} R$ mi) em todo subsetor com produção"
+            + (": abaixo em " + ", ".join(abaixo) if abaixo else ""), alerta=limitar)
+        dfix = float(res.extras["reequilibrio_RAS"]["delta_max_insumos_fixos"].max())
+        add("reequilibrio_insumos_fixos", dfix <= TOL_REAGREGACAO, dfix, TOL_REAGREGACAO,
+            "bloco, combustíveis, importações, remunerações e impostos sobre a produção iguais antes e depois do reequilíbrio")
         dmax, det = 0.0, []
         for r in sorted(set(mapa.loc[mapa["desagregado"], "regiao"])):
             ks = [k for k in sub if m2.setores["regiao"][k] == r]

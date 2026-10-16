@@ -38,10 +38,24 @@ def main(argv=None):
     fontes = {}
     for m in a.mip or PADRAO_MIP:
         nome, _, cam = m.partition("=") if "=" in m else (Path(m).stem if m != "original" else "original", "", m)
+        nome, cam = nome.strip(), cam.strip()
+        if nome in fontes:
+            ap.error(f"--mip: versão '{nome}' repetida (dê nomes diferentes: --mip nome=caminho)")
         fontes[nome] = cam
-    rep = a.reparticao
+    rep = a.reparticao.strip()
     if "=" in rep:
-        rep = {k: float(v) for k, v in (x.split("=") for x in rep.split(","))}
+        itens = [x.strip() for x in rep.split(",")]
+        if any(not x or x.count("=") != 1 for x in itens):
+            ap.error(f"--reparticao: use 'SUB=peso,SUB=peso' (recebido: {a.reparticao!r})")
+        rep = {}
+        for k, v in (x.split("=") for x in itens):
+            k = k.strip()
+            if k in rep:
+                ap.error(f"--reparticao: subsetor {k} repetido")
+            try:
+                rep[k] = float(v)
+            except ValueError:
+                ap.error(f"--reparticao: peso inválido {v!r} para {k}")
     cen = ler_cenarios(a.cenarios)
     tab = executar_versoes(fontes, cen, rep)
     salvar_tabelas(Path(a.saida), tab, leiame=[

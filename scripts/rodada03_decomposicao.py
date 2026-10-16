@@ -7,10 +7,13 @@ Monta especificações intermediárias (em uma pasta temporária) combinando os 
   passo 0  v01 (Rodada 02b)
   passo 1  + D8   GWh por fonte = BEN − ONS (pesos P1, energia e água das térmicas)
   passo 2  + (a)  importações do S38-RS → 100% DIS
-  passo 3  + (b)  VBP do GAS-RB = preço médio × volume (e o que depende dele: SF6 de TRA/DIS e gás por comprador no RB)
-  passo 4  + (f)  combustíveis integrais, piso de VBP (κ e viabilidade) e remunerações/ocupações seguindo o VBP final
-  passo 5  + (r)  reequilíbrio dos insumos não energéticos (EOB ≥ η × VBP)
-  passo 6  + D10  gás por comprador no RS pela Sulgás  (= v02)
+  passo 3  + (b)  VBP do GAS-RB = preço médio × volume (e o que depende dele: SF6 de TRA/DIS e gás por comprador no
+                  RB, já com o teto do gás por comprador da revisão)
+  passo 4  + (f)  combustíveis integrais, piso de VBP só pelo κ (a regra das instruções) e remunerações/ocupações
+                  seguindo o VBP final
+  passo 5  + (r)  reequilíbrio dos insumos não energéticos (EOB ≥ η × VBP), com a extensão de viabilidade do piso
+                  (que só existe junto com o reequilíbrio)
+  passo 6  + D10  gás por comprador no RS pela Sulgás, com o teto  (= v02)
 Saída: resultados/rodada03/decomposicao_v01_v02.csv (um indicador por linha, um passo por coluna).
 """
 from __future__ import annotations
@@ -88,6 +91,8 @@ def montar(pasta: Path, passo: int) -> Path:
         cfg.pop("piso_vbp", None)
     if passo < 5:
         cfg.pop("reequilibrio", None)
+        if "piso_vbp" in cfg:
+            cfg["piso_vbp"].pop("viabilidade_eta", None)
     destino = pasta / f"especificacao_p{passo}.yaml"
     with open(destino, "w", encoding="utf-8") as f:
         yaml.safe_dump(cfg, f, allow_unicode=True, sort_keys=False)

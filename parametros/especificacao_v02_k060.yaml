@@ -1,4 +1,5 @@
-nome: v02 — sensibilidade κ = 0.60
+nome: 'v02 — sensibilidade κ = 0.60 (só o piso κ, sem a extensão de viabilidade; compare
+  com _sem_viabilidade, κ = 0.70: com a viabilidade ligada, κ ≥ ≈ 0.62 não atua)'
 descricao: Parâmetros da Rodada 03 (D1=C, D2=D3=D4=D6=D7=A, D5=E1, D8=A, D9=a+b+f+r,
   D10=Sulgás); gerado por scripts/rodada03_parametros.py; fontes em cada linha dos
   CSVs e em quadro_parametros_v02.xlsx
@@ -32,7 +33,6 @@ piso_vbp:
     - S03
     - S09
   max_iter: 50
-  viabilidade_eta: 0.1
 reequilibrio:
   eta: 0.1
   linhas_fixas:
@@ -46,7 +46,7 @@ reequilibrio:
   - icms
   - outros_impostos
   importacoes: fixas
-  se_inviavel: erro
+  se_inviavel: limitar
 alerta_multiplicador_producao: 2.2
 arquivos:
   subsetores: subsetores_v02.csv
