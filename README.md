@@ -16,11 +16,18 @@ demanda final no RS com um modelo de Leontief com coeficientes de emissão.
 | 01 — organização, leitor, validação, replicação, diagnóstico do S38, motor de desagregação (com parâmetros **fictícios**), teste de fontes externas | concluída em 15/10/2026 | [respostas/RODADA_01_resposta.md](respostas/RODADA_01_resposta.md) |
 | 02 — dados de 2019, motor com 11 subsetores, parâmetros reais e MIP v01 | **parcial** em 15/10/2026: ONS coletado e conferido; motor com 11 subsetores pronto (T6–T8); leitores das demais fontes prontos. Parâmetros e MIP v01 **parados**: a rede liberada não chegou ao ambiente (`*.gov.br` e `seeg.eco.br` com 403) | [respostas/RODADA_02_resposta.md](respostas/RODADA_02_resposta.md) |
 | 02b — continuação da 02 com rede: fontes, parâmetros reais, MIP v01 e variantes, quadro por subsetor | concluída em 15/10/2026, com pontos em aberto (EOB negativo em GN e GAS; RAP 2019-2020 com fonte secundária) | [respostas/RODADA_02b_resposta.md](respostas/RODADA_02b_resposta.md) |
+| 03 — MIP v02 consolidada (D8, D9, D10), variantes, comparativo v01 × v02 e executor de cenários | concluída em 16/10/2026 | [respostas/RODADA_03_resposta.md](respostas/RODADA_03_resposta.md) |
 
 Decisões do Francisco em vigor: D1 = C (11 subsetores), D2 = D3 = D4 = D6 = A, D5 = E1 (E2 e E3 como
-sensibilidades), D7 = A.
+sensibilidades), D7 = A, D8 = A (geração por fonte: Brasil pelo BEN 2020, RS pelo ONS), D9 = (a) + (b) + (f) + (r)
+(correção do EOB negativo), D10 = gás por comprador no RS pela Sulgás.
 
-A **primeira desagregação real** é a v01 (Rodada 02b): `resultados/rodada02/MIP_RS_RB_2019_S38_11sub_v01.xlsx`
+A versão **atual** é a v02 (Rodada 03): `resultados/rodada03/MIP_RS_RB_2019_S38_11sub_v02.xlsx` (principal:
+P1 + E1 + D9, κ = 0.70, η = 0.10), com as variantes P2, E2, E3 (.xlsx) e κ = 0.60/0.80, η = 0.05 e sem extensão de
+viabilidade (CSV longo), o quadro `resultados/rodada03/quadro_subsetores_v02.xlsx` (com o comparativo v01 × v02) e a
+prévia `previa_multiplicadores_v02.xlsx` (PRÉVIA). Para simular choques, use o executor de cenários (abaixo).
+
+A **primeira desagregação real** foi a v01 (Rodada 02b): `resultados/rodada02/MIP_RS_RB_2019_S38_11sub_v01.xlsx`
 (principal, P1 + E1), as variantes `_P2`, `_E2` e `_E3`, o quadro `resultados/rodada02/quadro_subsetores_v01.xlsx`
 e a prévia `previa_multiplicadores_v01.xlsx` (marcada PRÉVIA). A v01 tem EOB negativo em GN e GAS (ALERTA; ver o
 relatório da 02b, Seção 10). Os arquivos em `resultados/rodada01/teste/` usam valores fictícios e não devem ser
@@ -49,13 +56,17 @@ MIP-desagregacao/
 │   ├── desagregacao.py       motor de desagregação, RAS e verificação
 │   ├── exportacao.py         .xlsx com o layout da original e CSV formato longo
 │   ├── dados_externos.py     funções de tratamento das fontes externas (reúne mip.externos)
-│   └── externos/             um leitor por fonte: ons, siga, leiloes (+ IPCA), seeg, cempre
+│   ├── cenarios.py           executor de cenários (choques de demanda final em qualquer versão da MIP)
+│   └── externos/             um leitor por fonte: ons, siga, leiloes (+ IPCA), seeg, cempre, ben (BEN 2020, D8)
 ├── scripts/                  rodada01.py; rodada01_teste_fontes.py; rodada02_coleta.py (downloads, rede);
 │                             rodada02.py (tratamento); rodada02_parametros.py (parâmetros v01);
-│                             rodada02_mip.py (MIP v01, variantes, quadro e prévia)
-├── tests/                    pytest (T1–T8, T2 com a especificação real e demais)
+│                             rodada02_mip.py (MIP v01, variantes, quadro e prévia);
+│                             rodada03.py, rodada03_parametros.py, rodada03_mip.py (MIP v02),
+│                             rodada03_decomposicao.py (v01 → v02 passo a passo), rodar_cenarios.py (executor)
+├── tests/                    pytest (T1–T11, T2 com as especificações reais v01 e v02, e demais)
 ├── resultados/rodada01/      saídas da Rodada 01
 ├── resultados/rodada02/      saídas das Rodadas 02 e 02b (MIP v01 e variantes, checagens, quadro, prévia, referências)
+├── resultados/rodada03/      saídas da Rodada 03 (MIP v02 e variantes, quadro v02, prévia, decomposição, cenários)
 ├── instrucoes/               instruções de cada rodada
 └── respostas/                relatórios das rodadas + HISTORICO.md
 ```
@@ -71,7 +82,19 @@ python scripts/rodada02_coleta.py       # Rodada 02: baixa as fontes (precisa de
 python scripts/rodada02.py              # Rodada 02: trata o que foi baixado e gera as saídas
 python scripts/rodada02_parametros.py   # Rodada 02b: parâmetros reais (parametros/*_v01)
 python scripts/rodada02_mip.py          # Rodada 02b: MIP v01 + variantes, checagens, quadro e prévia
+python scripts/rodada03.py              # Rodada 03: geração por fonte (D8) e reconciliação
+python scripts/rodada03_parametros.py   # Rodada 03: parâmetros v02
+python scripts/rodada03_mip.py          # Rodada 03: MIP v02 + variantes, quadro v02 e prévia
+python scripts/rodada03_decomposicao.py # Rodada 03: efeito de cada mudança v01 → v02
+python scripts/rodar_cenarios.py        # executor de cenários (padrão: 9 cenários da Rodada 01 na original, v01 e v02)
 ```
+
+Executor de cenários: escreva os choques num CSV `cenario,regiao,setor,valor_R$mi` (modelo em
+`parametros/cenarios_exemplo.csv`) e rode, por exemplo,
+`python scripts/rodar_cenarios.py --cenarios meus.csv --mip original --mip v02=resultados/rodada03/MIP_RS_RB_2019_S38_11sub_v02.xlsx`.
+Sai um .xlsx com impactos (produção, CO₂e, IC, produção por mil t), top-10, RS × RB, diretas × indiretas e a
+sensibilidade entre versões. Choque em `S38` numa MIP desagregada é repartido entre os subsetores na proporção das
+vendas à demanda final (ou por pesos: `--reparticao S38_DIS=0.9,S38_GAS=0.1`).
 
 Para desagregar com outra especificação:
 
@@ -81,7 +104,7 @@ from mip.leitura import ler_mip_original
 from mip.desagregacao import ler_especificacao, desagregar
 from mip.modelo import ModeloLeontief
 
-res = desagregar(ler_mip_original(), ler_especificacao("parametros/especificacao_v01.yaml"))
+res = desagregar(ler_mip_original(), ler_especificacao("parametros/especificacao_v02.yaml"))
 print(res.checagens)                       # verificação (OK / ALERTA / FALHA)
 res.exportar("saida.xlsx", "saida_longo.csv")
 modelo = ModeloLeontief(res.mip)           # o mesmo modelo serve para a MIP desagregada

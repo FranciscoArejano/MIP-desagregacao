@@ -85,3 +85,20 @@ Não acessados nesta rodada (sem contornar):
   CAGE/Sefaz-RS (Prestação de Contas do Governador 2019).
 - Receita agregada das demais distribuidoras de gás: não existe fonte oficial (ANP, MME e ABEGÁS não publicam). Vale o
   fallback das instruções (margem de 0.25 como hipótese).
+
+## Rodada 03 — fontes novas ou com uso novo
+
+Nenhum download novo de rede; todos os números abaixo vêm de arquivos já baixados na 02b (URL, data e SHA-256 em
+`dados/externos/valores_documentais_v02.csv` e nos `DOWNLOAD.txt` de cada pasta). Conferidos no documento nesta rodada.
+
+| Uso (Rodada 03) | Fonte | Localização | Arquivo |
+|---|---|---|---|
+| D8: geração por fonte do Brasil (serviço público) | EPE, BEN 2020, Tabela 5.4 | PDF p. 112 (transcrição em `epe/ben2020_tabela_5_4_v01.csv`) | `epe/ben_2020/BEN2020_sp.pdf` |
+| D9-b: volume não térmico do RB = (40.482 − 2.214) × 365 milhões m³ | MME, Boletim do gás nº 154 (dez/2019) | p. 16, "TOTAL DISTRIBUIDORAS SEM O SEGMENTO TERMELÉTRICO" e "Sulgás (RS)", média 2019 | `gas/mme_boletim_dez2019/boletim_gn_dez2019.pdf` |
+| D9-b: preço médio do gás (4 distribuidoras) | DFP 2019 na CVM: Comgás (seq. 90958; Relatório da Administração p. 14 e nota 5 p. 27), CEG (seq. 91986; nota 22 p. 99), Gasmig (seq. 92390; nota 19 p. 93); Sulgás (Nota 18, p. 86 da cópia da CAGE) | receita líquida de venda de gás e volume, sem térmico, construção e serviços | `brutos/gas/cvm_rad_*` e `brutos/gas/cage_rs_2019/` (fora do git; SHA-256 na tabela de valores) |
+| D10: gás por comprador no RS | Sulgás, Demonstrações Contábeis 2019, Nota 18 (receita líquida por segmento) | PDF p. 86 | `gas/sulgas_segmentos_2019_v01.csv` (transcrição, com fonte por linha) |
+
+Observações: o preço da Gasmig sem o térmico é **aproximação** (a companhia não divulga deduções por segmento; foram
+rateadas na proporção da receita bruta). Os volumes por segmento da CEG e da Gasmig são marcados "não auditados" nas DFP.
+A extração foi feita e conferida por agentes verificadores independentes (dois por empresa; um dos verificadores da
+Gasmig não terminou por limite de sessão), e os valores usados foram reconferidos nas tabelas citadas.
