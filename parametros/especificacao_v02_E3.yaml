@@ -1,0 +1,58 @@
+nome: v02 — sensibilidade P1 + E3 (só níveis do SEEG; NÃO preserva o total da base)
+descricao: Parâmetros da Rodada 03 (D1=C, D2=D3=D4=D6=D7=A, D5=E1, D8=A, D9=a+b+f+r,
+  D10=Sulgás); gerado por scripts/rodada03_parametros.py; fontes em cada linha dos
+  CSVs e em quadro_parametros_v02.xlsx
+setor_alvo: S38
+regioes:
+- RS
+- RB
+bloco_intrassetorial: roteamento_por_componentes
+modo_vbp: ancora_componentes
+subsetor_termica_gas: S38_GN
+ras:
+  tolerancia: 1.0e-08
+  max_iter: 20000
+niveis:
+  co2e:
+    modo: sem_residuo
+    residuo_para:
+    - S38_DIS
+    - S38_GAS
+piso_vbp:
+  kappa: 0.7
+  combustiveis:
+    S38_CAR:
+    - S04
+    S38_GN:
+    - S05
+    - importacoes
+    S38_PET:
+    - S19
+    S38_BIO:
+    - S03
+    - S09
+  max_iter: 50
+  viabilidade_eta: 0.1
+reequilibrio:
+  eta: 0.1
+  linhas_fixas:
+  - S04
+  - S05
+  - S19
+  - S03
+  - S09
+  primarios_ajustaveis:
+  - ipi
+  - icms
+  - outros_impostos
+  importacoes: fixas
+  se_inviavel: erro
+alerta_multiplicador_producao: 2.2
+arquivos:
+  subsetores: subsetores_v02.csv
+  participacoes_vbp: participacoes_vbp_v02.csv
+  componentes: componentes_v02.csv
+  regras_coluna: regras_coluna_v02.csv
+  regras_linha: regras_linha_v02.csv
+  regras_primarios: regras_primarios_v02.csv
+  latentes_espelho: latentes_espelho_v02.csv

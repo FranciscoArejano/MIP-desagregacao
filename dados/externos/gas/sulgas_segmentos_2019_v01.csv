@@ -1,0 +1,7 @@
+segmento,volume_m3,receita_bruta_rs,deducoes_rs,receita_liquida_rs,fonte
+Residencial,7017841,28832455.19,-6124618.82,22707836.37,"Sulgás, Demonstrações Contábeis 2019, Nota 18 (informações por segmento), PDF p. 86 de https://cage.fazenda.rs.gov.br/upload/arquivos/202507/02143858-prestacao-de-contas-do-governador-2019-v-5-2.pdf (SHA-256 94cf3c42…8a5f; acesso 2026-10-15T19:34:32Z); volumes rotulados 'm3 mil', unidade efetiva m³"
+Comercial,14127983,45855453.61,-10012785.05,35842668.56,idem
+Industrial,424488524,798836340.32,-176348174.19,622488166.13,idem
+Cogeração,98632982,82423856.95,-17461854.15,64962002.80,idem
+Automotivo,102094590,189129760.84,-45331595.21,143798165.63,idem
+Serviço,160626236,10155554.48,-1244055.43,8911499.05,"idem; serviço de distribuição (só movimenta o gás, sem compra nem venda; provavelmente o gás da REFAP)"

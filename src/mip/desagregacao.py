@@ -41,7 +41,7 @@ from .modelo import ModeloLeontief
 TIPOS_SUBSETOR = ("geracao", "transmissao", "distribuicao", "gas_utilidades", "rede")
 REGRAS_COLUNA = ("proporcional_vbp", "fixa", "indicador", "fixa_com_teto")
 REGRAS_LINHA = ("proporcional_vbp", "somente_rede_e_gas", "somente_distribuicao_e_gas", "fixa_por_comprador")
-REGRAS_PRIMARIOS = ("proporcional_vbp", "fixa", "indicador", "proporcional_ci", "niveis")
+REGRAS_PRIMARIOS = ("proporcional_vbp", "fixa", "indicador", "proporcional_ci", "niveis", "fixa_por_tipo")
 OPCOES_BLOCO = ("proporcional", "geracao_vende_para_rede", "roteamento_por_componentes")
 MODOS_VBP = ("participacoes", "ancora_bloco", "ancora_componentes")
 MODOS_NIVEIS = ("residuo", "proporcional", "sem_residuo")
@@ -128,6 +128,10 @@ class Especificacao:
     componentes: pd.DataFrame | None = None
     niveis: dict = field(default_factory=dict)  # {item: {"modo": ..., "residuo_para": [...]}}
     subsetor_termica_gas: str | None = None  # comprador do gás G_r no roteamento (ex.: S38_GN)
+    # Rodada 03 — piso de VBP das térmicas (pacote D9-f) e reequilíbrio dos insumos não energéticos (D9-r)
+    piso_vbp: dict = field(default_factory=dict)  # {kappa, combustiveis: {subsetor: [fornecedores | 'importacoes']}, viabilidade_eta, max_iter}
+    reequilibrio: dict = field(default_factory=dict)  # {eta, linhas_fixas, primarios_ajustaveis, importacoes, se_inviavel}
+    alerta_multiplicador: float | None = None  # ALERTA se o multiplicador de produção de um subsetor passar deste valor
     ras_tolerancia: float = 1e-8
     ras_max_iter: int = 10000
     aviso: str | None = None
@@ -146,6 +150,8 @@ class Especificacao:
         self.latentes_espelho = _tabela(self.latentes_espelho, COLS_LATENTES_ESPELHO)
         self.componentes = _tabela(self.componentes, COLS_COMPONENTES)
         self.niveis = dict(self.niveis or {})
+        self.piso_vbp = dict(self.piso_vbp or {})
+        self.reequilibrio = dict(self.reequilibrio or {})
 
     def componente(self, regiao: str, nome: str) -> float | None:
         """Valor de um componente do bloco para a região (linha da região vence a linha '*')."""
@@ -205,6 +211,10 @@ def ler_especificacao(caminho_yaml: str | Path) -> Especificacao:
         componentes=ler("componentes"),
         niveis=cfg.get("niveis") or {},
         subsetor_termica_gas=cfg.get("subsetor_termica_gas"),
+        piso_vbp=cfg.get("piso_vbp") or {},
+        reequilibrio=cfg.get("reequilibrio") or {},
+        alerta_multiplicador=(float(cfg["alerta_multiplicador_producao"])
+                              if cfg.get("alerta_multiplicador_producao") is not None else None),
         ras_tolerancia=float(ras.get("tolerancia", 1e-8)),
         ras_max_iter=int(ras.get("max_iter", 10000)),
         aviso=cfg.get("aviso"),
@@ -311,7 +321,10 @@ def validar_especificacao(espec: Especificacao, mip: MIP) -> None:
         inv = set(tab["regra"]) - set(validas)
         if inv:
             erros.append(f"{nome}: regras inválidas {sorted(inv)} (válidas: {validas})")
-        subs_inv = set(tab["subsetor"]) - codigos - {""}
+        tipos_validos = {tipo_canonico(x) for x in TIPOS_SUBSETOR}
+        por_tipo = tab["regra"] == "fixa_por_tipo"
+        subs_inv = (set(tab.loc[~por_tipo, "subsetor"]) - codigos - {""}) | \
+                   (set(tab.loc[por_tipo, "subsetor"]) - codigos - tipos_validos)
         if subs_inv:
             erros.append(f"{nome}: subsetores inexistentes {sorted(subs_inv)}")
     dest_inv = set(espec.regras_coluna["destino_excedente"]) - set(DESTINOS_EXCEDENTE) - {""}
@@ -354,6 +367,44 @@ def validar_especificacao(espec: Especificacao, mip: MIP) -> None:
         tl_inv = set(cl["tipo_linha"]) - {"setor", "satelite"}
         if tl_inv:
             erros.append(f"coef_latentes: tipo_linha inválido {sorted(tl_inv)}")
+    # piso de VBP (D9-f) e reequilíbrio (D9-r)
+    pv = espec.piso_vbp
+    if pv:
+        k = pv.get("kappa")
+        if k is None or not 0 < float(k) <= 1:
+            erros.append("piso_vbp.kappa precisa estar em (0, 1]")
+        comb = pv.get("combustiveis") or {}
+        if not comb:
+            erros.append("piso_vbp.combustiveis vazio")
+        for sub, forn in comb.items():
+            if sub not in codigos:
+                erros.append(f"piso_vbp.combustiveis: subsetor {sub} inexistente")
+            elif tipo_canonico(subs.set_index("codigo").loc[sub, "tipo"]) != "geracao":
+                erros.append(f"piso_vbp.combustiveis: {sub} não é de geração")
+            cods = set(forn or []) - {"importacoes"}
+            inv = cods - set(mip.setores["codigo"])
+            if inv or not forn:
+                erros.append(f"piso_vbp.combustiveis.{sub}: fornecedores inválidos {sorted(inv) or forn}")
+        ev = pv.get("viabilidade_eta")
+        if ev is not None and not 0 <= float(ev) < 1:
+            erros.append("piso_vbp.viabilidade_eta precisa estar em [0, 1)")
+        if espec.modo_vbp != "ancora_componentes":
+            erros.append("piso_vbp exige modo_vbp = ancora_componentes (o piso redistribui E_r entre as fontes)")
+    rq = espec.reequilibrio
+    if rq:
+        eta = rq.get("eta")
+        if eta is None or not 0 <= float(eta) < 1:
+            erros.append("reequilibrio.eta precisa estar em [0, 1)")
+        inv = set(rq.get("linhas_fixas") or []) - set(mip.setores["codigo"])
+        if inv:
+            erros.append(f"reequilibrio.linhas_fixas: setores inexistentes {sorted(inv)}")
+        inv = set(rq.get("primarios_ajustaveis", ["ipi", "icms", "outros_impostos"])) - {"ipi", "icms", "outros_impostos"}
+        if inv:
+            erros.append(f"reequilibrio.primarios_ajustaveis: só ipi, icms e outros_impostos (inválidos: {sorted(inv)})")
+        if rq.get("importacoes", "fixas") not in ("fixas", "ajustaveis"):
+            erros.append("reequilibrio.importacoes ∈ {fixas, ajustaveis}")
+        if rq.get("se_inviavel", "erro") not in ("erro", "limitar"):
+            erros.append("reequilibrio.se_inviavel ∈ {erro, limitar}")
     if erros:
         raise EspecificacaoInvalida("especificação inválida:\n  - " + "\n  - ".join(erros))
 
@@ -489,6 +540,21 @@ def _pesos(grupo: _Grupo | None, ga: _GrupoAlvo, descricao: str) -> tuple[np.nda
         w = np.array([grupo.valores.get(c, 0.0) for c in ga.codigos])
         if (w < 0).any() or abs(w.sum() - 1) > TOL_SOMA:
             raise EspecificacaoInvalida(f"{descricao}: participações fixas devem ser ≥ 0 e somar 1 (soma = {w.sum()})")
+    elif regra == "fixa_por_tipo":
+        # valor por subsetor (código) ou por tipo (geracao, transmissao, ...): dentro do tipo, na proporção do VBP
+        w = np.zeros(len(ga.codigos))
+        tipos = [tipo_canonico(x) for x in ga.tipos]
+        for chave, v in grupo.valores.items():
+            if chave in ga.codigos:
+                w[ga.codigos.index(chave)] += v
+                continue
+            membros = [k for k, tk in enumerate(tipos) if tk == tipo_canonico(chave) and s[k] > 0]
+            if v > 0 and not membros:
+                raise EspecificacaoInvalida(f"{descricao}: fixa_por_tipo dá {v} ao tipo '{chave}', sem subsetor com VBP > 0")
+            if membros:
+                w[membros] += v * s[membros] / s[membros].sum()
+        if (w < 0).any() or abs(w.sum() - 1) > TOL_SOMA:
+            raise EspecificacaoInvalida(f"{descricao}: fixa_por_tipo deve somar 1 (soma = {w.sum()})")
     elif regra == "indicador":
         faltam = [c for c, sk in zip(ga.codigos, s) if sk > 0 and c not in grupo.valores]
         if faltam:
@@ -950,8 +1016,248 @@ def desagregar(mip: MIP, espec: Especificacao, estrito: bool = True) -> Resultad
 
     Com estrito=True, levanta DesagregacaoInvalida se alguma checagem der FALHA
     (ALERTA, como EOB negativo, não interrompe: fica registrado nas checagens).
+
+    Opções da Rodada 03 (YAML): `piso_vbp` (D9-f: VBP das térmicas ≥ combustível ÷ κ, redistribuindo E_r entre as
+    fontes da mesma região; repete a desagregação até estabilizar) e `reequilibrio` (D9-r: RAS dos insumos não
+    energéticos para que EOB ≥ η × VBP, preservando o total de cada insumo e a soma dos EOB da região).
     """
     validar_especificacao(espec, mip)
+    espec_final, pisos = espec, None
+    if espec.piso_vbp:
+        espec_final, pisos = _resolver_pisos(mip, espec)
+    res = _desagregar_passo(mip, espec_final, reequilibrar=bool(espec.reequilibrio))
+    if pisos is not None:
+        res.extras["pisos_vbp"] = pisos
+    res.checagens = verificar(res)
+    if estrito and not res.ok:
+        falhas = res.checagens[res.checagens["status"] == "FALHA"]
+        raise DesagregacaoInvalida("verificação falhou:\n" + falhas.to_string(index=False))
+    return res
+
+
+def _custos_fixos_e_combustivel(espec: Especificacao, m2: MIP, mapa: pd.DataFrame, idx: list[int]) -> tuple[np.ndarray, np.ndarray]:
+    """(custos fixos, combustível) de cada coluna em `idx` — D9-f/r.
+
+    Fixos: compras ao bloco (setor-alvo de todas as regiões), compras às linhas de combustível (`linhas_fixas`),
+    importações (se `importacoes: fixas`), remunerações e impostos sobre a produção. Combustível: as linhas de
+    `piso_vbp.combustiveis` de cada subsetor (e as importações, se listadas).
+    """
+    ip = {it: k for k, it in enumerate(ITENS_PRIMARIOS)}
+    cod_orig = mapa["codigo_original"].to_numpy()
+    cod_novo = list(mapa["codigo_novo"])
+    comb_cfg = espec.piso_vbp.get("combustiveis") or {}
+    fixas = set(espec.reequilibrio.get("linhas_fixas") or []) | {c for v in comb_cfg.values() for c in v if c != "importacoes"}
+    bloco = cod_orig == espec.setor_alvo
+    linhas_fixas = np.isin(cod_orig, sorted(fixas)) & ~bloco
+    imp_fixas = espec.reequilibrio.get("importacoes", "fixas") == "fixas"
+    fixos = (m2.Z[bloco][:, idx].sum(axis=0) + m2.Z[linhas_fixas][:, idx].sum(axis=0)
+             + m2.V[ip["remuneracoes"], idx] + m2.V[ip["impostos_producao"], idx]
+             + (m2.V[ip["importacoes"], idx] if imp_fixas else 0.0))
+    comb = np.zeros(len(idx))
+    for n, k in enumerate(idx):
+        forn = comb_cfg.get(cod_novo[k]) or []
+        linhas = np.isin(cod_orig, [c for c in forn if c != "importacoes"]) & ~bloco
+        comb[n] = m2.Z[linhas, k].sum() + (m2.V[ip["importacoes"], k] if "importacoes" in forn else 0.0)
+        if "importacoes" in forn and not imp_fixas:
+            fixos[n] += m2.V[ip["importacoes"], k]  # importação de combustível é fixa mesmo com importacoes: ajustaveis
+    return fixos, comb
+
+
+def _eob_maximo(espec: Especificacao, m2: MIP, mapa: pd.DataFrame, idx: list[int]) -> np.ndarray:
+    """EOB que cada coluna teria com todos os insumos ajustáveis (D9-r) positivos a zero: EOB + Σ ajustáveis > 0."""
+    ip = {it: k for k, it in enumerate(ITENS_PRIMARIOS)}
+    cod_orig = mapa["codigo_original"].to_numpy()
+    fixas = set(espec.reequilibrio.get("linhas_fixas") or []) | {
+        c for v in (espec.piso_vbp.get("combustiveis") or {}).values() for c in v if c != "importacoes"}
+    aj = ~np.isin(cod_orig, sorted(fixas)) & (cod_orig != espec.setor_alvo)
+    itens = list(espec.reequilibrio.get("primarios_ajustaveis", ["ipi", "icms", "outros_impostos"]))
+    if espec.reequilibrio.get("importacoes", "fixas") == "ajustaveis":
+        itens.append("importacoes")
+    M = np.vstack([m2.Z[aj][:, idx], m2.V[[ip[x] for x in itens]][:, idx]])
+    return m2.V[ip["eob"], idx] + np.where(M > 0, M, 0.0).sum(axis=0)
+
+
+def _redistribuir_com_piso(g: np.ndarray, piso: np.ndarray, E: float, contexto: str) -> np.ndarray:
+    """Eleva ao piso quem estiver abaixo e reduz os demais na proporção do VBP, mantendo Σ = E (itera)."""
+    preso = np.zeros(len(g), dtype=bool)
+    novo = g.copy()
+    for _ in range(len(g) + 1):
+        livres = ~preso
+        resto = E - piso[preso].sum()
+        if resto < -1e-9 * max(1.0, E) or (livres.any() and g[livres].sum() <= 0 and resto > 1e-9 * max(1.0, E)):
+            raise EspecificacaoInvalida(
+                f"piso_vbp em {contexto}: os pisos ({piso[preso].sum():.4f}) não cabem no VBP da geração E_r = {E:.4f}")
+        novo = np.where(preso, piso, 0.0)
+        if not livres.any() and abs(resto) > 1e-9 * max(1.0, E):
+            raise EspecificacaoInvalida(
+                f"piso_vbp em {contexto}: todas as fontes ficaram no piso e sobram {resto:.4f} de E_r sem destino")
+        if livres.any() and g[livres].sum() > 0:
+            novo[livres] = g[livres] * resto / g[livres].sum()
+        abaixo = (novo < piso * (1 - 1e-12) - 1e-12) & livres
+        if not abaixo.any():
+            return novo
+        preso |= abaixo
+    raise EspecificacaoInvalida(f"piso_vbp em {contexto}: a redistribuição não estabilizou")
+
+
+def _resolver_pisos(mip: MIP, espec: Especificacao) -> tuple[Especificacao, pd.DataFrame]:
+    """D9-f: VBP_k ≥ combustível_k ÷ κ (e, com viabilidade_eta, ≥ combustível_k ÷ (1 − η − φ_k), em que φ_k é a
+    parte dos custos fixos não combustíveis no VBP_k), elevando k e reduzindo os demais subsetores de geração da
+    mesma região na proporção do VBP, de forma que E_r não mude. Repete a desagregação (sem reequilíbrio) até
+    os VBPs estabilizarem. Devolve a especificação com as participações finais e a tabela dos pisos."""
+    from dataclasses import replace
+
+    cfg = espec.piso_vbp
+    kappa = float(cfg["kappa"])
+    eta_v = cfg.get("viabilidade_eta")
+    eta_v = None if eta_v is None else float(eta_v)
+    max_iter = int(cfg.get("max_iter", 50))
+    tol = float(cfg.get("tolerancia", 1e-12))
+    comb_cfg = cfg["combustiveis"]
+    p = espec.participacoes.copy()
+    tipos = dict(zip(espec.subsetores["codigo"], espec.subsetores["tipo"].map(tipo_canonico)))
+    inicial, linhas = {}, []
+    for it in range(1, max_iter + 1):
+        res = _desagregar_passo(mip, replace(espec, participacoes=p), reequilibrar=False)
+        m2, mapa = res.mip, res.mapa
+        mudou, linhas = False, []
+        for r in espec.regioes:
+            sel = mapa[(mapa["regiao"] == r) & mapa["desagregado"]]
+            idx = [int(k) for k, c in zip(sel["indice_novo"], sel["codigo_novo"]) if tipos[c] == "geracao" and m2.X[k] > 0]
+            cods = [mapa["codigo_novo"][k] for k in idx]
+            g = m2.X[idx].astype(float)
+            E = float(g.sum())
+            if r not in inicial:
+                inicial[r] = dict(zip(cods, g))
+            fixos, comb = _custos_fixos_e_combustivel(espec, m2, mapa, idx)
+            # φ: tudo o que o reequilíbrio não pode mexer, exceto o combustível (custos fixos, células ajustáveis
+            # negativas e o resíduo contábil da coluna original), como fração do VBP — proporcional ao VBP nas regras
+            phi = (g - _eob_maximo(espec, m2, mapa, idx) - comb) / g
+            piso_k = np.where([c in comb_cfg for c in cods], comb / kappa, 0.0)
+            piso_v = np.zeros(len(idx))
+            if eta_v is not None:
+                den = 1.0 - eta_v - phi
+                for n, c in enumerate(cods):
+                    if c in comb_cfg and comb[n] > 0:
+                        if den[n] <= 0:
+                            raise EspecificacaoInvalida(
+                                f"piso_vbp em {r} {c}: custos fixos não combustíveis já passam 1 − η do VBP (φ = {phi[n]:.4f})")
+                        piso_v[n] = comb[n] / den[n] * (1 + 1e-10)  # margem de arredondamento
+            piso = np.maximum(piso_k, piso_v)
+            novo = _redistribuir_com_piso(g, piso, E, f"região {r}")
+            if np.abs(novo - g).max() > tol * max(1.0, E):
+                mudou = True
+            for n, c in enumerate(cods):
+                lin = (p["regiao"] == r) & (p["subsetor"] == c)
+                p.loc[lin, "participacao"] = novo[n]
+                p.loc[lin, "fonte"] = (f"piso de VBP (D9-f, κ = {kappa}"
+                                       + (f", viabilidade η = {eta_v}" if eta_v is not None else "")
+                                       + f"): VBP final; peso inicial: {espec.participacoes.loc[lin, 'fonte'].iloc[0]}")
+                linhas.append({"regiao": r, "subsetor": c, "combustivel": comb[n],
+                               "VBP_inicial (pesos da especificação)": inicial[r][c], "VBP_antes_desta_iteracao": g[n],
+                               "piso_kappa (combustível ÷ κ)": piso_k[n], "fixos_nao_combustivel / VBP (φ)": phi[n],
+                               "piso_viabilidade (combustível ÷ (1 − η − φ))": piso_v[n], "piso": piso[n],
+                               "VBP_final": novo[n], "piso_atingido": bool(piso[n] > 0 and novo[n] <= piso[n] * (1 + 1e-9)),
+                               "piso_que_manda": ("viabilidade" if piso_v[n] > piso_k[n] else "kappa") if piso[n] > 0 else "",
+                               "combustivel / VBP_final": comb[n] / novo[n] if novo[n] else np.nan,
+                               "kappa": kappa, "viabilidade_eta": eta_v, "iteracoes": it})
+        if not mudou:
+            tab = pd.DataFrame(linhas)
+            return replace(espec, participacoes=p), tab
+    raise EspecificacaoInvalida(f"piso_vbp: não estabilizou em {max_iter} iterações")
+
+
+def _reequilibrar_eob(espec: Especificacao, ga: _GrupoAlvo, Z2: np.ndarray, V2: np.ndarray, X2: np.ndarray,
+                      linhas_aj: list[int], rotulos: list[str], ip: dict) -> tuple[InfoRAS, pd.DataFrame, pd.DataFrame]:
+    """D9-r: RAS dos insumos não energéticos das colunas dos subsetores de uma região (altera Z2 e V2).
+
+    Ajustáveis: compras a setores fora do bloco, exceto as linhas fixas (combustíveis); impostos sobre produtos
+    (e as importações, se `importacoes: ajustaveis`). Fixos: bloco, combustíveis, importações de energia,
+    remunerações e impostos sobre a produção. Totais de linha = total de cada insumo na região (preservado).
+    Alvo de coluna = ajustável_k − (EOB*_k − EOB_k), com EOB*_k = η × VBP_k para quem está abaixo e, para os demais,
+    EOB_k menos uma parte do déficit, na proporção da folga (EOB_k − η × VBP_k). A soma dos EOB da região não muda.
+    """
+    cfg = espec.reequilibrio
+    eta = float(cfg["eta"])
+    itens = list(cfg.get("primarios_ajustaveis", ["ipi", "icms", "outros_impostos"]))
+    if cfg.get("importacoes", "fixas") == "ajustaveis":
+        itens.append("importacoes")
+    limitar = cfg.get("se_inviavel", "erro") == "limitar"
+    idx = ga.idx_novo
+    X = X2[idx]
+    prod = X > 0
+    M = np.vstack([Z2[np.ix_(linhas_aj, idx)], V2[[ip[x] for x in itens]][:, idx]])
+    rot = list(rotulos) + itens
+    fix = (M < 0) | ~prod[None, :]
+    livre_pos = np.where(fix, 0.0, M)
+    eob = V2[ip["eob"], idx].copy()
+    adj = M.sum(axis=0)
+    minimo = eta * X
+    escala = max(1.0, float(X.sum()))
+    tol_eob = 1e-9 * escala
+    alvo = eob.copy()
+    situacao = np.array(["sem produção" if not p_ else "" for p_ in prod], dtype=object)
+    abaixo = prod & (eob < minimo - tol_eob)
+    max_eob = eob + livre_pos.sum(axis=0)  # EOB máximo: todos os ajustáveis livres a zero
+    for k in np.flatnonzero(abaixo):
+        tol_viab = 1e-6 * max(1.0, X[k])  # folga numérica: o piso de viabilidade deixa o ajustável exatamente em zero
+        if minimo[k] > max_eob[k] + tol_viab:
+            msg = (f"reequilíbrio em {ga.regiao} {ga.codigos[k]}: mesmo com os insumos ajustáveis a zero, EOB = "
+                   f"{max_eob[k]:.4f} < η × VBP = {minimo[k]:.4f} (custos fixos > (1 − η) × VBP)")
+            if not limitar:
+                raise EspecificacaoInvalida(msg)
+            alvo[k] = max_eob[k]
+            situacao[k] = "abaixo do mínimo: inviável, limitado (ajustáveis a zero)"
+        else:
+            alvo[k] = min(minimo[k], max_eob[k])
+            situacao[k] = "abaixo do mínimo: elevado a η × VBP" + (
+                " (ajustáveis a zero: o piso de viabilidade foi o que bastou)" if minimo[k] >= max_eob[k] - tol_viab else "")
+    deficit = float((alvo - eob)[abaixo].sum())
+    folga = np.where(prod & ~abaixo & (livre_pos.sum(axis=0) > 0), np.maximum(eob - minimo, 0.0), 0.0)
+    if deficit > tol_eob:
+        if folga.sum() < deficit - tol_eob:
+            raise EspecificacaoInvalida(f"reequilíbrio em {ga.regiao}: déficit de EOB ({deficit:.4f}) maior que a folga "
+                                        f"dos demais subsetores ({folga.sum():.4f})")
+        cede = folga > 0
+        alvo[cede] = eob[cede] - deficit * folga[cede] / folga.sum()
+        for k in np.flatnonzero(cede):
+            situacao[k] = "cede folga"
+    for k in np.flatnonzero(prod & (situacao == "")):
+        situacao[k] = "sem mudança"
+    alvo_col = adj - (alvo - eob)
+    alvo_lin = M.sum(axis=1)
+    tol = max(espec.ras_tolerancia, 1e-14 * escala)
+    M2, info = ras(M, alvo_lin, alvo_col, fix, tol=tol, max_iter=espec.ras_max_iter,
+                   contexto=f"reequilibrio_EOB {ga.regiao} (η = {eta})")
+    nz = len(linhas_aj)
+    Z2[np.ix_(linhas_aj, idx)] = M2[:nz]
+    for n, x in enumerate(itens):
+        V2[ip[x], idx] = M2[nz + n]
+    novo_adj = M2.sum(axis=0)
+    eob_novo = eob + (adj - novo_adj)
+    V2[ip["eob"], idx] = eob_novo
+    V2[ip["va"], idx] += eob_novo - eob
+    tab_sub = pd.DataFrame({
+        "regiao": ga.regiao, "subsetor": ga.codigos, "VBP": X, "fixos": X - eob - adj,
+        "ajustaveis_antes": adj, "ajustaveis_depois": novo_adj, "EOB_antes": eob, "EOB_depois": eob_novo,
+        "EOB/VBP_antes": np.where(prod, eob / np.where(prod, X, 1.0), np.nan),
+        "EOB/VBP_depois": np.where(prod, eob_novo / np.where(prod, X, 1.0), np.nan),
+        "EOB_alvo": alvo, "situacao": situacao, "eta": eta,
+        "RAS": f"{'convergiu' if info.convergiu else 'NÃO convergiu'} em {info.iteracoes} iterações (erro {info.erro_max:.2e})",
+    })
+    linhas = []
+    for n, r_ in enumerate(rot):
+        if not (np.abs(M[n]).sum() > 0 or np.abs(M2[n]).sum() > 0):
+            continue
+        d = {"regiao": ga.regiao, "insumo": r_, "total_preservado": float(M[n].sum()),
+             "valor_movido (Σ|Δ| ÷ 2)": float(np.abs(M2[n] - M[n]).sum() / 2)}
+        d.update({f"Δ {c}": float(v) for c, v in zip(ga.codigos, M2[n] - M[n])})
+        linhas.append(d)
+    return info, tab_sub, pd.DataFrame(linhas)
+
+
+def _desagregar_passo(mip: MIP, espec: Especificacao, reequilibrar: bool = True) -> ResultadoDesagregacao:
+    """Uma passada da desagregação (sem a verificação final)."""
     t = espec.setor_alvo
     regs = mip.lista_regioes
     subs = espec.subsetores
@@ -1101,6 +1407,7 @@ def desagregar(mip: MIP, espec: Especificacao, estrito: bool = True) -> Resultad
     # linhas (vendas a compradores fora do bloco e à demanda final) + RAS
     g_lin = _agrupar(espec.regras_linha, ["regiao", "comprador", "regiao_comprador"], "regras_linha")
     infos = []
+    reequilibrio_sub, reequilibrio_ins = [], []
     ndf = len(COLUNAS_DF)
     for r, ga in grupos.items():
         i = ga.idx_orig
@@ -1221,8 +1528,19 @@ def desagregar(mip: MIP, espec: Especificacao, estrito: bool = True) -> Resultad
         eps = mip.V[ip["va"], j] - (mip.V[ip["remuneracoes"], j] + mip.V[ip["eob"], j] + mip.V[ip["impostos_producao"], j])
         V2[ip["va"], idx] = V2[ip["remuneracoes"], idx] + V2[ip["eob"], idx] + V2[ip["impostos_producao"], idx] + ga.s * eps
         registrar("primarios_satelite", ga, "eob", "residuo", "fecha a coluna", V2[ip["eob"], idx] / mip.V[ip["eob"], j] if mip.V[ip["eob"], j] else V2[ip["eob"], idx] * 0)
+        if reequilibrar and espec.reequilibrio:
+            fixas_rq = set(espec.reequilibrio.get("linhas_fixas") or []) | {
+                c for v in (espec.piso_vbp.get("combustiveis") or {}).values() for c in v if c != "importacoes"}
+            aj = [(i2, f"{reg_orig[i]} {cod_orig[i]}") for i, i2 in zip(fora, fora2) if cod_orig[i] not in fixas_rq]
+            info_rq, tab_sub, tab_ins = _reequilibrar_eob(espec, ga, Z2, V2, X2, [a for a, _ in aj], [b for _, b in aj], ip)
+            infos.append(info_rq)
+            reequilibrio_sub.append(tab_sub)
+            reequilibrio_ins.append(tab_ins)
     if niveis_reg:
         extras["niveis"] = pd.DataFrame(niveis_reg)
+    if reequilibrio_sub:
+        extras["reequilibrio_RAS"] = pd.concat(reequilibrio_sub, ignore_index=True)
+        extras["reequilibrio_insumos"] = pd.concat(reequilibrio_ins, ignore_index=True)
 
     # ---- coeficientes latentes ---------------------------------------------------------------
     partes = []
@@ -1263,10 +1581,6 @@ def desagregar(mip: MIP, espec: Especificacao, estrito: bool = True) -> Resultad
     pesos = pd.DataFrame(pesos_reg)
     info_ras = pd.DataFrame([vars(x) for x in infos])
     res = ResultadoDesagregacao(mip2, mip, espec, mapa, pesos, info_ras, extras=extras)
-    res.checagens = verificar(res)
-    if estrito and not res.ok:
-        falhas = res.checagens[res.checagens["status"] == "FALHA"]
-        raise DesagregacaoInvalida("verificação falhou:\n" + falhas.to_string(index=False))
     return res
 
 
@@ -1465,4 +1779,43 @@ def verificar(res: ResultadoDesagregacao) -> pd.DataFrame:
         lat = m2.coef_latentes[["regiao", "subsetor"]].drop_duplicates()
         add("subsetores_latentes", True, len(lat), 0,
             "colunas de coeficientes guardadas à parte: " + ", ".join(f"{a}_{b}" for a, b in lat.itertuples(index=False)))
+
+    # 11) Rodada 03: piso de VBP das térmicas (D9-f), EOB mínimo (D9-r, T9) e multiplicador de produção
+    e = res.especificacao
+    ids = list(m2.setores["id"])
+    if e.piso_vbp:
+        kappa = float(e.piso_vbp["kappa"])
+        comb_cfg = e.piso_vbp.get("combustiveis") or {}
+        idx_c = [int(k) for k in sub if mapa["codigo_novo"][k] in comb_cfg and m2.X[k] > 0]
+        viol, det = [], []
+        if idx_c:
+            _, comb = _custos_fixos_e_combustivel(e, m2, mapa, idx_c)
+            for k, c in zip(idx_c, comb):
+                det.append(f"{ids[k]}: combustível/VBP = {c / m2.X[k]:.4f}")
+                if m2.X[k] < c / kappa - TOL_REAGREGACAO:
+                    viol.append(f"{ids[k]} (VBP {m2.X[k]:.4f} < {c / kappa:.4f})")
+        add("piso_vbp_combustivel", not viol, len(viol), 0,
+            f"VBP ≥ combustível ÷ κ (κ = {kappa}); " + ("; ".join(viol) if viol else "; ".join(det)))
+    if e.reequilibrio and res.extras.get("reequilibrio_RAS") is not None:
+        eta = float(e.reequilibrio["eta"])
+        limitar = e.reequilibrio.get("se_inviavel", "erro") == "limitar"
+        abaixo = [f"{ids[k]} ({eob[k] / m2.X[k]:.4f})" for k in sub if m2.X[k] > 0 and eob[k] < eta * m2.X[k] - TOL_REAGREGACAO]
+        add("EOB_minimo_eta", not abaixo, float(min((eob[k] / m2.X[k] for k in sub if m2.X[k] > 0), default=0.0)), eta,
+            f"EOB ≥ η × VBP (η = {eta}) em todo subsetor com produção" + (": abaixo em " + ", ".join(abaixo) if abaixo else ""),
+            alerta=limitar)
+        dmax, det = 0.0, []
+        for r in sorted(set(mapa.loc[mapa["desagregado"], "regiao"])):
+            ks = [k for k in sub if m2.setores["regiao"][k] == r]
+            d = abs(eob[ks].sum() - m1.V[ip["eob"], m1.indice(r, e.setor_alvo)])
+            dmax = max(dmax, d)
+            det.append(f"{r}: Σ EOB = {eob[ks].sum():.4f}")
+        add("reequilibrio_soma_EOB_regiao", dmax <= TOL_REAGREGACAO, dmax, TOL_REAGREGACAO,
+            "Σ EOB dos subsetores de cada região = EOB original do setor-alvo; " + "; ".join(det))
+    if e.alerta_multiplicador is not None:
+        mult = mod.L.sum(axis=0)
+        cols = [int(k) for k in sub]
+        altos = [f"{ids[k]} ({mult[k]:.3f})" for k in cols if mult[k] > e.alerta_multiplicador]
+        add("multiplicador_producao_subsetores", not altos, float(max(mult[cols], default=0.0)), e.alerta_multiplicador,
+            f"multiplicador de produção (Σ coluna de L, inclui latentes) ≤ {e.alerta_multiplicador}"
+            + (": acima em " + ", ".join(altos) if altos else ""), alerta=True)
     return pd.DataFrame(linhas, columns=["checagem", "status", "valor", "tolerancia", "detalhe"])
