@@ -301,7 +301,7 @@ Gerado por `scripts/rodada05_artigo.py`; números no padrão brasileiro.
 | Parâmetro | Valor | Fonte ou justificativa | Sensibilidade testada |
 |---|---|---|---|
 | VBP da transmissão (Brasil) | R$ 22.935,6 milhões | Encargos de uso faturados pelo ONS no ano civil de 2019 (SEAMSE), sem PIS/Pasep e Cofins; repartido entre RS e RB pela participação no VBP do S38 | RAP 2019: R$ 24.883,4 milhões (_rap_media) |
-| Parcela da transmissão paga pela geração (α) | 0,5 | Rateio inicial de 50% para a geração (ANEEL, REN nº 559/2013) | — |
+| Parcela da transmissão paga pelo consumo, via distribuição (α); a geração paga 1 − α | 0,5 | Rateio inicial dos encargos de uso: 50% geração e 50% consumo (ANEEL, REN nº 559/2013) | — |
 | TUST da geração entre as fontes | ∝ MWh gerado no SIN | Regra do encargo por uso da rede; sistemas isolados não pagam | — |
 | TUST das colunas latentes (solar e derivados de petróleo no RS) | 32,41 R$/MWh | HIPÓTESE: a mesma TUST por MWh das fontes do RS no SIN, ao preço do espelho do RB | TUST por real do espelho (registro no relatório) |
 | VBP do gás canalizado no RS | R$ 898,7 milhões | Receita líquida da Sulgás em 2019 | — |

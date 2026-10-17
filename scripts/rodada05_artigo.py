@@ -20,7 +20,6 @@ import json
 import re
 import sys
 import textwrap
-from dataclasses import dataclass, field
 from pathlib import Path
 
 RAIZ = Path(__file__).resolve().parents[1]
@@ -140,25 +139,28 @@ def pct(v, casas: int = 1) -> str:
     return br(v, casas) + "%"
 
 
-@dataclass
 class Tabela:
-    """Uma tabela do artigo: um ou mais painéis (título do painel, DataFrame), casas decimais por coluna e notas."""
-    numero: str  # "Tabela 1", "Quadro 1", "Tabela A2"
-    titulo: str
-    paineis: list
-    casas: dict = field(default_factory=dict)  # coluna → casas decimais (padrão 1)
-    notas: list = field(default_factory=list)
-    fonte: str = FONTE
-    aba: str = ""
+    """Uma tabela do artigo: um ou mais painéis (título do painel, DataFrame), casas decimais por coluna e notas.
+
+    (Classe simples, e não dataclass, para o módulo poder ser carregado por importlib nos testes e nas conferências.)"""
+
+    def __init__(self, numero: str, titulo: str, paineis: list, casas: dict | None = None, notas: list | None = None,
+                 fonte: str = FONTE, aba: str = ""):
+        self.numero, self.titulo, self.paineis = numero, titulo, paineis  # numero: "Tabela 1", "Quadro 1", "Tabela A2"
+        self.casas = dict(casas or {})  # coluna → casas decimais (padrão 1)
+        self.notas = list(notas or [])
+        self.fonte, self.aba = fonte, aba
 
     def colunas(self) -> list:
         return list(self.paineis[0][1].columns)
 
-    def celula(self, col, v) -> str:
+    def celula(self, col, v, ponto: bool = False) -> str:
+        """Célula formatada: padrão brasileiro (artigo) ou, com ponto=True, ponto decimal sem milhar (relatório)."""
+        f = (lambda x, c: "" if (isinstance(x, float) and np.isnan(x)) else f"{float(x):.{c}f}") if ponto else br
         if isinstance(v, (int, np.integer)) and not isinstance(v, bool):
-            return br(v, 0)
+            return f(v, 0)
         if isinstance(v, (float, np.floating)):
-            return br(v, self.casas.get(col, 1))
+            return f(v, self.casas.get(col, 1))
         return "" if v is None else str(v)
 
 
@@ -491,12 +493,16 @@ def tabelaA5(d) -> Tabela:
     gas_rs = q[(q["versao"] == V) & (q["regiao"] == "RS") & (q["subsetor"] == "S38_GAS")]["VBP (R$ mi)"].iloc[0]
     k = e["piso_vbp"]["kappa"]
     eta = e["reequilibrio"]["eta"]
+    comp = pd.read_csv(PASTA_PARAMETROS / f"componentes_{V}.csv")
+    alfa = float(comp.loc[comp["componente"] == "fracao_transmissao_distribuicao", "valor"].iloc[0])
+    lin = pd.read_csv(PASTA_PARAMETROS / f"regras_linha_{V}.csv")
+    teto = float(lin.loc[lin["subsetor"] == "S38_GAS", "valor"].astype(float).max())
     linhas = [
         ("VBP da transmissão (Brasil)", f"R$ {br(tra)} milhões", "Encargos de uso faturados pelo ONS no ano civil de 2019 "
          "(SEAMSE), sem PIS/Pasep e Cofins; repartido entre RS e RB pela participação no VBP do S38",
          f"RAP 2019: R$ {br(tra_m)} milhões (_rap_media)"),
-        ("Parcela da transmissão paga pela geração (α)", br(0.5, 1),
-         "Rateio inicial de 50% para a geração (ANEEL, REN nº 559/2013)", "—"),
+        ("Parcela da transmissão paga pelo consumo, via distribuição (α); a geração paga 1 − α", br(alfa, 1),
+         "Rateio inicial dos encargos de uso: 50% geração e 50% consumo (ANEEL, REN nº 559/2013)", "—"),
         ("TUST da geração entre as fontes", "∝ MWh gerado no SIN", "Regra do encargo por uso da rede; sistemas isolados "
          "não pagam", "—"),
         ("TUST das colunas latentes (solar e derivados de petróleo no RS)",
@@ -505,7 +511,7 @@ def tabelaA5(d) -> Tabela:
         ("VBP do gás canalizado no RS", f"R$ {br(gas_rs)} milhões", "Receita líquida da Sulgás em 2019", "—"),
         ("VBP do gás canalizado no RB", f"R$ {br(gas_rb)} milhões", "HIPÓTESE: preço da Sulgás × volume não térmico do "
          "RB (MME/Abegás)", f"Preço médio de 4 distribuidoras: R$ {br(gas_4d)} milhões (_gas4dist)"),
-        ("Participação máxima do gás canalizado na compra de S38 de cada comprador", br(0.9, 2), "HIPÓTESE (teto)", "—"),
+        ("Participação máxima do gás canalizado na compra de S38 de cada comprador", br(teto, 2), "HIPÓTESE (teto)", "—"),
         ("Piso do VBP das térmicas (κ)", br(k, 2), "HIPÓTESE: combustível ≤ κ × VBP", "κ = 0,60 (_k060)"),
         ("Excedente operacional bruto mínimo (η)", br(eta, 2), "HIPÓTESE: EOB ≥ η × VBP em cada subsetor (ajuste RAS "
          "dos insumos não energéticos)", "η = 0,05 (_eta005)"),
@@ -671,7 +677,7 @@ def escrever_xlsx(tabs: list[Tabela], caminho: Path) -> None:
     wb.save(caminho)
 
 
-def tabela_md(t: Tabela) -> str:
+def tabela_md(t: Tabela, ponto: bool = False) -> str:
     linhas = [f"**{t.numero}:** {t.titulo}", ""]
     for nome, df in t.paineis:
         if nome:
@@ -681,7 +687,7 @@ def tabela_md(t: Tabela) -> str:
         num = [pd.api.types.is_numeric_dtype(df[c]) and not pd.api.types.is_bool_dtype(df[c]) for c in cols]
         linhas.append("|" + "|".join("---:" if n else "---" for n in num) + "|")
         for _, r in df.iterrows():
-            linhas.append("| " + " | ".join(t.celula(c, r[c]).replace("|", "\\|") for c in cols) + " |")
+            linhas.append("| " + " | ".join(t.celula(c, r[c], ponto).replace("|", "\\|") for c in cols) + " |")
         linhas.append("")
     linhas += [f"*{n}*" for n in t.notas + [t.fonte]]
     return "\n".join(linhas) + "\n"
@@ -701,6 +707,13 @@ def _bordas(tabela) -> None:
         e.set(qn("w:color"), "000000")
         b.append(e)
     tblPr.append(b)
+    mar = OxmlElement("w:tblCellMar")  # margens internas estreitas (0,08 cm) para caber em A4 retrato
+    for lado in ("left", "right"):
+        e = OxmlElement(f"w:{lado}")
+        e.set(qn("w:w"), "45")
+        e.set(qn("w:type"), "dxa")
+        mar.append(e)
+    tblPr.append(mar)
 
 
 def _fonte_run(run, tamanho, negrito=False, italico=False):
@@ -756,19 +769,20 @@ def escrever_docx(tabs: list[Tabela], caminho: Path) -> None:
             _bordas(tab)
             for c, col in enumerate(cols):
                 cel = tab.cell(0, c)
-                cel.text = ""
                 _fonte_run(cel.paragraphs[0].add_run(str(col)), 8, negrito=True)
+            _larguras(tab, [str(c) for c in cols], [[t.celula(c, v) for c, v in zip(cols, r)] for _, df in g
+                                                     for r in df.itertuples(index=False)])
             lin = 1
             for nome, df in g:
                 if nome:
                     cel = tab.cell(lin, 0).merge(tab.cell(lin, len(cols) - 1))
-                    cel.text = ""
+                    for extra in cel.paragraphs[1:]:  # a fusão junta um parágrafo vazio de cada célula
+                        extra._element.getparent().remove(extra._element)
                     _fonte_run(cel.paragraphs[0].add_run(nome), 8, negrito=True)
                     lin += 1
                 for _, r in df.iterrows():
                     for c, col in enumerate(cols):
                         cel = tab.cell(lin, c)
-                        cel.text = ""
                         par = cel.paragraphs[0]
                         v = r[col]
                         if isinstance(v, (int, float, np.integer, np.floating)) and not isinstance(v, bool):
@@ -781,8 +795,44 @@ def escrever_docx(tabs: list[Tabela], caminho: Path) -> None:
             q = doc.add_paragraph()
             q.paragraph_format.space_after = Pt(0)
             _fonte_run(q.add_run(n), 10, italico=True)
+    for tab in doc.tables:  # células compactas: sem espaço entre parágrafos, entrelinha simples
+        for row in tab.rows:
+            for cel in row.cells:
+                for par in cel.paragraphs:
+                    par.paragraph_format.space_before = Pt(0)
+                    par.paragraph_format.space_after = Pt(0)
+                    par.paragraph_format.line_spacing = 1.0
     caminho.parent.mkdir(parents=True, exist_ok=True)
     doc.save(caminho)
+
+
+def _larguras(tab, cabecalho: list, linhas: list, total_cm: float = 16.0) -> None:
+    """Largura das colunas: cada uma tem pelo menos a da maior palavra (números não quebram) e cresce com o tamanho
+    médio do texto; o conjunto ocupa a largura útil da página A4 (Times New Roman 8: ~0,15 cm por caractere)."""
+    from docx.shared import Cm
+
+    cm_car, folga = 0.145, 0.22
+    n = len(cabecalho)
+    minimo, desejado = [], []
+    for j in range(n):
+        textos = [str(lin[j]) for lin in linhas if j < len(lin)]
+        palavras = [w for x in textos + [cabecalho[j]] for w in re.split(r"[\s/-]+", x) if w]  # quebra em hífen e barra
+        maior = max([len(w) for w in palavras] or [3])
+        medio = (sum(len(x) for x in textos) / len(textos)) if textos else 3
+        minimo.append(cm_car * maior + folga)
+        desejado.append(max(minimo[-1], cm_car * min(medio * 1.1, 45) + folga, cm_car * len(cabecalho[j]) / 3 + folga))
+    if sum(desejado) > total_cm and sum(minimo) < total_cm:  # corta só o que passa do mínimo
+        extra = [d - m for d, m in zip(desejado, minimo)]
+        f = (total_cm - sum(minimo)) / sum(extra)
+        larg = [m + e * f for m, e in zip(minimo, extra)]
+    else:
+        larg = [d * total_cm / sum(desejado) for d in desejado]
+    tab.autofit = False
+    for j, col in enumerate(tab.columns):  # grade da tabela (lida pelo LibreOffice) e largura de cada célula (Word)
+        col.width = Cm(larg[j])
+    for row in tab.rows:
+        for j, cel in enumerate(row.cells[:n]):
+            cel.width = Cm(larg[j])
 
 
 # ---------------------------------------------------------------------------------------------
@@ -1065,8 +1115,79 @@ def numeros_chave(d: dict) -> dict:
         x = rea[(rea["regiao"] == r) & ~rea["setor_destino"].astype(str).str.startswith("(")]
         put(f"e4_movido_{r.lower()}", x["valor"].sum(), 1, "t CO₂e", f"{qd} › realocacao_E4 › {r}",
             f"emissões movidas do S38 na E4, {r}")
+    for r in ("RS", "RB"):
+        movido = N[f"e4_movido_{r.lower()}"]["valor"]
+        put(f"e4_sobra_{r.lower()}", N[f"residuo_{r.lower()}"]["valor"] - movido, 1, "t CO₂e",
+            f"{qd} › niveis_emissoes e realocacao_E4 › {r}", f"resíduo de emissões que fica em DIS e GAS na E4, {r}")
+    # parâmetros (das especificações e dos CSVs de parâmetros)
+    e = d["espec"]
+    put("param_kappa", e["piso_vbp"]["kappa"], 2, "", f"parametros/especificacao_{V}.yaml › piso_vbp.kappa", "κ (piso do VBP das térmicas)")
+    put("param_eta", e["reequilibrio"]["eta"], 2, "", f"parametros/especificacao_{V}.yaml › reequilibrio.eta", "η (EOB mínimo)")
+    for suf, chave, campo in (("_k060", "param_kappa_sens", ("piso_vbp", "kappa")), ("_eta005", "param_eta_sens", ("reequilibrio", "eta"))):
+        with open(PASTA_PARAMETROS / f"especificacao_{V}{suf}.yaml", encoding="utf-8") as f:
+            es = yaml.safe_load(f)
+        put(chave, es[campo[0]][campo[1]], 2, "", f"parametros/especificacao_{V}{suf}.yaml › {'.'.join(campo)}",
+            f"{campo[1]} na variante {suf}")
+    comp = pd.read_csv(PASTA_PARAMETROS / f"componentes_{V}.csv")
+    put("param_alfa", comp.loc[comp["componente"] == "fracao_transmissao_distribuicao", "valor"].astype(float).iloc[0], 1,
+        "", f"parametros/componentes_{V}.csv › fracao_transmissao_distribuicao", "parcela da transmissão paga pela distribuição (α)")
+    lin = pd.read_csv(PASTA_PARAMETROS / f"regras_linha_{V}.csv")
+    g = lin.loc[lin["subsetor"] == "S38_GAS", "valor"].astype(float)
+    put("param_teto_gas", g.max(), 2, "", f"parametros/regras_linha_{V}.csv › S38_GAS (máximo)",
+        "participação máxima do gás canalizado nas compras de S38 de um comprador (teto)")
+    for r in ("RS", "RB"):
+        o = q[(q["versao"] == "original") & (q["regiao"] == r)].iloc[0]
+        put(f"vbp_s38_{r.lower()}", o["VBP (R$ mi)"], 1, "R$ milhões", f"{qd} › quadro › original {r}", f"VBP do S38 na MIP original, {r}")
+        put(f"mult_em_s38_{r.lower()}", o["multiplicador de emissões (t/R$ mi)"], 1, "t CO₂e/R$ milhão",
+            f"{qd} › quadro › original {r}", f"multiplicador de emissões do S38 na MIP original, {r}")
+        ger = q[(q["versao"] == V) & (q["regiao"] == r) & (q["tipo"] == "geracao")]
+        put(f"vbp_ger_{r.lower()}", ger["VBP (R$ mi)"].sum(), 1, "R$ milhões", f"{qd} › quadro › v04 {r} geração",
+            f"VBP da geração (8 subsetores), {r}")
+        put(f"gwh_ger_{r.lower()}", ger["GWh"].sum(), 1, "GWh", f"{qd} › quadro › v04 {r} geração", f"GWh de 2019, {r}")
+    ne = d["q_insumos_nao_energeticos"]
+    ne = ne[ne["versao"] == V].set_index(["regiao", "subsetor"])
+    for r in ("RS", "RB"):
+        put(f"t12_gn_{r.lower()}", ne.loc[(r, "S38_GN"), "insumos_nao_energeticos / VBP"], 3, "fração do VBP",
+            f"{qd} › insumos_nao_energeticos › v04 {r} S38_GN", f"insumos não energéticos ÷ VBP da geração a gás, {r} (T12)")
+    put("t12_min_k060", vr.loc["v04_k060", "insumos não energéticos / VBP mínimo"], 3, "fração do VBP",
+        f"{qd} › variantes_resumo › v04_k060", "menor razão insumos não energéticos ÷ VBP com κ = 0,60")
+    put("mult_em_rs_sol_sem_d18", d18.loc["S38_SOL", "multiplicador de emissões (t/R$ mi) sem D18"], 1, "t CO₂e/R$ milhão",
+        f"{qd} › d18_latentes › S38_SOL", "multiplicador de emissões do SOL-RS latente sem a D18")
+    put("mult_prod_rs_sol_sem_d18", d18.loc["S38_SOL", "multiplicador de produção sem D18"], 3, "",
+        f"{qd} › d18_latentes › S38_SOL", "multiplicador de produção do SOL-RS latente sem a D18")
+    sol = d["d18_SOL"].set_index("versao")
+    put("twh_sol_sem_d18", sol.loc[f"{V} sem D18", "t CO₂e por TWh (total)"], 1, "t CO₂e/TWh", f"{sim} › d18_SOL",
+        "emissões por TWh da solar sem a D18 (TUST por real do espelho)")
+    chk = d["checagens"]
+    chk = chk[chk["versao"] == V].set_index("checagem")
+    put("reag_max", max(float(chk.loc[f"reagregacao_{n}", "valor"]) for n in ("Z", "F", "X", "total_linha", "V")), 9,
+        "R$ milhões", f"resultados/rodada05/checagens_{V}.csv › reagregacao_*", "maior diferença da re-agregação")
+    a0 = d["A0"].set_index("cenario")
+    put("a0_dif_artigo", max(abs(a0.loc[f"A0_{x.cenario}", "CO₂e total (t)"] - x.co2e_total) for x in ref.ESPERADO.itertuples()),
+        2, "t CO₂e", f"{sim} › A0 × src/mip/referencia.py", "maior diferença entre o A0 e os valores publicados")
     if "diag" in d and "resumo" in d["diag"]:
-        put("diag_disponivel", 1, 0, "", dg, "diagnóstico NEREUS × SEEG gerado")
+        rs = _com_cabecalho(d["diag"]["resumo"], "item")
+        rs = rs.dropna(subset=["valor"])
+        val = {str(i): float(v) for i, v in zip(rs["item"], rs["valor"]) if isinstance(v, (int, float, np.number))}
+
+        def diag(chave, prefixo, casas, unidade, descricao):
+            k = next((i for i in val if i.startswith(prefixo)), None)
+            if k is None:
+                raise SystemExit(f"diagnóstico: '{prefixo}' não encontrado na aba resumo")
+            put(chave, val[k], casas, unidade, f"{dg} › resumo › {k}", descricao)
+
+        diag("diag_s38_rs_seeg", "S38-RS: SEEG", 1, "mil t CO₂e", "S38-RS pelo SEEG (geração de eletricidade + produção de combustíveis)")
+        diag("diag_s38_rs_nereus", "S38-RS: NEREUS", 1, "mil t CO₂e", "S38-RS na base NEREUS")
+        diag("diag_s38_rs_dif", "S38-RS: diferença", 2, "%", "diferença SEEG − NEREUS no S38-RS")
+        diag("diag_s38_rb_seeg", "S38-RB: SEEG", 1, "mil t CO₂e", "S38-RB pelo SEEG (estados)")
+        diag("diag_s38_rb_nereus", "S38-RB: NEREUS", 1, "mil t CO₂e", "S38-RB na base NEREUS")
+        diag("diag_s38_rb_dif", "S38-RB: diferença", 2, "%", "diferença SEEG − NEREUS no S38-RB")
+        diag("diag_nao_alocado", "Não alocado", 1, "mil t CO₂e", "'Não alocado' das duas atividades")
+        diag("diag_testes", "Casamentos: total de testes", 0, "combinações", "combinações testadas no casamento de setores")
+        diag("diag_casamentos", "Casamentos: |dif| < 0.1% (todos)", 0, "combinações", "combinações com diferença < 0,1%")
+        diag("diag_acaso", "Casamentos: |dif| < 0.1% esperados", 0, "combinações", "combinações < 0,1% esperadas por acaso")
+        diag("diag_total_br_liq", "Total Brasil: SEEG GWP-AR5 líquida", 1, "%", "total Brasil, SEEG AR5 líquida − NEREUS")
+        diag("diag_total_br_bruta", "Total Brasil: SEEG GWP-AR5 bruta", 1, "%", "total Brasil, SEEG AR5 bruta − NEREUS")
     return N
 
 
@@ -1081,8 +1202,9 @@ def escrever_numeros(N: dict) -> None:
               "| Chave | Descrição | Valor bruto | Padrão brasileiro | Unidade | Origem |", "|---|---|---:|---:|---|---|"]
     for k in sorted(N):
         x = N[k]
-        linhas.append(f"| `{k}` | {x['descricao']} | {x['valor']!r} | {br(x['valor'], x['casas'])} | {x['unidade']} | "
-                      f"{x['origem']} |")
+        esc = lambda t: str(t).replace("|", "\\|")  # noqa: E731
+        linhas.append(f"| `{k}` | {esc(x['descricao'])} | {x['valor']!r} | {br(x['valor'], x['casas'])} | {x['unidade']} | "
+                      f"{esc(x['origem'])} |")
     (TXT / "numeros_chave.md").write_text("\n".join(linhas) + "\n", encoding="utf-8")
 
 
@@ -1155,6 +1277,9 @@ def main():
         "# Tabelas do artigo\n\nGerado por `scripts/rodada05_artigo.py`; números no padrão brasileiro.\n\n"
         + "\n".join(tabela_md(t) for t in tabs), encoding="utf-8")
     escrever_docx(tabs, TAB / "tabelas_artigo.docx")
+    (RES / "tabelas_artigo_ponto_decimal.md").write_text(  # as mesmas tabelas na convenção do repositório (relatório)
+        "# Tabelas do artigo — ponto decimal, sem separador de milhar (convenção do repositório)\n\nGerado por "
+        "`scripts/rodada05_artigo.py`.\n\n" + "\n".join(tabela_md(t, ponto=True) for t in tabs), encoding="utf-8")
     figs = figuras(d)
     N = numeros_chave(d)
     escrever_numeros(N)

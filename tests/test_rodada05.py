@@ -106,6 +106,7 @@ def test_d18_mantem_reparticao_e_demais_coeficientes(mip, v04):
     sem = desagregar(mip, replace(v04.especificacao, tust_latentes={}), estrito=False)
     a = sem.mip.coef_latentes.set_index(["regiao", "subsetor", "tipo_linha", "regiao_linha", "codigo_linha"])["coeficiente"]
     b = v04.mip.coef_latentes.set_index(["regiao", "subsetor", "tipo_linha", "regiao_linha", "codigo_linha"])["coeficiente"]
+    a, b = a.sort_index(), b.sort_index()
     tra = b.index.get_level_values("codigo_linha") == "S38_TRA"
     np.testing.assert_allclose(b[~tra].to_numpy(), a.reindex(b.index)[~tra].to_numpy(), rtol=1e-12, atol=0)
     for s in ("S38_SOL", "S38_PET"):
@@ -183,3 +184,96 @@ def test_latentes_entram_no_modelo(v04):
     mod = ModeloLeontief(v04.mip)
     j = v04.mip.indice("RS", "S38_SOL")
     assert mod.A[:, j].sum() > 0 and mod.L[j, j] >= 1
+
+
+# ---------------------------------------------------------------------------------------------
+# material do artigo (T13, T15)
+# ---------------------------------------------------------------------------------------------
+def _artigo():
+    import importlib.util
+
+    from mip.caminhos import RAIZ
+
+    caminho = RAIZ / "scripts" / "rodada05_artigo.py"
+    spec = importlib.util.spec_from_file_location("rodada05_artigo", caminho)
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    if not mod.SIM.exists():
+        pytest.skip("simulacoes_v04.xlsx ainda não foi gerado (scripts/rodada05_simulacoes.py)")
+    return mod
+
+
+@pytest.fixture(scope="module")
+def artigo():
+    mod = _artigo()
+    return mod, {t.numero: t for t in mod.construir_tabelas(mod.carregar())}
+
+
+def _painel(t, nome):
+    return next(df for n, df in t.paineis if n == nome).reset_index(drop=True)
+
+
+def test_t13_painel_b_reproduz_o_artigo(artigo):
+    """T13: os Painéis B das Tabelas 1, 3 e 4 e a Tabela A2 reproduzem os valores publicados (uma casa decimal)."""
+    mod, tabs = artigo
+    t1 = _painel(tabs["Tabela 1"], mod.PAINEL_B)
+    esperado1 = [(1925.0, 428113.5, 222.4, 4.5), (1959.4, 216407.0, 110.4, 9.1), (2120.6, 356045.7, 167.9, 6.0)]
+    for i, linha in enumerate(esperado1):
+        assert tuple(round(float(v), 1) for v in t1.iloc[i, 1:5]) == linha, t1.iloc[i, 0]
+    assert round(float(t1.iloc[3]["Emissões totais (t CO₂e)"]), 1) == 139638.8
+    assert round(float(t1.iloc[4]["Intensidade carbônica (t CO₂e/R$ milhão)"]), 1) == 34.2
+    t3 = _painel(tabs["Tabela 3"], mod.PAINEL_B)
+    esperado3 = [(1357.0, 339326.4, 79.3), (568.0, 88787.1, 20.7), (1391.3, 142390.0, 65.8), (568.0, 74016.9, 34.2),
+                 (1373.2, 277141.4, 77.8), (747.3, 78904.3, 22.2)]
+    for i, linha in enumerate(esperado3):
+        assert tuple(round(float(v), 1) for v in t3.iloc[i, 2:5]) == linha, t3.iloc[i, :2].tolist()
+    t4 = _painel(tabs["Tabela 4"], mod.PAINEL_B)
+    esperado4 = [(1959.4, 216407.0, 110.4, 51.5, 34.2), (1920.4, 216987.2, 113.0, 46.1, 29.1),
+                 (1969.2, 169090.0, 85.9, 62.7, 43.5), (1959.5, 309794.9, 158.1, 39.0, 23.8),
+                 (2120.6, 356045.7, 167.9, 35.3, 22.2), (2110.5, 381702.9, 180.9, 32.9, 19.7),
+                 (2073.9, 375427.3, 181.0, 35.0, 21.5)]
+    for i, linha in enumerate(esperado4):
+        assert tuple(round(float(v), 1) for v in t4.iloc[i, 1:6]) == linha, t4.iloc[i, 0]
+    a2 = tabs["Tabela A2"].paineis[0][1].reset_index(drop=True)
+    cols = ["Produção induzida (R$ milhões)", "Emissões induzidas (t CO₂e)", "Participação (%)"]
+    assert (a2.iloc[0]["Região"], a2.iloc[0]["Código"]) == ("RS", "S38")
+    assert tuple(round(float(a2.iloc[0][c]), 1) for c in cols) == (357.1, 99554.6, 46.0)
+    assert (a2.iloc[1]["Região"], a2.iloc[1]["Código"]) == ("RS", "S43")
+    assert tuple(round(float(a2.iloc[1][c]), 1) for c in cols) == (84.1, 35489.9, 16.4)
+    assert (a2.iloc[9]["Região"], a2.iloc[9]["Código"]) == ("RB", "S01")
+    assert tuple(round(float(a2.iloc[9][c]), 1) for c in cols) == (3.5, 2649.5, 1.2)
+    assert a2.iloc[10]["Setor"] == "Demais setores"
+    assert tuple(round(float(a2.iloc[10][c]), 1) for c in cols[1:]) == (16285.6, 7.5)
+
+
+def test_t15_artigo_deterministico(artigo):
+    """T15: gerar o material duas vezes dá os mesmos números em todas as tabelas e nos números-chave."""
+    mod, tabs = artigo
+    d = mod.carregar()
+    outra = {t.numero: t for t in mod.construir_tabelas(d)}
+    assert set(outra) == set(tabs)
+    for k, t in tabs.items():
+        for (n1, a), (n2, b) in zip(t.paineis, outra[k].paineis):
+            assert n1 == n2
+            pd.testing.assert_frame_equal(a, b, check_exact=True)
+    assert mod.numeros_chave(d) == mod.numeros_chave(mod.carregar())
+
+
+def test_artigo_formato_br_e_saidas(artigo):
+    mod, tabs = artigo
+    assert mod.br(1925.04) == "1.925,0" and mod.br(-6.4441) == "−6,4" and mod.br(0.0) == "0,0"
+    assert mod.br(139638.75, 1) == "139.638,8" and mod.pct(46.0034) == "46,0%"
+    assert {"Quadro 1"} | {f"Tabela {i}" for i in range(1, 8)} | {f"Tabela A{i}" for i in range(1, 9)} <= set(tabs)
+    if (mod.TAB / "tabelas_artigo.docx").exists():
+        from docx import Document
+        from docx.shared import Cm
+
+        doc = Document(str(mod.TAB / "tabelas_artigo.docx"))
+        s = doc.sections[0]
+        assert abs(s.page_width - Cm(21.0)) < Cm(0.01) and abs(s.left_margin - Cm(2.5)) < Cm(0.01)
+        run = doc.tables[0].cell(1, 0).paragraphs[0].runs[0]
+        assert run.font.name == "Times New Roman" and run.font.size.pt == 8
+    for nome in ("figura_1_top10_cesta_renovavel", "figura_2_diretas_indiretas", "figura_3_emissoes_por_TWh",
+                 "figura_4_emissoes_por_cesta", "figura_A1_top10_cesta_renovavel_original"):
+        if (mod.FIG / f"{nome}.png").exists():
+            assert (mod.FIG / f"{nome}.pdf").exists()

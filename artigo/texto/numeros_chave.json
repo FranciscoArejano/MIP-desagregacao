@@ -1,4 +1,11 @@
 {
+ "a0_dif_artigo": {
+  "casas": 2,
+  "descricao": "maior diferença entre o A0 e os valores publicados",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › A0 × src/mip/referencia.py",
+  "unidade": "t CO₂e",
+  "valor": 0.004858762084040791
+ },
  "a0_dif_fossil_renov": {
   "casas": 1,
   "descricao": "diferença de emissões fóssil − renovável (A0)",
@@ -1175,12 +1182,89 @@
   "unidade": "%",
   "valor": -1.2767534215700649
  },
- "diag_disponivel": {
+ "diag_acaso": {
   "casas": 0,
-  "descricao": "diagnóstico NEREUS × SEEG gerado",
-  "origem": "resultados/rodada05/diagnostico_seeg_nereus.xlsx",
-  "unidade": "",
-  "valor": 1.0
+  "descricao": "combinações < 0,1% esperadas por acaso",
+  "origem": "resultados/rodada05/diagnostico_seeg_nereus.xlsx › resumo › Casamentos: |dif| < 0.1% esperados por acaso (≈)",
+  "unidade": "combinações",
+  "valor": 210.72
+ },
+ "diag_casamentos": {
+  "casas": 0,
+  "descricao": "combinações com diferença < 0,1%",
+  "origem": "resultados/rodada05/diagnostico_seeg_nereus.xlsx › resumo › Casamentos: |dif| < 0.1% (todos)",
+  "unidade": "combinações",
+  "valor": 224.0
+ },
+ "diag_nao_alocado": {
+  "casas": 1,
+  "descricao": "'Não alocado' das duas atividades",
+  "origem": "resultados/rodada05/diagnostico_seeg_nereus.xlsx › resumo › Não alocado (GE + PC)",
+  "unidade": "mil t CO₂e",
+  "valor": 18699.95597566485
+ },
+ "diag_s38_rb_dif": {
+  "casas": 2,
+  "descricao": "diferença SEEG − NEREUS no S38-RB",
+  "origem": "resultados/rodada05/diagnostico_seeg_nereus.xlsx › resumo › S38-RB: diferença",
+  "unidade": "%",
+  "valor": -6.506752684567207
+ },
+ "diag_s38_rb_nereus": {
+  "casas": 1,
+  "descricao": "S38-RB na base NEREUS",
+  "origem": "resultados/rodada05/diagnostico_seeg_nereus.xlsx › resumo › S38-RB: NEREUS",
+  "unidade": "mil t CO₂e",
+  "valor": 84518.34905662797
+ },
+ "diag_s38_rb_seeg": {
+  "casas": 1,
+  "descricao": "S38-RB pelo SEEG (estados)",
+  "origem": "resultados/rodada05/diagnostico_seeg_nereus.xlsx › resumo › S38-RB: SEEG GE + PC, estados (GWP-AR5, bruta)",
+  "unidade": "mil t CO₂e",
+  "valor": 79018.94911043394
+ },
+ "diag_s38_rs_dif": {
+  "casas": 2,
+  "descricao": "diferença SEEG − NEREUS no S38-RS",
+  "origem": "resultados/rodada05/diagnostico_seeg_nereus.xlsx › resumo › S38-RS: diferença",
+  "unidade": "%",
+  "valor": 0.0207302882466799
+ },
+ "diag_s38_rs_nereus": {
+  "casas": 1,
+  "descricao": "S38-RS na base NEREUS",
+  "origem": "resultados/rodada05/diagnostico_seeg_nereus.xlsx › resumo › S38-RS: NEREUS",
+  "unidade": "mil t CO₂e",
+  "valor": 5838.005554368286
+ },
+ "diag_s38_rs_seeg": {
+  "casas": 1,
+  "descricao": "S38-RS pelo SEEG (geração de eletricidade + produção de combustíveis)",
+  "origem": "resultados/rodada05/diagnostico_seeg_nereus.xlsx › resumo › S38-RS: SEEG GE + PC (GWP-AR5, bruta)",
+  "unidade": "mil t CO₂e",
+  "valor": 5839.215789747564
+ },
+ "diag_testes": {
+  "casas": 0,
+  "descricao": "combinações testadas no casamento de setores",
+  "origem": "resultados/rodada05/diagnostico_seeg_nereus.xlsx › resumo › Casamentos: total de testes",
+  "unidade": "combinações",
+  "valor": 679856.0
+ },
+ "diag_total_br_bruta": {
+  "casas": 1,
+  "descricao": "total Brasil, SEEG AR5 bruta − NEREUS",
+  "origem": "resultados/rodada05/diagnostico_seeg_nereus.xlsx › resumo › Total Brasil: SEEG GWP-AR5 bruta − NEREUS",
+  "unidade": "%",
+  "valor": 46.62783315617315
+ },
+ "diag_total_br_liq": {
+  "casas": 1,
+  "descricao": "total Brasil, SEEG AR5 líquida − NEREUS",
+  "origem": "resultados/rodada05/diagnostico_seeg_nereus.xlsx › resumo › Total Brasil: SEEG GWP-AR5 líquida − NEREUS",
+  "unidade": "%",
+  "valor": -1.9132204855362
  },
  "e4_movido_rb": {
   "casas": 1,
@@ -1195,6 +1279,20 @@
   "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › realocacao_E4 › RS",
   "unidade": "t CO₂e",
   "valor": 1900181.996674465
+ },
+ "e4_sobra_rb": {
+  "casas": 1,
+  "descricao": "resíduo de emissões que fica em DIS e GAS na E4, RB",
+  "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › niveis_emissoes e realocacao_E4 › RB",
+  "unidade": "t CO₂e",
+  "valor": 6946267.899657965
+ },
+ "e4_sobra_rs": {
+  "casas": 1,
+  "descricao": "resíduo de emissões que fica em DIS e GAS na E4, RS",
+  "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › niveis_emissoes e realocacao_E4 › RS",
+  "unidade": "t CO₂e",
+  "valor": 75675.72868064791
  },
  "fator_e1_rb_bio": {
   "casas": 3,
@@ -1286,6 +1384,20 @@
   "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RS S38_HID",
   "unidade": "t CO₂e/MWh",
   "valor": 0.0
+ },
+ "gwh_ger_rb": {
+  "casas": 1,
+  "descricao": "GWh de 2019, RB",
+  "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RB geração",
+  "unidade": "GWh",
+  "valor": 501267.511191
+ },
+ "gwh_ger_rs": {
+  "casas": 1,
+  "descricao": "GWh de 2019, RS",
+  "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RS geração",
+  "unidade": "GWh",
+  "valor": 22677.488809000002
  },
  "mult_em_rb_bio": {
   "casas": 1,
@@ -1427,12 +1539,33 @@
   "unidade": "t CO₂e/R$ milhão",
   "valor": 24.91769053774674
  },
+ "mult_em_rs_sol_sem_d18": {
+  "casas": 1,
+  "descricao": "multiplicador de emissões do SOL-RS latente sem a D18",
+  "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › d18_latentes › S38_SOL",
+  "unidade": "t CO₂e/R$ milhão",
+  "valor": 23.31817874856202
+ },
  "mult_em_rs_tra": {
   "casas": 1,
   "descricao": "multiplicador de emissões RS S38_TRA",
   "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RS S38_TRA",
   "unidade": "t CO₂e/R$ milhão",
   "valor": 23.93629521218996
+ },
+ "mult_em_s38_rb": {
+  "casas": 1,
+  "descricao": "multiplicador de emissões do S38 na MIP original, RB",
+  "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › original RB",
+  "unidade": "t CO₂e/R$ milhão",
+  "valor": 406.2507036184068
+ },
+ "mult_em_s38_rs": {
+  "casas": 1,
+  "descricao": "multiplicador de emissões do S38 na MIP original, RS",
+  "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › original RS",
+  "unidade": "t CO₂e/R$ milhão",
+  "valor": 428.1135341067809
  },
  "mult_prod_rb_bio": {
   "casas": 3,
@@ -1574,6 +1707,13 @@
   "unidade": "",
   "valor": 1.508255449942891
  },
+ "mult_prod_rs_sol_sem_d18": {
+  "casas": 3,
+  "descricao": "multiplicador de produção do SOL-RS latente sem a D18",
+  "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › d18_latentes › S38_SOL",
+  "unidade": "",
+  "valor": 1.421480282999841
+ },
  "mult_prod_rs_tra": {
   "casas": 3,
   "descricao": "multiplicador de produção RS S38_TRA",
@@ -1594,6 +1734,55 @@
   "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › d18_latentes › S38_SOL",
   "unidade": "R$/MWh",
   "valor": 200.7911885476695
+ },
+ "param_alfa": {
+  "casas": 1,
+  "descricao": "parcela da transmissão paga pela distribuição (α)",
+  "origem": "parametros/componentes_v04.csv › fracao_transmissao_distribuicao",
+  "unidade": "",
+  "valor": 0.5
+ },
+ "param_eta": {
+  "casas": 2,
+  "descricao": "η (EOB mínimo)",
+  "origem": "parametros/especificacao_v04.yaml › reequilibrio.eta",
+  "unidade": "",
+  "valor": 0.1
+ },
+ "param_eta_sens": {
+  "casas": 2,
+  "descricao": "eta na variante _eta005",
+  "origem": "parametros/especificacao_v04_eta005.yaml › reequilibrio.eta",
+  "unidade": "",
+  "valor": 0.05
+ },
+ "param_kappa": {
+  "casas": 2,
+  "descricao": "κ (piso do VBP das térmicas)",
+  "origem": "parametros/especificacao_v04.yaml › piso_vbp.kappa",
+  "unidade": "",
+  "valor": 0.7
+ },
+ "param_kappa_sens": {
+  "casas": 2,
+  "descricao": "kappa na variante _k060",
+  "origem": "parametros/especificacao_v04_k060.yaml › piso_vbp.kappa",
+  "unidade": "",
+  "valor": 0.6
+ },
+ "param_teto_gas": {
+  "casas": 2,
+  "descricao": "participação máxima do gás canalizado nas compras de S38 de um comprador (teto)",
+  "origem": "parametros/regras_linha_v04.csv › S38_GAS (máximo)",
+  "unidade": "",
+  "valor": 0.9000000000000001
+ },
+ "reag_max": {
+  "casas": 9,
+  "descricao": "maior diferença da re-agregação",
+  "origem": "resultados/rodada05/checagens_v04.csv › reagregacao_*",
+  "unidade": "R$ milhões",
+  "valor": 1.425632945029065e-09
  },
  "residuo_rb": {
   "casas": 1,
@@ -1762,6 +1951,27 @@
   "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › niveis_emissoes › v04 RS",
   "unidade": "t CO₂e",
   "valor": 5838005.554368285
+ },
+ "t12_gn_rb": {
+  "casas": 3,
+  "descricao": "insumos não energéticos ÷ VBP da geração a gás, RB (T12)",
+  "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › insumos_nao_energeticos › v04 RB S38_GN",
+  "unidade": "fração do VBP",
+  "valor": 0.0315483416099439
+ },
+ "t12_gn_rs": {
+  "casas": 3,
+  "descricao": "insumos não energéticos ÷ VBP da geração a gás, RS (T12)",
+  "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › insumos_nao_energeticos › v04 RS S38_GN",
+  "unidade": "fração do VBP",
+  "valor": 0.02567660099411299
+ },
+ "t12_min_k060": {
+  "casas": 3,
+  "descricao": "menor razão insumos não energéticos ÷ VBP com κ = 0,60",
+  "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › variantes_resumo › v04_k060",
+  "unidade": "fração do VBP",
+  "valor": 0.07680941610745359
  },
  "tau_rs": {
   "casas": 2,
@@ -2015,6 +2225,13 @@
   "unidade": "R$/MWh",
   "valor": 200.7911885476695
  },
+ "twh_sol_sem_d18": {
+  "casas": 1,
+  "descricao": "emissões por TWh da solar sem a D18 (TUST por real do espelho)",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › d18_SOL",
+  "unidade": "t CO₂e/TWh",
+  "valor": 4682.084825690778
+ },
  "twh_sol_t": {
   "casas": 1,
   "descricao": "emissões por TWh, Solar fotovoltaica",
@@ -2140,6 +2357,20 @@
   "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › variantes_resumo › v04",
   "unidade": "R$ milhões",
   "valor": 19421.04544377357
+ },
+ "vbp_ger_rb": {
+  "casas": 1,
+  "descricao": "VBP da geração (8 subsetores), RB",
+  "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RB geração",
+  "unidade": "R$ milhões",
+  "valor": 74993.73746916429
+ },
+ "vbp_ger_rs": {
+  "casas": 1,
+  "descricao": "VBP da geração (8 subsetores), RS",
+  "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RS geração",
+  "unidade": "R$ milhões",
+  "valor": 4268.713587728492
  },
  "vbp_rb_bio": {
   "casas": 1,
@@ -2294,6 +2525,20 @@
   "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RS S38_TRA",
   "unidade": "R$ milhões",
   "valor": 1390.937723469444
+ },
+ "vbp_s38_rb": {
+  "casas": 1,
+  "descricao": "VBP do S38 na MIP original, RB",
+  "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › original RB",
+  "unidade": "R$ milhões",
+  "valor": 324387.3415734943
+ },
+ "vbp_s38_rs": {
+  "casas": 1,
+  "descricao": "VBP do S38 na MIP original, RS",
+  "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › original RS",
+  "unidade": "R$ milhões",
+  "valor": 20942.65842650564
  },
  "vbp_tra_media": {
   "casas": 1,

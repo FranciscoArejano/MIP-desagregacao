@@ -19,6 +19,7 @@ Saídas: parametros/cenarios_v04.csv; resultados/rodada05/simulacoes_v04.xlsx.
 """
 from __future__ import annotations
 
+import copy
 import importlib.util
 import sys
 from pathlib import Path
@@ -141,6 +142,17 @@ def main():
         if suf in ("_E4", "_rap_media"):
             abas_var[suf.lstrip("_")] = desvios(ind, base, "na v04")
     rob = robustez(por_versao)
+    # D18: o SOL por TWh sem a D18 (coluna latente com a TUST por real do espelho), só para registro no relatório
+    d18 = pd.read_excel(SAIDA / f"quadro_subsetores_{V}.xlsx", "d18_latentes").set_index("subsetor")
+    m_sem = copy.copy(m04)
+    m_sem.coef_latentes = m04.coef_latentes.copy()
+    cl = m_sem.coef_latentes
+    for s_, x in d18.iterrows():
+        sel_ = (cl["regiao"] == "RS") & (cl["subsetor"] == s_) & (cl["tipo_linha"] == "setor") & (cl["codigo_linha"] == "S38_TRA")
+        cl.loc[sel_, "coeficiente"] *= x["coeficiente de TUST antes"] / x["coeficiente de TUST depois"]
+    sem_d18 = tabela_twh(cen.executar(m_sem, r04s.b_twh(m04, G), f"{V} sem D18"), f"{V} sem D18")
+    d18_sol = pd.concat([tabela_twh(b, V), sem_d18], ignore_index=True)
+    d18_sol = d18_sol[d18_sol["subsetor (RS)"] == "S38_SOL"]
     tw = pd.concat(tw, ignore_index=True)
     b1 = r04s.indicadores(b, "B_")
     b1 = b1[~b1["cenario"].str.startswith("B_TWh_")].copy()
@@ -158,7 +170,7 @@ def main():
     ind_a0 = r04s.indicadores(a0)
     abas = {"A0": ind_a0, "A0_E4": desvios(r04s.indicadores(a0_e4), ind_a0, "no A0"), "A1": r04s.indicadores(a1),
             "A2": r04s.indicadores(a2), "A2_sens": r04s.indicadores(a2_todos), "B_RS1bi": b1, "B_TWh": tw,
-            "robustez": rob, "robustez_detalhe": pd.concat(detalhe, ignore_index=True), **abas_var,
+            "robustez": rob, "robustez_detalhe": pd.concat(detalhe, ignore_index=True), **abas_var, "d18_SOL": d18_sol,
             "comparacao_artigo": comp, **art,
             "top10_A0": a0["top10"], "top10_A0_E4": a0_e4["top10"], "top10_A1": a1["top10"],
             "top10_A2": a2_todos["top10"], "top10_B": b["top10"],
@@ -189,6 +201,7 @@ def main():
         "versão; E4 e rap_media: os cenários dessas variantes com a variação em relação à v04.",
         "tabela1_artigo a tabela4_artigo: as tabelas da Rodada 04 (formato de trabalho); as tabelas no formato do "
         "artigo saem de scripts/rodada05_artigo.py (pasta artigo/).",
+        "d18_SOL: 1 TWh de SOL-RS com a D18 (principal) e sem ela (TUST por real do espelho do RB), só para registro.",
         "Emissões diretas = e · ΔY (setores chocados); indiretas = total − diretas (eq. 12–14 do modelo).",
         "Gerado por scripts/rodada05_simulacoes.py."])
     a2i = r04s.indicadores(a2).set_index("cenario")

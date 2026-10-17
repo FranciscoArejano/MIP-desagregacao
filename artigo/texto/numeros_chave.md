@@ -4,6 +4,7 @@ Gerado por `scripts/rodada05_artigo.py` a partir dos arquivos de resultado. Cada
 
 | Chave | Descrição | Valor bruto | Padrão brasileiro | Unidade | Origem |
 |---|---|---:|---:|---|---|
+| `a0_dif_artigo` | maior diferença entre o A0 e os valores publicados | 0.004858762084040791 | 0,00 | t CO₂e | resultados/rodada05/simulacoes_v04.xlsx › A0 × src/mip/referencia.py |
 | `a0_dif_fossil_renov` | diferença de emissões fóssil − renovável (A0) | 139638.75294936722 | 139.638,8 | t CO₂e | resultados/rodada05/simulacoes_v04.xlsx › A0 › F1 − R1 |
 | `a0_e1_co2e` | emissões totais, Energia elétrica agregada (A0) | 428113.5341067808 | 428.113,5 | t CO₂e | resultados/rodada05/simulacoes_v04.xlsx › A0 › A0_E1 |
 | `a0_e1_dx` | produção bruta induzida, Energia elétrica agregada (A0) | 1925.037208036543 | 1.925,0 | R$ milhões | resultados/rodada05/simulacoes_v04.xlsx › A0 › A0_E1 |
@@ -172,9 +173,22 @@ Gerado por `scripts/rodada05_artigo.py` a partir dos arquivos de resultado. Cada
 | `dev_rap_media_b_twh_gn` | desvio das emissões da v04_rap_media em relação à principal, B_TWh_GN | -0.027592012192667603 | 0,0 | % | resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › B_TWh_GN |
 | `dev_rap_media_b_twh_hid` | desvio das emissões da v04_rap_media em relação à principal, B_TWh_HID | -1.1397038161159556 | −1,1 | % | resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › B_TWh_HID |
 | `dev_rap_media_b_twh_sol` | desvio das emissões da v04_rap_media em relação à principal, B_TWh_SOL | -1.2767534215700649 | −1,3 | % | resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › B_TWh_SOL |
-| `diag_disponivel` | diagnóstico NEREUS × SEEG gerado | 1.0 | 1 |  | resultados/rodada05/diagnostico_seeg_nereus.xlsx |
+| `diag_acaso` | combinações < 0,1% esperadas por acaso | 210.72 | 211 | combinações | resultados/rodada05/diagnostico_seeg_nereus.xlsx › resumo › Casamentos: \|dif\| < 0.1% esperados por acaso (≈) |
+| `diag_casamentos` | combinações com diferença < 0,1% | 224.0 | 224 | combinações | resultados/rodada05/diagnostico_seeg_nereus.xlsx › resumo › Casamentos: \|dif\| < 0.1% (todos) |
+| `diag_nao_alocado` | 'Não alocado' das duas atividades | 18699.95597566485 | 18.700,0 | mil t CO₂e | resultados/rodada05/diagnostico_seeg_nereus.xlsx › resumo › Não alocado (GE + PC) |
+| `diag_s38_rb_dif` | diferença SEEG − NEREUS no S38-RB | -6.506752684567207 | −6,51 | % | resultados/rodada05/diagnostico_seeg_nereus.xlsx › resumo › S38-RB: diferença |
+| `diag_s38_rb_nereus` | S38-RB na base NEREUS | 84518.34905662797 | 84.518,3 | mil t CO₂e | resultados/rodada05/diagnostico_seeg_nereus.xlsx › resumo › S38-RB: NEREUS |
+| `diag_s38_rb_seeg` | S38-RB pelo SEEG (estados) | 79018.94911043394 | 79.018,9 | mil t CO₂e | resultados/rodada05/diagnostico_seeg_nereus.xlsx › resumo › S38-RB: SEEG GE + PC, estados (GWP-AR5, bruta) |
+| `diag_s38_rs_dif` | diferença SEEG − NEREUS no S38-RS | 0.0207302882466799 | 0,02 | % | resultados/rodada05/diagnostico_seeg_nereus.xlsx › resumo › S38-RS: diferença |
+| `diag_s38_rs_nereus` | S38-RS na base NEREUS | 5838.005554368286 | 5.838,0 | mil t CO₂e | resultados/rodada05/diagnostico_seeg_nereus.xlsx › resumo › S38-RS: NEREUS |
+| `diag_s38_rs_seeg` | S38-RS pelo SEEG (geração de eletricidade + produção de combustíveis) | 5839.215789747564 | 5.839,2 | mil t CO₂e | resultados/rodada05/diagnostico_seeg_nereus.xlsx › resumo › S38-RS: SEEG GE + PC (GWP-AR5, bruta) |
+| `diag_testes` | combinações testadas no casamento de setores | 679856.0 | 679.856 | combinações | resultados/rodada05/diagnostico_seeg_nereus.xlsx › resumo › Casamentos: total de testes |
+| `diag_total_br_bruta` | total Brasil, SEEG AR5 bruta − NEREUS | 46.62783315617315 | 46,6 | % | resultados/rodada05/diagnostico_seeg_nereus.xlsx › resumo › Total Brasil: SEEG GWP-AR5 bruta − NEREUS |
+| `diag_total_br_liq` | total Brasil, SEEG AR5 líquida − NEREUS | -1.9132204855362 | −1,9 | % | resultados/rodada05/diagnostico_seeg_nereus.xlsx › resumo › Total Brasil: SEEG GWP-AR5 líquida − NEREUS |
 | `e4_movido_rb` | emissões movidas do S38 na E4, RB | 42743465.99482903 | 42.743.466,0 | t CO₂e | resultados/rodada05/quadro_subsetores_v04.xlsx › realocacao_E4 › RB |
 | `e4_movido_rs` | emissões movidas do S38 na E4, RS | 1900181.996674465 | 1.900.182,0 | t CO₂e | resultados/rodada05/quadro_subsetores_v04.xlsx › realocacao_E4 › RS |
+| `e4_sobra_rb` | resíduo de emissões que fica em DIS e GAS na E4, RB | 6946267.899657965 | 6.946.267,9 | t CO₂e | resultados/rodada05/quadro_subsetores_v04.xlsx › niveis_emissoes e realocacao_E4 › RB |
+| `e4_sobra_rs` | resíduo de emissões que fica em DIS e GAS na E4, RS | 75675.72868064791 | 75.675,7 | t CO₂e | resultados/rodada05/quadro_subsetores_v04.xlsx › niveis_emissoes e realocacao_E4 › RS |
 | `fator_e1_rb_bio` | fator de emissão E1 RB S38_BIO | 0.006883556534375941 | 0,007 | t CO₂e/MWh | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RB S38_BIO |
 | `fator_e1_rb_car` | fator de emissão E1 RB S38_CAR | 0.8669797164970893 | 0,867 | t CO₂e/MWh | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RB S38_CAR |
 | `fator_e1_rb_eol` | fator de emissão E1 RB S38_EOL | 0.0 | 0,000 | t CO₂e/MWh | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RB S38_EOL |
@@ -188,6 +202,8 @@ Gerado por `scripts/rodada05_artigo.py` a partir dos arquivos de resultado. Cada
 | `fator_e1_rs_eol` | fator de emissão E1 RS S38_EOL | 0.0 | 0,000 | t CO₂e/MWh | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RS S38_EOL |
 | `fator_e1_rs_gn` | fator de emissão E1 RS S38_GN | 0.4364369138406436 | 0,436 | t CO₂e/MWh | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RS S38_GN |
 | `fator_e1_rs_hid` | fator de emissão E1 RS S38_HID | 0.0 | 0,000 | t CO₂e/MWh | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RS S38_HID |
+| `gwh_ger_rb` | GWh de 2019, RB | 501267.511191 | 501.267,5 | GWh | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RB geração |
+| `gwh_ger_rs` | GWh de 2019, RS | 22677.488809000002 | 22.677,5 | GWh | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RS geração |
 | `mult_em_rb_bio` | multiplicador de emissões RB S38_BIO | 81.57672862286299 | 81,6 | t CO₂e/R$ milhão | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RB S38_BIO |
 | `mult_em_rb_car` | multiplicador de emissões RB S38_CAR | 4520.868380526529 | 4.520,9 | t CO₂e/R$ milhão | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RB S38_CAR |
 | `mult_em_rb_dis` | multiplicador de emissões RB S38_DIS | 422.6125128330976 | 422,6 | t CO₂e/R$ milhão | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RB S38_DIS |
@@ -208,7 +224,10 @@ Gerado por `scripts/rodada05_artigo.py` a partir dos arquivos de resultado. Cada
 | `mult_em_rs_hid` | multiplicador de emissões RS S38_HID | 26.39153752492741 | 26,4 | t CO₂e/R$ milhão | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RS S38_HID |
 | `mult_em_rs_pet` | multiplicador de emissões RS S38_PET | 1187.596798429766 | 1.187,6 | t CO₂e/R$ milhão | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RS S38_PET |
 | `mult_em_rs_sol` | multiplicador de emissões RS S38_SOL | 24.91769053774674 | 24,9 | t CO₂e/R$ milhão | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RS S38_SOL |
+| `mult_em_rs_sol_sem_d18` | multiplicador de emissões do SOL-RS latente sem a D18 | 23.31817874856202 | 23,3 | t CO₂e/R$ milhão | resultados/rodada05/quadro_subsetores_v04.xlsx › d18_latentes › S38_SOL |
 | `mult_em_rs_tra` | multiplicador de emissões RS S38_TRA | 23.93629521218996 | 23,9 | t CO₂e/R$ milhão | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RS S38_TRA |
+| `mult_em_s38_rb` | multiplicador de emissões do S38 na MIP original, RB | 406.2507036184068 | 406,3 | t CO₂e/R$ milhão | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › original RB |
+| `mult_em_s38_rs` | multiplicador de emissões do S38 na MIP original, RS | 428.1135341067809 | 428,1 | t CO₂e/R$ milhão | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › original RS |
 | `mult_prod_rb_bio` | multiplicador de produção RB S38_BIO | 1.516989283291159 | 1,517 |  | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RB S38_BIO |
 | `mult_prod_rb_car` | multiplicador de produção RB S38_CAR | 1.630804233151826 | 1,631 |  | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RB S38_CAR |
 | `mult_prod_rb_dis` | multiplicador de produção RB S38_DIS | 1.921852379490097 | 1,922 |  | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RB S38_DIS |
@@ -229,9 +248,17 @@ Gerado por `scripts/rodada05_artigo.py` a partir dos arquivos de resultado. Cada
 | `mult_prod_rs_hid` | multiplicador de produção RS S38_HID | 1.552910481791872 | 1,553 |  | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RS S38_HID |
 | `mult_prod_rs_pet` | multiplicador de produção RS S38_PET | 2.801481802009222 | 2,801 |  | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RS S38_PET |
 | `mult_prod_rs_sol` | multiplicador de produção RS S38_SOL | 1.508255449942891 | 1,508 |  | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RS S38_SOL |
+| `mult_prod_rs_sol_sem_d18` | multiplicador de produção do SOL-RS latente sem a D18 | 1.421480282999841 | 1,421 |  | resultados/rodada05/quadro_subsetores_v04.xlsx › d18_latentes › S38_SOL |
 | `mult_prod_rs_tra` | multiplicador de produção RS S38_TRA | 1.321166321733432 | 1,321 |  | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RS S38_TRA |
 | `p_pet_rb` | R$/MWh do espelho S38_PET-RB | 785.9676713530407 | 786,0 | R$/MWh | resultados/rodada05/quadro_subsetores_v04.xlsx › d18_latentes › S38_PET |
 | `p_sol_rb` | R$/MWh do espelho S38_SOL-RB | 200.7911885476695 | 200,8 | R$/MWh | resultados/rodada05/quadro_subsetores_v04.xlsx › d18_latentes › S38_SOL |
+| `param_alfa` | parcela da transmissão paga pela distribuição (α) | 0.5 | 0,5 |  | parametros/componentes_v04.csv › fracao_transmissao_distribuicao |
+| `param_eta` | η (EOB mínimo) | 0.1 | 0,10 |  | parametros/especificacao_v04.yaml › reequilibrio.eta |
+| `param_eta_sens` | eta na variante _eta005 | 0.05 | 0,05 |  | parametros/especificacao_v04_eta005.yaml › reequilibrio.eta |
+| `param_kappa` | κ (piso do VBP das térmicas) | 0.7 | 0,70 |  | parametros/especificacao_v04.yaml › piso_vbp.kappa |
+| `param_kappa_sens` | kappa na variante _k060 | 0.6 | 0,60 |  | parametros/especificacao_v04_k060.yaml › piso_vbp.kappa |
+| `param_teto_gas` | participação máxima do gás canalizado nas compras de S38 de um comprador (teto) | 0.9000000000000001 | 0,90 |  | parametros/regras_linha_v04.csv › S38_GAS (máximo) |
+| `reag_max` | maior diferença da re-agregação | 1.425632945029065e-09 | 0,000000001 | R$ milhões | resultados/rodada05/checagens_v04.csv › reagregacao_* |
 | `residuo_rb` | resíduo de emissões do S38 (E1), RB | 49689733.89448699 | 49.689.733,9 | t CO₂e | resultados/rodada05/quadro_subsetores_v04.xlsx › niveis_emissoes › v04 RB |
 | `residuo_rb_pct` | resíduo de emissões em % do CO₂e do S38, RB | 58.7916522851085 | 58,8 | % | resultados/rodada05/quadro_subsetores_v04.xlsx › niveis_emissoes › v04 RB |
 | `residuo_rs` | resíduo de emissões do S38 (E1), RS | 1975857.725355113 | 1.975.857,7 | t CO₂e | resultados/rodada05/quadro_subsetores_v04.xlsx › niveis_emissoes › v04 RS |
@@ -256,6 +283,9 @@ Gerado por `scripts/rodada05_artigo.py` a partir dos arquivos de resultado. Cada
 | `rob_b_twh_sol_min` | menor valor entre as 9 versões (v04_P2), B_TWh_SOL | 3552.058475846372 | 3.552,1 | t CO₂e | resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › B_TWh_SOL |
 | `s38_co2e_rb` | emissões do S38 na base NEREUS, RB | 84518349.05662796 | 84.518.349,1 | t CO₂e | resultados/rodada05/quadro_subsetores_v04.xlsx › niveis_emissoes › v04 RB |
 | `s38_co2e_rs` | emissões do S38 na base NEREUS, RS | 5838005.554368285 | 5.838.005,6 | t CO₂e | resultados/rodada05/quadro_subsetores_v04.xlsx › niveis_emissoes › v04 RS |
+| `t12_gn_rb` | insumos não energéticos ÷ VBP da geração a gás, RB (T12) | 0.0315483416099439 | 0,032 | fração do VBP | resultados/rodada05/quadro_subsetores_v04.xlsx › insumos_nao_energeticos › v04 RB S38_GN |
+| `t12_gn_rs` | insumos não energéticos ÷ VBP da geração a gás, RS (T12) | 0.02567660099411299 | 0,026 | fração do VBP | resultados/rodada05/quadro_subsetores_v04.xlsx › insumos_nao_energeticos › v04 RS S38_GN |
+| `t12_min_k060` | menor razão insumos não energéticos ÷ VBP com κ = 0,60 | 0.07680941610745359 | 0,077 | fração do VBP | resultados/rodada05/quadro_subsetores_v04.xlsx › variantes_resumo › v04_k060 |
 | `tau_rs` | TUST por MWh das fontes do RS (τ_RS) | 32.41080238467936 | 32,41 | R$/MWh | resultados/rodada05/quadro_subsetores_v04.xlsx › d18_latentes |
 | `twh_bio_evit_car` | emissões evitadas por TWh em relação ao carvão, Biomassa | 1433351.506450309 | 1.433.351,5 | t CO₂e/TWh | resultados/rodada05/simulacoes_v04.xlsx › B_TWh › S38_BIO (v04) |
 | `twh_bio_evit_gn` | emissões evitadas por TWh em relação ao gás natural, Biomassa | 450209.5726140406 | 450.209,6 | t CO₂e/TWh | resultados/rodada05/simulacoes_v04.xlsx › B_TWh › S38_BIO (v04) |
@@ -292,6 +322,7 @@ Gerado por `scripts/rodada05_artigo.py` a partir dos arquivos de resultado. Cada
 | `twh_sol_gkwh` | g CO₂e/kWh, Solar fotovoltaica | 5.003252698937188 | 5,0 | g CO₂e/kWh | resultados/rodada05/simulacoes_v04.xlsx › B_TWh › S38_SOL (v04) |
 | `twh_sol_pct_rb` | emissões no RB por TWh, Solar fotovoltaica | 52.9998799209711 | 53,0 | % | resultados/rodada05/simulacoes_v04.xlsx › B_TWh › S38_SOL (v04) |
 | `twh_sol_preco` | preço médio, Solar fotovoltaica | 200.7911885476695 | 200,8 | R$/MWh | resultados/rodada05/simulacoes_v04.xlsx › B_TWh › S38_SOL (v04) |
+| `twh_sol_sem_d18` | emissões por TWh da solar sem a D18 (TUST por real do espelho) | 4682.084825690778 | 4.682,1 | t CO₂e/TWh | resultados/rodada05/simulacoes_v04.xlsx › d18_SOL |
 | `twh_sol_t` | emissões por TWh, Solar fotovoltaica | 5003.252698937188 | 5.003,3 | t CO₂e/TWh | resultados/rodada05/simulacoes_v04.xlsx › B_TWh › S38_SOL (v04) |
 | `var_a1_a0_e1` | variação das emissões A1/A0, Energia elétrica agregada | -10.478487315395679 | −10,5 | % | resultados/rodada05/simulacoes_v04.xlsx › A1 e A0 › E1 |
 | `var_a1_a0_f1` | variação das emissões A1/A0, Fóssil base | -4.435041108369719 | −4,4 | % | resultados/rodada05/simulacoes_v04.xlsx › A1 e A0 › F1 |
@@ -310,6 +341,8 @@ Gerado por `scripts/rodada05_artigo.py` a partir dos arquivos de resultado. Cada
 | `var_a2_a0_r3` | variação das emissões A2/A0, Renovável infraestrutura-intensiva | -36.01124625620151 | −36,0 | % | resultados/rodada05/simulacoes_v04.xlsx › A2 e A0 › R3 |
 | `var_a2_a0_r4a` | variação das emissões A2/A0, Renovável energia/transporte-intensiva | -58.473726494215605 | −58,5 | % | resultados/rodada05/simulacoes_v04.xlsx › A2 e A0 › R4a |
 | `vbp_gas_rb` | VBP do gás canalizado, RB | 19421.04544377357 | 19.421,0 | R$ milhões | resultados/rodada05/quadro_subsetores_v04.xlsx › variantes_resumo › v04 |
+| `vbp_ger_rb` | VBP da geração (8 subsetores), RB | 74993.73746916429 | 74.993,7 | R$ milhões | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RB geração |
+| `vbp_ger_rs` | VBP da geração (8 subsetores), RS | 4268.713587728492 | 4.268,7 | R$ milhões | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RS geração |
 | `vbp_rb_bio` | VBP RB S38_BIO | 281.255334907724 | 281,3 | R$ milhões | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RB S38_BIO |
 | `vbp_rb_car` | VBP RB S38_CAR | 2166.419696778494 | 2.166,4 | R$ milhões | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RB S38_CAR |
 | `vbp_rb_dis` | VBP RB S38_DIS | 208427.8922088759 | 208.427,9 | R$ milhões | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RB S38_DIS |
@@ -332,6 +365,8 @@ Gerado por `scripts/rodada05_artigo.py` a partir dos arquivos de resultado. Cada
 | `vbp_rs_pet` | VBP RS S38_PET | 0.0 | 0,0 | R$ milhões | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RS S38_PET |
 | `vbp_rs_sol` | VBP RS S38_SOL | 0.0 | 0,0 | R$ milhões | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RS S38_SOL |
 | `vbp_rs_tra` | VBP RS S38_TRA | 1390.937723469444 | 1.390,9 | R$ milhões | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RS S38_TRA |
+| `vbp_s38_rb` | VBP do S38 na MIP original, RB | 324387.3415734943 | 324.387,3 | R$ milhões | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › original RB |
+| `vbp_s38_rs` | VBP do S38 na MIP original, RS | 20942.65842650564 | 20.942,7 | R$ milhões | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › original RS |
 | `vbp_tra_media` | VBP da transmissão na variante _rap_media | 24883.427435680005 | 24.883,4 | R$ milhões | resultados/rodada05/quadro_subsetores_v04.xlsx › variantes_resumo › v04_rap_media |
 | `vbp_tra_rs` | VBP da transmissão, RS | 1390.937723469444 | 1.390,9 | R$ milhões | resultados/rodada05/quadro_subsetores_v04.xlsx › variantes_resumo › v04 |
 | `vbp_tra_total` | VBP da transmissão (Brasil, D17) | 22935.604175150005 | 22.935,6 | R$ milhões | resultados/rodada05/quadro_subsetores_v04.xlsx › variantes_resumo › v04 |
