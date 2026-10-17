@@ -151,6 +151,31 @@ def test_validacao_pesos_tust(mip):
     e.pesos_tust_geracao = pt
     with pytest.raises(EspecificacaoInvalida, match="sem produção"):
         desagregar(mip, e, estrito=False)
+    e = _espec("")  # sem a linha do NUC no RB, a NUC ficaria sem TUST em silêncio
+    pt = e.pesos_tust_geracao
+    e.pesos_tust_geracao = pt[~((pt["regiao"] == "RB") & (pt["subsetor"] == "S38_NUC"))]
+    with pytest.raises(EspecificacaoInvalida, match="falta uma linha.*RB S38_NUC"):
+        desagregar(mip, e, estrito=False)
+    e = _espec("")
+    e.bloco = "proporcional"
+    with pytest.raises(EspecificacaoInvalida, match="exige bloco_intrassetorial = roteamento_por_componentes"):
+        desagregar(mip, e, estrito=False)
+
+
+def test_piso_de_viabilidade_atingido_com_eta_020(mip):
+    """Revisão R04 (#2): o piso de viabilidade cai quando o VBP sobe (φ cai: TUST por MWh, remunerações ∝ VBP − comb.);
+    a redistribuição parte do VBP inicial em cada iteração, e o VBP desce até o piso da última iteração."""
+    from dataclasses import replace
+    e = _espec("")
+    r = desagregar(mip, replace(e, piso_vbp=dict(e.piso_vbp, viabilidade_eta=0.20)), estrito=False)
+    p = r.extras["pisos_vbp"].set_index(["regiao", "subsetor"])
+    for chave in (("RS", "S38_GN"), ("RB", "S38_GN")):
+        assert p.loc[chave, "piso_que_manda"] == "viabilidade"
+        assert p.loc[chave, "piso_atingido"], chave
+        assert p.loc[chave, "VBP_final"] == pytest.approx(p.loc[chave, "piso"], rel=1e-9)
+    for r_ in ("RS", "RB"):
+        q = p.loc[r_]
+        assert q["VBP_final"].sum() == pytest.approx(q["VBP_inicial (pesos da especificação)"].sum(), rel=1e-12)
 
 
 # ---------------------------------------------------------------------------------------------

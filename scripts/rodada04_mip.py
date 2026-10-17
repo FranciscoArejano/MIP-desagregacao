@@ -46,11 +46,24 @@ def espec(suf, versao="v03"):
     return ler_especificacao(PASTA_PARAMETROS / f"especificacao_{versao}{suf}.yaml")
 
 
+def marcar_hipotese_tust_latente(r) -> None:
+    """Revisão R04 (#1): a TUST da coluna latente (espelho do RB) é uma hipótese; fica escrita na fonte."""
+    cl = r.mip.coef_latentes
+    if cl is None or not len(cl):
+        return
+    tra = (cl["tipo_linha"] == "setor") & (cl["codigo_linha"] == "S38_TRA")
+    cl.loc[tra, "fonte"] = cl.loc[tra, "fonte"] + (
+        "; HIPÓTESE (V1): TUST por R$ igual à do mesmo subsetor no RB, ou seja, com a TUST por MWh do RB e o R$/MWh "
+        "do RB (SOL-RS ≈ 21 R$/MWh; as fontes do RS no SIN pagam ≈ 35 R$/MWh). Alternativa na aba B_TWh de "
+        "simulacoes_v03.xlsx")
+
+
 def gerar(mip) -> dict:
     res = {}
     for suf in [""] + VARIANTES:
         nome = f"v03{suf}"
         r = desagregar(mip, espec(suf), estrito=False)
+        marcar_hipotese_tust_latente(r)
         res[nome] = r
         print(f"[{nome}] {r.mip.n} setores-região; checagens {r.checagens['status'].value_counts().to_dict()}")
         longo = SAIDA / f"{NOME}_{nome}_longo.csv"

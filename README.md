@@ -17,7 +17,7 @@ demanda final no RS com um modelo de Leontief com coeficientes de emissão.
 | 02 — dados de 2019, motor com 11 subsetores, parâmetros reais e MIP v01 | **parcial** em 15/10/2026: ONS coletado e conferido; motor com 11 subsetores pronto (T6–T8); leitores das demais fontes prontos. Parâmetros e MIP v01 **parados**: a rede liberada não chegou ao ambiente (`*.gov.br` e `seeg.eco.br` com 403) | [respostas/RODADA_02_resposta.md](respostas/RODADA_02_resposta.md) |
 | 02b — continuação da 02 com rede: fontes, parâmetros reais, MIP v01 e variantes, quadro por subsetor | concluída em 15/10/2026, com pontos em aberto (EOB negativo em GN e GAS; RAP 2019-2020 com fonte secundária) | [respostas/RODADA_02b_resposta.md](respostas/RODADA_02b_resposta.md) |
 | 03 — MIP v02 consolidada (D8, D9, D10), variantes, comparativo v01 × v02 e executor de cenários | concluída em 16/10/2026 | [respostas/RODADA_03_resposta.md](respostas/RODADA_03_resposta.md) |
-| 04 — MIP v03 final (V1, V2, V3) e simulações do artigo (blocos A0, A1, A2 e B), tabelas e figuras de rascunho | concluída em 16/10/2026 | [respostas/RODADA_04_resposta.md](respostas/RODADA_04_resposta.md) |
+| 04 — MIP v03 final (V1, V2, V3) e simulações do artigo (blocos A0, A1, A2 e B), tabelas e figuras de rascunho | concluída em 17/10/2026 | [respostas/RODADA_04_resposta.md](respostas/RODADA_04_resposta.md) |
 
 Decisões do Francisco em vigor: D1 = C (11 subsetores), D2 = D3 = D4 = D6 = A, D5 = E1 (E2 e E3 como
 sensibilidades), D7 = A, D8 = A (geração por fonte: Brasil pelo BEN 2020, RS pelo ONS), D9 = (a) + (b) + (f) + (r)
@@ -49,7 +49,7 @@ usados em análises.
 ```
 MIP-desagregacao/
 ├── README.md
-├── requirements.txt          pandas, numpy, openpyxl, pytest, pyyaml, pyarrow
+├── requirements.txt          pandas, numpy, openpyxl, pytest, pyyaml, pyarrow, matplotlib
 ├── dados/
 │   ├── original/             planilha original (somente leitura) + CHECKSUM.txt (SHA-256)
 │   ├── externos/             dados de fontes externas + FONTES.md (registro de fontes) + valores_documentais_v01.csv;
@@ -75,7 +75,7 @@ MIP-desagregacao/
 │                             rodada03.py, rodada03_parametros.py, rodada03_mip.py (MIP v02),
 │                             rodada03_decomposicao.py (v01 → v02 passo a passo), rodar_cenarios.py (executor);
 │                             rodada04_parametros.py, rodada04_mip.py (MIP v03), rodada04_simulacoes.py
-├── tests/                    pytest (T1–T11, T2 com as especificações reais v01 e v02, e demais)
+├── tests/                    pytest (T1–T12, T2 com as especificações reais v01, v02 e v03, e demais)
 ├── resultados/rodada01/      saídas da Rodada 01
 ├── resultados/rodada02/      saídas das Rodadas 02 e 02b (MIP v01 e variantes, checagens, quadro, prévia, referências)
 ├── resultados/rodada03/      saídas da Rodada 03 (MIP v02 e variantes, quadro v02, prévia, decomposição, cenários)

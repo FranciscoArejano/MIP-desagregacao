@@ -434,6 +434,13 @@ def validar_especificacao(espec: Especificacao, mip: MIP) -> None:
             erros.append(f"pesos_tust_geracao: regiões não desagregadas {sorted(set(pt['regiao']) - set(espec.regioes))}")
         if pt.duplicated(["regiao", "subsetor"]).any():
             erros.append("pesos_tust_geracao: (regiao, subsetor) repetido")
+        if espec.bloco != "roteamento_por_componentes":
+            erros.append("pesos_tust_geracao exige bloco_intrassetorial = roteamento_por_componentes (só ele roteia a TUST)")
+        ger = [c for c in subs["codigo"] if tipos_sub[c] == "geracao"]
+        faltam = [f"{r} {c}" for r in espec.regioes for c in ger
+                  if not ((pt["regiao"] == r) & (pt["subsetor"] == c)).any()]
+        if faltam:  # sem linha, o subsetor ficaria sem TUST em silêncio; quem não paga tem de vir com 0 explícito
+            erros.append(f"pesos_tust_geracao: falta uma linha (0 explícito, se for o caso) para {faltam}")
         for r in espec.regioes:
             if pt.loc[pt["regiao"] == r, "valor"].sum() <= 0:
                 erros.append(f"pesos_tust_geracao: região {r} sem peso positivo")
@@ -1191,7 +1198,7 @@ def _redistribuir_com_piso(g: np.ndarray, piso: np.ndarray, E: float, contexto: 
 def _resolver_pisos(mip: MIP, espec: Especificacao) -> tuple[Especificacao, pd.DataFrame]:
     """D9-f: VBP_k ≥ combustível_k ÷ κ (e, com viabilidade_eta, ≥ combustível_k ÷ (1 − η − φ_k), em que φ_k é a
     parte dos custos fixos não combustíveis no VBP_k), elevando k e reduzindo os demais subsetores de geração da
-    mesma região na proporção do VBP, de forma que E_r não mude. Repete a desagregação (sem reequilíbrio) até
+    mesma região na proporção do VBP inicial, de forma que E_r não mude. Repete a desagregação (sem reequilíbrio) até
     os VBPs estabilizarem. Devolve a especificação com as participações finais e a tabela dos pisos."""
     from dataclasses import replace
 
@@ -1219,7 +1226,8 @@ def _resolver_pisos(mip: MIP, espec: Especificacao) -> tuple[Especificacao, pd.D
                 inicial[r] = dict(zip(cods, g))
             fixos, comb = _custos_fixos_e_combustivel(espec, m2, mapa, idx)
             # φ: tudo o que o reequilíbrio não pode mexer, exceto o combustível (custos fixos, células ajustáveis
-            # negativas e o resíduo contábil da coluna original), como fração do VBP — proporcional ao VBP nas regras
+            # negativas e o resíduo contábil da coluna original), como fração do VBP da iteração; φ muda com o VBP
+            # quando há custos que não lhe são proporcionais (TUST por MWh; remunerações ∝ VBP − combustível)
             phi = (g - _eob_maximo(espec, m2, mapa, idx) - comb) / g
             piso_k = np.where([c in comb_cfg for c in cods], comb / kappa, 0.0)
             piso_v = np.zeros(len(idx))
@@ -1232,7 +1240,11 @@ def _resolver_pisos(mip: MIP, espec: Especificacao) -> tuple[Especificacao, pd.D
                                 f"piso_vbp em {r} {c}: custos fixos não combustíveis já passam 1 − η do VBP (φ = {phi[n]:.4f})")
                         piso_v[n] = comb[n] / den[n] * (1 + 1e-10)  # margem de arredondamento
             piso = np.maximum(piso_k, piso_v)
-            novo = _redistribuir_com_piso(g, piso, E, f"região {r}")
+            # redistribui sempre a partir do VBP inicial (pesos da especificação), e não do VBP da iteração
+            # anterior: como φ_k cai quando VBP_k sobe (TUST e custos fixos que não acompanham o VBP), o piso
+            # de viabilidade pode baixar de uma iteração para a outra, e o VBP tem de poder descer até ele
+            g0 = np.array([inicial[r][c] for c in cods])
+            novo = _redistribuir_com_piso(g0, piso, E, f"região {r}")
             if np.abs(novo - g).max() > tol * max(1.0, E):
                 mudou = True
             for n, c in enumerate(cods):

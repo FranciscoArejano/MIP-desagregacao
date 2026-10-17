@@ -145,6 +145,15 @@ def main():
     # ---- V2: GAS-RB pelo preço da Sulgás ------------------------------------------------------------
     comp_sul = ler("componentes_v02_gas_sulgas.csv")
     comp_4d = ler("componentes_v02.csv")
+    gas_rb = lambda c: (c["regiao"] == "RB") & (c["componente"] == "vbp_gas")  # noqa: E731
+    comp_sul.loc[gas_rb(comp_sul), "fonte"] = comp_sul.loc[gas_rb(comp_sul), "fonte"].str.replace(
+        "D9-b (variante): preço da Sulgás", "V2 (Rodada 04): principal — preço da Sulgás", regex=False)
+    comp_4d.loc[gas_rb(comp_4d), "fonte"] = comp_4d.loc[gas_rb(comp_4d), "fonte"].str.replace(
+        "D9-b: preço médio das 4 distribuidoras", "V2 (Rodada 04): sensibilidade _gas4dist — preço médio das 4 "
+        "distribuidoras (o principal da v02)", regex=False).str.replace("; acesso 2026-10-16; nan)", "; acesso 2026-10-16)",
+                                                                           regex=False)
+    assert comp_sul.loc[gas_rb(comp_sul), "fonte"].str.startswith("V2").all()
+    assert comp_4d.loc[gas_rb(comp_4d), "fonte"].str.startswith("V2").all()
 
     def vbp_gas(comp):
         c = comp[comp["componente"] == "vbp_gas"].set_index("regiao")["valor"].astype(float)

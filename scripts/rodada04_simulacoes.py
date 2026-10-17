@@ -40,6 +40,7 @@ RENOV, FOSS = ["R1", "R2", "R3", "R4a"], ["F1", "F2", "F3"]
 TECS = ["S38_EOL", "S38_SOL", "S38_HID", "S38_BIO", "S38_CAR", "S38_GN"]
 NOME_TEC = {"S38_EOL": "Eólica", "S38_SOL": "Solar (latente)", "S38_HID": "Hidráulica", "S38_BIO": "Biomassa",
             "S38_CAR": "Carvão", "S38_GN": "Gás natural", "S38_DIS": "Distribuição (mix da rede de 2019)"}
+VERSAO_SOL = "v03 (SOL-RS com a TUST/MWh do RS)"
 VARIANTES = ["_P2", "_E2", "_E3", "_gas4dist", "_rap_ons", "_k060", "_eta005"]
 SENS_RENOV = {"EOL50SOL50": {"S38_EOL": 0.5, "S38_SOL": 0.5}, "EOL67TRA33": {"S38_EOL": 2 / 3, "S38_TRA": 1 / 3}}
 SENS_FOSS = {"CAR100": {"S38_CAR": 1.0}, "GN100": {"S38_GN": 1.0}}
@@ -114,6 +115,25 @@ def cenarios(m03, G) -> pd.DataFrame:
 def b_twh(m, G) -> pd.DataFrame:
     return pd.DataFrame([(f"B_TWh_{s.replace('S38_', '')}", "RS", s, p) for s, p in preco_mwh(m, G).items()],
                         columns=cen.COLUNAS)
+
+
+def sol_com_tust_do_rs(m, G):
+    """Hipótese alternativa (revisão R04, #1): a coluna latente do SOL-RS é o espelho do SOL-RB, e paga a TUST por
+    MWh do RB; aqui as linhas S38_TRA da coluna latente são multiplicadas para que o SOL-RS pague a TUST por MWh
+    das fontes do RS (a mesma em todas, V1). Só o modelo muda (a MIP não tem produção de SOL-RS)."""
+    import copy
+
+    tra = [m.indice(q, "S38_TRA") for q in ("RS", "RB")]
+    tust_rs = m.Z[tra, m.indice("RS", "S38_EOL")].sum() * 1e6 / (G["RS"]["S38_EOL"] * 1000)  # R$/MWh
+    cl = m.coef_latentes
+    sel = (cl["regiao"] == "RS") & (cl["subsetor"] == "S38_SOL") & (cl["tipo_linha"] == "setor") & \
+        (cl["codigo_linha"] == "S38_TRA")
+    tust_lat = cl.loc[sel, "coeficiente"].sum() * preco_mwh(m, G)["S38_SOL"]
+    m2 = copy.copy(m)
+    m2.coef_latentes = cl.copy()
+    m2.coef_latentes.loc[sel, "coeficiente"] *= tust_rs / tust_lat
+    return m2, {"TUST do RS (R$/MWh)": tust_rs, "TUST do SOL-RS latente (R$/MWh)": tust_lat,
+                "fator nas linhas S38_TRA": tust_rs / tust_lat}
 
 
 # ---------------------------------------------------------------------------------------------
@@ -235,7 +255,7 @@ def figuras(tab_a0: dict, tab_a2: dict, tw: pd.DataFrame) -> list[Path]:
     _eixo(ax)
     cores = [COR["s1"] if r == "RS" else COR["s2"] for r in top["regiao"]]
     rot = [f"{r} {c}" for r, c in zip(top["regiao"], top["codigo"])]
-    ax.barh(rot, top["CO2e induzido (t)"], color=cores, height=0.6, edgecolor=COR["fundo"], linewidth=2)
+    ax.barh(rot, top["CO2e induzido (t)"], color=cores, height=0.6, edgecolor=COR["fundo"], linewidth=0.5)
     for y, (v, p) in enumerate(zip(top["CO2e induzido (t)"], top["% do CO2e total"])):
         ax.text(v, y, f"  {_fmt(v)} t ({p:.1f}%)", va="center", fontsize=8.5, color=COR["texto2"])
     ax.set_xlabel("CO₂e induzido (t) por R$ 1 bi na cesta R1")
@@ -261,8 +281,8 @@ def figuras(tab_a0: dict, tab_a2: dict, tw: pd.DataFrame) -> list[Path]:
     for desl, d, pref in ((-larg / 2 - 0.02, d0, "A0"), (larg / 2 + 0.02, d2, "A2")):
         dir_ = np.array([d.loc[f"{pref}_{c}", "co2e_diretas"] for c in CEN_ARTIGO]) / 1000
         ind = np.array([d.loc[f"{pref}_{c}", "co2e_indiretas"] for c in CEN_ARTIGO]) / 1000
-        ax.bar(x + desl, dir_, larg, color=COR["s1"], edgecolor=COR["fundo"], linewidth=2)
-        ax.bar(x + desl, ind, larg, bottom=dir_, color=COR["s2"], edgecolor=COR["fundo"], linewidth=2)
+        ax.bar(x + desl, dir_, larg, color=COR["s1"], edgecolor=COR["fundo"], linewidth=0.5)
+        ax.bar(x + desl, ind, larg, bottom=dir_, color=COR["s2"], edgecolor=COR["fundo"], linewidth=0.5)
         for xi, t in zip(x + desl, dir_ + ind):
             ax.text(xi, t, f"{pref}\n{t:.0f}", ha="center", va="bottom", fontsize=7.5, color=COR["texto2"])
     ax.set_xticks(x, CEN_ARTIGO)
@@ -292,8 +312,8 @@ def figuras(tab_a0: dict, tab_a2: dict, tw: pd.DataFrame) -> list[Path]:
         sub = t.loc[grupo]
         y = np.arange(len(sub))
         d, i_ = sub["diretas"] / 1000, sub["indiretas"] / 1000
-        ax.barh(y, d, 0.55, color=COR["s1"], edgecolor=COR["fundo"], linewidth=2)
-        ax.barh(y, i_, 0.55, left=d, color=COR["s2"], edgecolor=COR["fundo"], linewidth=2)
+        ax.barh(y, d, 0.55, color=COR["s1"], edgecolor=COR["fundo"], linewidth=0.5)
+        ax.barh(y, i_, 0.55, left=d, color=COR["s2"], edgecolor=COR["fundo"], linewidth=0.5)
         tot = (d + i_).to_numpy()
         for yi, v in zip(y, tot):
             ax.text(v, yi, f"  {v:,.1f}".replace(",", " "), va="center", fontsize=8.5, color=COR["texto2"])
@@ -305,7 +325,7 @@ def figuras(tab_a0: dict, tab_a2: dict, tw: pd.DataFrame) -> list[Path]:
     fig.suptitle("RASCUNHO — Fig. 3: emissões por TWh demandado, por tecnologia do RS (bloco B, v03)",
                  x=0.01, ha="left", fontsize=11, color=COR["texto"])
     fig.text(0.01, 0.01, "Escalas diferentes nos dois painéis. HID, EOL e SOL têm a mesma estrutura de insumos "
-             "(sem dado de custo por tecnologia); SOL-RS é latente.", fontsize=7.5, color=COR["texto2"])
+             "(sem dado de custo por tecnologia); SOL-RS é latente (espelho do SOL-RB, com a TUST/MWh do RB: hipótese).", fontsize=7.5, color=COR["texto2"])
     fig.tight_layout(rect=(0, 0.04, 1, 0.95))
     saidas.append(FIG / "fig3_emissoes_por_TWh_B.png")
     fig.savefig(saidas[-1], dpi=150, facecolor=COR["fundo"])
@@ -344,7 +364,10 @@ def main():
         por_versao[f"v03{suf}"] = t
         sens_imp.append(t)
     rob = robustez(por_versao)
-    tw = pd.concat([tabela_twh(b, "v03")] + [tabela_twh(t, f"v03{s}") for s, t in zip(VARIANTES, sens_imp)],
+    m_sol, info_sol = sol_com_tust_do_rs(m03, G)
+    alt = tabela_twh(cen.executar(m_sol, b_twh(m03, G), VERSAO_SOL), VERSAO_SOL)
+    alt = alt[alt["subsetor (RS)"] == "S38_SOL"].assign(**{k: v for k, v in info_sol.items()})
+    tw = pd.concat([tabela_twh(b, "v03")] + [tabela_twh(t, f"v03{s}") for s, t in zip(VARIANTES, sens_imp)] + [alt],
                    ignore_index=True)
     b1 = indicadores(b, "B_")
     b1 = b1[~b1["cenario"].str.startswith("B_TWh_")].copy()
@@ -376,8 +399,12 @@ def main():
         "A0: MIP original (replicação; inclui R4a e R4b). A1: v03, S38 → DIS e GAS do RS ∝ vendas à demanda final. "
         "A2: v03, S38 por tecnologia (renováveis → 100% EOL-RS; fósseis → CAR-RS e GN-RS ∝ VBP de 2019 na v03; E1 "
         "como no A1). A2_sens: sensibilidades (50% EOL + 50% SOL; 2/3 EOL + 1/3 TRA; 100% CAR; 100% GN).",
-        "B_RS1bi: R$ 1000 mi por tecnologia do RS. B_TWh: 1 TWh de cada tecnologia ao R$/MWh da v03 (SOL-RS latente: "
-        "R$/MWh do SOL-RB); 'evitadas' = CO₂e do carvão − CO₂e da tecnologia, por TWh.",
+        "B_RS1bi: R$ 1000 mi por tecnologia do RS. B_TWh: 1 TWh de cada tecnologia; na linha v03 ao R$/MWh da v03, "
+        "nas linhas das variantes ao R$/MWh de cada variante (SOL-RS latente: R$/MWh do SOL-RB da mesma versão); "
+        "'evitadas' = CO₂e do carvão − CO₂e da tecnologia, por TWh.",
+        f"B_TWh, versão '{VERSAO_SOL}': HIPÓTESE ALTERNATIVA para o SOL-RS latente. Na v03 a coluna latente é o "
+        "espelho do SOL-RB e paga a TUST por MWh do RB (cerca de 21 R$/MWh); nesta linha as linhas S38_TRA da coluna "
+        "são multiplicadas para que pague a TUST por MWh das fontes do RS (cerca de 35 R$/MWh).",
         LIMITACAO,
         "robustez: A2 (R1, F1, E1) e B por TWh nas variantes _P2, _E2, _E3, _gas4dist, _rap_ons, _k060 e _eta005 "
         "(faixa mín–máx de CO₂e total, IC e % no RB); robustez_detalhe: os valores de cada variante.",

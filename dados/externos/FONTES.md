@@ -116,7 +116,9 @@ Gasmig não terminou por limite de sessão), e os valores usados foram reconferi
 | Confirmação da REH 2.565/2019 (sem o total da RAP) | ANEEL, REH 2.565/2019, texto integral (enviado pelo Francisco) | 3 p. | `aneel_rap/reh_2565_2019_texto/reh20192565ti.pdf` |
 | V1: MWh no SIN = mín(GWh da D8; GWh do ONS sem autoprodução e sem Itaipu) | ONS 2019 por usina (02b) e D8 (Rodada 03) | — | `dados/intermediarios/geracao_2019_usina_v02.csv`, `geracao_2019_regiao_subsetor_v03.csv` |
 
-Ano civil 2019 = (21367.06 − 10576.54) + 12145.09 = 22935.6 R$ mi (`valores_documentais_v03.csv`). Os encargos do
-SEAMSE não incluem PIS/Pasep e Cofins e incluem a parcela do orçamento do ONS. O total da RAP 2019-2020 continua o da
+Ano civil 2019 = (21367.06 − 10576.54) + 12145.09 = 22935.6 R$ mi (`valores_documentais_v03.csv`). A tabela da seção 4
+do SEAMSE traz a nota "OBS: Não inclui PIS/PASEP e COFINS", e os encargos de uso incluem a parcela do orçamento do ONS.
+Não foi verificado se o total da RAP da fonte secundária (25700) inclui PIS/Pasep e Cofins: as bases podem diferir, e a
+diferença entre a `_rap_ons` e a principal não mede só homologado × faturado. O total da RAP 2019-2020 continua o da
 fonte secundária (25700): o texto da REH não o traz, e o Anexo na biblioteca da ANEEL respondeu 403 (desafio
 anti-robô, não contornado) em 16/10/2026.

@@ -1,7 +1,7 @@
 # Rodada 04 — Relatório do Claude Code
 
 Projeto: desagregação do S38 na MIP inter-regional RS × RB, 2019 · Repositório `FranciscoArejano/MIP-desagregacao`
-Data: 16/10/2026 · Instruções: `instrucoes/RODADA_04_instrucoes_CODE.md` · Rodada anterior: `respostas/RODADA_03_resposta.md`
+Data: 16–17/10/2026 · Instruções: `instrucoes/RODADA_04_instrucoes_CODE.md` · Rodada anterior: `respostas/RODADA_03_resposta.md`
 Convenção numérica: ponto decimal, sem separador de milhar.
 
 Decisões aplicadas: as anteriores (D1 = C; D2, D3, D4 e D6 = A; D5 = E1; D7 = A; D8 = A; D9 = (a) + (b) + (f) + (r); D10 = Sulgás) e as da Seção 1 das instruções:
@@ -32,9 +32,9 @@ Decisões aplicadas: as anteriores (D1 = C; D2, D3, D4 e D6 = A; D5 = E1; D7 = A
 
   O combustível é 70% do VBP nas três, que é o piso κ exato das instruções. As renováveis do RB ganham VBP: HID-RB 119.7 → 124.3 R$/MWh.
 - **V2:** VBP do GAS-RB = 19421.0 (era 26990.1). Nenhum comprador do RB encosta no teto de 0.90 do gás; no RS continuam os 6 da v02, porque o VBP do GAS-RS não muda.
-- **V3:** o texto da REH 2.565/2019 que você enviou tem só 3 páginas e **não traz o total da RAP**, que fica nos Anexos. A principal continua com o valor secundário. A variante `_rap_ons` usa os encargos de uso faturados pelo ONS em 2019, **22935.6 R$ mi**: os três números conferem nos PDFs do SEAMSE. São 1947.8 R$ mi a menos que a principal (−7.8%).
+- **V3:** o texto da REH 2.565/2019 que você enviou tem só 3 páginas e **não traz o total da RAP**, que fica nos Anexos. A principal continua com o valor secundário. A variante `_rap_ons` usa os encargos de uso faturados pelo ONS em 2019, **22935.6 R$ mi**: os três números conferem nos PDFs do SEAMSE. São 1947.8 R$ mi a menos que a principal (−7.8%). As bases podem diferir: o SEAMSE diz que não inclui PIS/Pasep e Cofins, e não sei se o total secundário de 25700 os inclui (Seção 13).
 - **Simulações:** A0 reproduz o artigo (9/9 cenários e o top-10 do R1). Os resultados de A1, A2 e B estão em `resultados/rodada04/simulacoes_v03.xlsx`, as figuras de rascunho em `resultados/rodada04/figuras/`, e os 5 achados principais na Seção 18.
-- **[TESTES]**
+- **Testes:** 389 passaram, 0 falharam (`python -m pytest`), incluindo 2 novos da revisão.
 
 ## 2. Status por etapa
 
@@ -51,7 +51,7 @@ Decisões aplicadas: as anteriores (D1 = C; D2, D3, D4 e D6 = A; D5 = E1; D7 = A
 | Bloco B (R$ 1 bi e 1 TWh) | concluído | Tabela por TWh com "evitadas" |
 | Robustez | concluído | 8 versões (principal + 7 variantes) |
 | Tabelas do artigo e figuras | concluído, com ressalva | Ordem e rótulos das Tabelas 1–4 inferidos (Seção 10, ponto 2) |
-| Revisão adversarial | [REVISAO-STATUS] | Seção 7 |
+| Revisão adversarial | concluído, com limitação | 9 achados, todos conferidos por mim (os verificadores pararam no limite de uso); 8 corrigidos e 1 mantido com ressalva (Seção 7) |
 | Relatório, HISTORICO, README | concluído | Este arquivo |
 
 ## 3. Arquivos criados, movidos ou alterados
@@ -59,11 +59,11 @@ Decisões aplicadas: as anteriores (D1 = C; D2, D3, D4 e D6 = A; D5 = E1; D7 = A
 | Caminho | Tipo | O que é |
 |---|---|---|
 | `instrucoes/RODADA_04_instrucoes_CODE.md` | texto | Cópia das instruções |
-| `src/mip/desagregacao.py` | código (alterado) | `pesos_tust_geracao` (TUST da geração por pesos próprios no roteamento); regra `fixa_por_tipo_sem_combustivel` (dentro do tipo, ∝ VBP − combustível); `_combustivel_nas_colunas`; `insumos_nao_energeticos` e a checagem `insumos_nao_energeticos_minimo` (T12; opção `alerta_insumos_nao_energeticos` no YAML); validações |
+| `src/mip/desagregacao.py` | código (alterado) | `pesos_tust_geracao` (TUST da geração por pesos próprios no roteamento); regra `fixa_por_tipo_sem_combustivel` (dentro do tipo, ∝ VBP − combustível); `_combustivel_nas_colunas`; `insumos_nao_energeticos` e a checagem `insumos_nao_energeticos_minimo` (T12; opção `alerta_insumos_nao_energeticos` no YAML); validações; correção do piso de viabilidade (revisão) |
 | `src/mip/cenarios.py` | código (alterado) | Tabela `participacao_setor`: participação do S38 (ou dos subsetores `S38_*`) nas emissões de cada cenário |
 | `scripts/rodada04_parametros.py` | script | Parâmetros v03 a partir dos v02 (V1, V2, V3); decide a extensão de viabilidade rodando o T9 sem ela |
-| `scripts/rodada04_mip.py` | script | MIP v03, variantes, checagens e quadro com o comparativo v02 × v03 e os passos V1, V2, V3 |
-| `scripts/rodada04_simulacoes.py` | script | Cenários (A0, A1, A2, sensibilidades, B), robustez, tabelas do artigo e figuras |
+| `scripts/rodada04_mip.py` | script | MIP v03, variantes, checagens e quadro com o comparativo v02 × v03 e os passos V1, V2, V3; marca a hipótese da TUST nas colunas latentes |
+| `scripts/rodada04_simulacoes.py` | script | Cenários (A0, A1, A2, sensibilidades, B), robustez, tabelas do artigo, figuras e a hipótese alternativa do SOL-RS latente |
 | `parametros/*_v03*` | parâmetros | `especificacao_v03.yaml` e 7 variantes; `pesos_tust_geracao_v03.csv` (novo); `componentes`, `regras_linha` e `regras_primarios` (com `_gas4dist` e `_rap_ons`); `quadro_parametros_v03.xlsx` |
 | `parametros/cenarios_v03.csv` | parâmetros | Os 52 cenários desta rodada no formato do executor |
 | `dados/externos/valores_documentais_v03.csv` | dado | As linhas da v02 + os três totais do SEAMSE e o ano civil de 2019 |
@@ -126,10 +126,24 @@ Fatores E1 dentro das faixas da Rodada 03 (CAR 0.8–1.6; GN 0.35–0.65; PET 0.
 | V1, remunerações e ocupações | Regra `fixa_por_tipo_sem_combustivel`: igual à `fixa_por_tipo`, mas dentro do tipo a parcela é repartida ∝ (VBP − combustível), com o combustível de `piso_vbp.combustiveis` (linhas de todas as origens e as importações do GN) |
 | T12 | `insumos_nao_energeticos(res)`: compras de cada subsetor com produção a setores fora do bloco, exceto as linhas de combustível, em valor e ÷ VBP. A checagem `insumos_nao_energeticos_minimo` dá ALERTA abaixo de `alerta_insumos_nao_energeticos` (0.05 na v03) |
 | Executor | Tabela `participacao_setor`: emissões induzidas no S38 (original) ou em cada `S38_*` (v03), por região e no total |
+| Piso de VBP (revisão, #2) | `_resolver_pisos` redistribui a partir do VBP inicial em cada iteração, para que o VBP possa descer quando o piso de viabilidade baixa |
+| Validação (revisão, #3) | `pesos_tust_geracao` exige uma linha para cada região e subsetor de geração (0 explícito) e o bloco `roteamento_por_componentes` |
 
-[REVISAO]
+**Revisão adversarial.** Rodei 4 revisores independentes (motor, parâmetros v03, simulações e resultados), com um verificador cético por achado. Os verificadores e o revisor de resultados pararam no limite semanal de uso dos agentes. Por isso **reproduzi e conferi cada achado eu mesmo**, com scripts próprios, antes de corrigir. Os números dos resultados (Seções 6, 16, 17 e 18) conferi contra as planilhas geradas.
 
-**Testes** ([TESTES-N]):
+| # | Achado | Gravidade | Conferência | Correção |
+|---|---|---|---|---|
+| 1 | O SOL-RS latente paga a TUST por real do SOL-RB (20.8 R$/MWh), e não os 35.2 R$/MWh das fontes do RS; isso põe o SOL abaixo da EOL por TWh | média | reproduzido (coeficiente 0.1067; 4939.4 t/TWh com a TUST do RS) | Marcado como **HIPÓTESE** (Seções 9, 10 e 18.2 e fonte do `coef_latentes`); alternativa calculada na aba `B_TWh` |
+| 2 | Piso de viabilidade com "catraca": como φ cai quando o VBP sobe (V1), o piso baixa na iteração seguinte, mas o VBP não desce até ele. Com η = 0.20, GN-RS e GN-RB paravam acima do piso | média (não afeta a v03, com a extensão desligada) | reproduzido (`piso_atingido` = False nos dois) | `_resolver_pisos` redistribui sempre a partir do VBP inicial. Teste novo com η = 0.20. v02 e v03 iguais às publicadas (diferença ≤ 5e-11 R$ mi, arredondamento) |
+| 3 | Sem a linha de um subsetor em `pesos_tust_geracao`, ele ficava sem TUST, sem erro nem alerta | média | reproduzido (NUC-RB com TUST 0) | Validação: uma linha por região e subsetor de geração (0 explícito) e bloco `roteamento_por_componentes`. Teste novo |
+| 4 | "Os encargos do SEAMSE não incluem PIS/Pasep e Cofins" | baixa | refutado em parte: a nota está na tabela do SEAMSE | Mantido, com a ressalva de que a base da RAP secundária não foi verificada (Seção 13 e `FONTES.md`) |
+| 5 | "Variantes de método mudam menos de 3%" valia para o CO₂e, não para a IC (GN por TWh na `_k060`: −10.8%) | baixa | reproduzido | Texto da Seção 18.3 corrigido |
+| 6 | A fonte do GAS-RB em `componentes_v03.csv` dizia "D9-b (variante)", e a da `_gas4dist` terminava em "nan" | baixa | reproduzido | Fontes reescritas ("V2: principal" e "V2: sensibilidade") |
+| 7 | Na Fig. 2, a borda branca das barras escondia as diretas pequenas (A2 R1) | baixa | reproduzido | Borda de 0.5 nas 3 figuras; figuras refeitas |
+| 8 | Achado 4 da Seção 18.4 dava a faixa errada ("de 10.5% a 4.4%") | baixa | reproduzido (R2: −3.7%) | Corrigido: de 3.7% (R2) a 10.5% (E1) |
+| 9 | O LEIAME de `simulacoes_v03.xlsx` dizia que todo o B por TWh usa o R$/MWh da v03 | baixa | reproduzido | Texto corrigido (cada variante usa o próprio R$/MWh) |
+
+**Testes** (389 passaram, 0 falharam):
 
 | Teste | Resultado | O que verifica |
 |---|---|---|
@@ -140,6 +154,7 @@ Fatores E1 dentro das faixas da Rodada 03 (CAR 0.8–1.6; GN 0.35–0.65; PET 0.
 | V1 | passou | TUST da geração exatamente ∝ MWh no SIN em cada região; remunerações e ocupações ∝ VBP − combustível |
 | V2 e V3 | passaram | GAS-RB = 19421.05, sem comprador do RB no teto; SEAMSE e ano civil; transmissão da `_rap_ons` |
 | Simulações | passaram | A0 = artigo; choques de R$ 1000 mi; D11–D14; B por TWh = R$/MWh; A1_E1 = A2_E1; fator direto do carvão por TWh = fator E1 |
+| Revisão | passaram (2 novos) | Piso de viabilidade atingido com η = 0.20; erro sem a linha de um subsetor em `pesos_tust_geracao` |
 
 ## 8. Acesso a fontes externas
 
@@ -167,6 +182,7 @@ Fatores E1 dentro das faixas da Rodada 03 (CAR 0.8–1.6; GN 0.35–0.65; PET 0.
 | B por TWh sem a DIS | Usar um R$/MWh médio da rede | A instrução lista as tecnologias; a DIS não tem GWh próprio na v03 |
 | Tabelas 1–4 do artigo: 1 = impactos totais; 2 = top-10 da cesta R1; 3 = RS × RB; 4 = diretas × indiretas; rótulos da Rodada 01 | — | Não recebi o artigo; é a ordem das tabelas do executor (Rodada 03). **Confira** (Seção 10, ponto 2) |
 | Fig. 3 em dois painéis com escalas lineares próprias | Escala log | Barras em escala log distorcem o comprimento; fósseis e renováveis diferem em duas ordens de grandeza |
+| **HIPÓTESE:** SOL-RS e PET-RS latentes com a TUST por real do espelho do RB | Reescalar as linhas S38_TRA da coluna latente para a TUST por MWh do RS | O espelho (D6 = A) copia a coluna inteira. A alternativa está calculada para o SOL (aba `B_TWh`) e escrita na fonte do `coef_latentes` (Seção 10, ponto 7) |
 
 ## 10. Pontos para o Francisco
 
@@ -175,10 +191,14 @@ Fatores E1 dentro das faixas da Rodada 03 (CAR 0.8–1.6; GN 0.35–0.65; PET 0.
    - Opções: (a) aceitar o ALERTA; (b) κ = 0.60, que dá mínimo de 0.077 (variante `_k060`: GN-RB 12812.3, 270.2 R$/MWh).
 2. **Formato das Tabelas 1–4 do artigo.** Montei pela ordem das tabelas do executor (impactos, top-10, RS × RB, diretas × indiretas) e com os rótulos da Rodada 01. Se o artigo tiver outra ordem ou outros rótulos, mande a lista e eu ajusto (é só a montagem; os números já estão nas abas A2).
 3. **A2 fóssil.** Com D13 (CAR e GN do RS ∝ VBP), o carvão leva 93.2% do S38 das cestas fósseis, e as emissões da F1 sobem 5.8 vezes em relação ao artigo (Seção 18). As sensibilidades 100% CAR e 100% GN estão na aba `A2_sens`; diga qual entra no texto.
-4. **RAP 2019-2020.** Para trocar o valor secundário, é preciso o **Anexo** da REH 2.565/2019 (Anexos I, IV, V e VIII, com as receitas por concessionária), e não o texto. A biblioteca da ANEEL bloqueia o download automático. Se você baixar o Anexo pelo navegador e subir, eu somo e troco. O efeito esperado é pequeno: a variante `_rap_ons` (−7.8% na transmissão) muda os resultados em menos de 3% (Seção 18.3).
+4. **RAP 2019-2020.** Para trocar o valor secundário, é preciso o **Anexo** da REH 2.565/2019 (Anexos I, IV, V e VIII, com as receitas por concessionária), e não o texto. A biblioteca da ANEEL bloqueia o download automático. Se você baixar o Anexo pelo navegador e subir, eu somo e troco. O efeito esperado é pequeno: a variante `_rap_ons` (−7.8% na transmissão) muda o CO₂e e a IC de todos os cenários da robustez em menos de 3% (Seção 18.3).
 5. **Multiplicador de produção acima de 2.2:** GN-RS 2.400, GAS-RS 2.344, PET-RB 2.759 e PET-RS latente 2.760. Ficou um pouco maior que na v02, porque as térmicas voltaram a comprar insumos. Segue como ALERTA.
 6. **Limitação do bloco B:** HID, EOL e SOL têm a mesma estrutura de insumos não energéticos (não há dado de custo por tecnologia). As diferenças entre elas vêm do VBP e, no SOL-RS, da coluna latente.
-7. **Repositório público:** continua público; não alterei.
+7. **HIPÓTESE: TUST do SOL-RS latente.** A coluna latente copia o SOL-RB e, com ela, a TUST por real do RB. Ao R$/MWh do SOL-RB, isso dá 20.8 R$/MWh, contra 35.2 R$/MWh que todas as fontes do RS no SIN pagam pela V1.
+   - Com a TUST do RS, o SOL por TWh vai de 4589.8 a 4939.4 t CO₂e (+7.6%) e passa a eólica (4730.4). Essa conta está na aba `B_TWh`, versão "v03 (SOL-RS com a TUST/MWh do RS)".
+   - O PET-RS latente tem o mesmo problema (cerca de 9 R$/MWh de TUST, porque 62% do MWh do PET-RB é de sistemas isolados), mas não entra em nenhuma simulação.
+   - Diga qual das duas fica na principal.
+8. **Repositório público:** continua público; não alterei.
 
 ## 11. Como reproduzir
 
@@ -188,12 +208,12 @@ python scripts/rodada03.py && python scripts/rodada03_parametros.py   # base v02
 python scripts/rodada04_parametros.py   # parâmetros v03 (8 especificações; testa a viabilidade)
 python scripts/rodada04_mip.py          # MIP v03 + variantes, checagens e quadro
 python scripts/rodada04_simulacoes.py   # cenários, simulações, tabelas e figuras
-python -m pytest                        # [TESTES-N]
+python -m pytest                        # 389 testes
 ```
 
 ## 12. Git
 
-Trabalho na `main`, a partir de `cf8e3b0`: um commit de trabalho em andamento (`3e5f826`) e o final, com a revisão e este relatório. Push direto para a `main`.
+Trabalho na `main`, a partir de `cf8e3b0`: dois commits de trabalho em andamento (`3e5f826` e `0f5279d`) e o final, com as correções da revisão e este relatório. Push direto para a `main`.
 
 ## 13. Fontes de dados
 
@@ -205,7 +225,10 @@ Trabalho na `main`, a partir de `cf8e3b0`: um commit de trabalho em andamento (`
 | ANEEL, REH 2.565/2019 (texto) | 3 p. | `…/reh_2565_2019_texto/reh20192565ti.pdf` | Confirma a REH; sem o total |
 | ONS 2019 por usina (02b) | — | `dados/intermediarios/geracao_2019_usina_v02.csv` | MWh no SIN (V1) |
 
-URLs, datas e SHA-256 em `dados/externos/valores_documentais_v03.csv` e em `dados/externos/aneel_rap/DOWNLOAD.txt`. Os encargos do SEAMSE não incluem PIS/Pasep e Cofins e incluem a parcela do orçamento do ONS (R$ 677.4 mi em 2019).
+URLs, datas e SHA-256 em `dados/externos/valores_documentais_v03.csv` e em `dados/externos/aneel_rap/DOWNLOAD.txt`.
+
+- A tabela da seção 4 do SEAMSE traz a nota "Não inclui PIS/PASEP e COFINS". Os encargos de uso incluem a parcela do orçamento do ONS (R$ 677.4 mi em 2019).
+- Não verifiquei se o total secundário da RAP (25700) inclui PIS/Pasep e Cofins. Por isso a diferença de −7.8% entre a `_rap_ons` e a principal não é, necessariamente, uma comparação homologado × faturado na mesma base.
 
 ## 14. Comparação com os valores de referência
 
@@ -349,6 +372,8 @@ Sensibilidades do A2 na R1: 50% EOL + 50% SOL dá 95035.5; 2/3 EOL + 1/3 TRA dá
 
 **Limitação:** HID, EOL e SOL têm a mesma estrutura de insumos não energéticos (não há dado de custo por tecnologia). As diferenças entre elas vêm do VBP (R$/MWh) e, no SOL-RS, da coluna latente (espelho do SOL-RB), não de tecnologia.
 
+**HIPÓTESE no SOL (latente):** a coluna latente paga a TUST por real do SOL-RB, que dá 20.8 R$/MWh. Se pagar a TUST por MWh das fontes do RS (35.2 R$/MWh), o SOL por TWh vai a **4939.4 t CO₂e** (diretas 0; 53.4% no RB), acima da eólica (Seção 10, ponto 7).
+
 ### 18.3 Robustez (8 versões: principal + 7 variantes)
 
 | Cenário | CO₂e total v03 | mín.–máx. (versão) | IC mín.–máx. | % no RB mín.–máx. |
@@ -366,12 +391,14 @@ Sensibilidades do A2 na R1: 50% EOL + 50% SOL dá 95035.5; 2/3 EOL + 1/3 TRA dá
 De onde vem a variação (desvio de cada variante em relação à v03, aba `robustez_detalhe`):
 - **Variantes de emissão (E2, E3):** E2 sobe o CO₂e das fósseis em 46% a 51% e o do E1 em 14%; E3 baixa o E1 em 34%. Na E2, os fatores saem das faixas de plausibilidade (CAR 2.17 t/MWh).
 - **Preços iguais (P2):** muda o valor em R$ de cada tecnologia. F1 +36.1%, porque o mesmo choque em R$ compra mais MWh de carvão. Por TWh: SOL −30.7%, BIO −7.5% e HID +5.9%.
-- **Variantes de método (`_gas4dist`, `_rap_ons`, `_k060`, `_eta005`):** a variação fica abaixo de 3% em todos os cenários, exceto o SOL por TWh na `_k060` (−7.4%). Lá o piso κ muda o VBP do SOL-RB e, com ele, o R$/MWh usado no choque.
+- **Variantes de método (`_gas4dist`, `_rap_ons`, `_k060`, `_eta005`):**
+  - no CO₂e total, a variação fica abaixo de 3% em todos os cenários, exceto o SOL por TWh na `_k060` (−7.4%). Lá o piso κ muda o VBP do SOL-RB e, com ele, o R$/MWh usado no choque;
+  - na IC (t por R$ mi), a variação também fica abaixo de 3%, exceto o GN por TWh na `_k060` (−10.8%). Com κ = 0.60, o R$/MWh do GN-RS sobe, e o mesmo TWh vira mais reais com quase o mesmo CO₂e (+0.6%).
 
 ### 18.4 Os 5 achados principais (só fatos dos números)
 
 1. **Cesta renovável com o S38 como eólica (A2):** as emissões da R1 caem de 216.4 mil t (artigo) para 95.5 mil t por R$ 1 bi, e a IC de 110.45 para 51.54 t por R$ mi. A participação do S38 nas emissões cai de 57.1% para 5.3%, e o maior emissor passa a ser o transporte terrestre do RS (37.1%). Nas outras cestas renováveis a queda vai de 31% (R2) a 58% (R4a).
 2. **Cesta fóssil com o S38 como térmicas do RS (A2):** as emissões da F1 sobem de 356.0 mil t para 2074.9 mil t por R$ 1 bi (5.8 vezes). O carvão do RS responde sozinho por 87.8% delas, e 95.9% são diretas. Com 100% gás natural no lugar do carvão, a F1 fica em 778.7 mil t.
-3. **Por TWh demandado no RS:** carvão 1442 mil t CO₂e; gás natural 459 mil t; biomassa 8.7 mil t; eólica 4.7 mil t; hidráulica 4.6 mil t; solar 4.6 mil t. Cada TWh de eólica no lugar do carvão evita 1437 mil t.
-4. **Só desagregar, sem mudar o vetor (A1), muda pouco:** as emissões caem de 10.5% (E1) a 4.4% (F1). Mas as indiretas passam a ser maioria no E1 (de 34.9% para 66.0%), porque o choque cai na distribuição, que compra a energia das usinas.
+3. **Por TWh demandado no RS:** carvão 1442 mil t CO₂e; gás natural 459 mil t; biomassa 8.7 mil t; eólica 4.7 mil t; hidráulica 4.6 mil t; solar 4.6 mil t (4.9 mil t com a TUST do RS, hipótese da Seção 10, ponto 7). Cada TWh de eólica no lugar do carvão evita 1437 mil t.
+4. **Só desagregar, sem mudar o vetor (A1), muda pouco:** nas 8 cestas, as emissões caem de 3.7% (R2) a 10.5% (E1). Mas as indiretas passam a ser maioria no E1 (de 34.9% para 66.0%), porque o choque cai na distribuição, que compra a energia das usinas.
 5. **Onde as emissões acontecem:** nas cestas renováveis do A2, entre 31% e 57% das emissões induzidas ocorrem no RB (R1: 54.1%, contra 34.2% no artigo); nas cestas fósseis do A2, menos de 3%. Por TWh, 55% das emissões da eólica ocorrem no RB.
