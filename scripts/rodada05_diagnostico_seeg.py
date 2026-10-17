@@ -14,7 +14,10 @@ valor de 2019 (todas as métricas de gás, todos os tipos de 'Emissão/Remoção
 em dados/externos/brutos/seeg/seeg13_2019_todas_linhas.csv.gz, com um seeg13_2019_todas_linhas.meta.json ao lado
 (SHA-256 do bruto, ano, número de linhas). A pasta dados/externos/brutos/ é ignorada pelo git. Nas execuções
 seguintes o cache é reaproveitado só se o SHA-256 do bruto (recalculado a cada execução) conferir com o do .meta.json
-e com o registrado em DOWNLOAD.txt; senão o xlsx é lido de novo. Apagar o cache força a releitura.
+e com o registrado em DOWNLOAD.txt; senão o xlsx é lido de novo. Apagar o cache força a releitura. O cache não é
+cópia literal do bruto: os rótulos de texto têm os espaços das pontas tirados (str.strip; no bruto, 'Efluentes líquidos
+industriais ', 'Disposição final ' e 'Alimentos ' têm espaço no fim, 3544 linhas, nenhuma em Geração de eletricidade
+ou Produção de combustíveis); nenhuma soma muda.
 
 Critérios (Seção 3): ano 2019; Gás = 'CO2e (t) GWP-AR5'; 'Emissão/Remoção/Bunker' ∈ {'Emissão', 'Emissão NCI'}
 (emissão bruta); região do projeto: Estado = 'Rio Grande do Sul' → RS; 'Não Alocado' → 'Não alocado'; demais
@@ -23,16 +26,27 @@ combustíveis'}.
 
 Métricas (Seção 3.1, item 2): GWP-AR2, AR4, AR5, AR6 e GTP-AR2, AR4, AR5, AR6. No arquivo, parte das linhas do
 GTP-AR4 (736 linhas, todas do setor Resíduos) vem com o rótulo 'CO2e (t) GTP AR4' (sem hífen); não há sobreposição
-com as linhas 'CO2e (t) GTP-AR4' e as duas grafias são tratadas como a mesma métrica. Emissão bruta = 'Emissão' +
-'Emissão NCI'; líquida = bruta + 'Remoção' + 'Remoção NCI' (remoções vêm negativas); 'Bunker' (combustível de
-navegação e aviação internacionais) fica fora de tudo. Variantes sem NCI também são mostradas.
+com as linhas 'CO2e (t) GTP-AR4' e as duas grafias são tratadas como a mesma métrica. Bases (principais = convenção
+do próprio SEEG, a da pivot 'Consulta Série Histórica' do arquivo): bruta (SEEG) = 'Emissão'; líquida (SEEG) =
+'Emissão' + 'Remoção' (remoções vêm negativas). Variantes: bruta com NCI = 'Emissão' + 'Emissão NCI' (o critério da
+Seção 3; NCI = não contabilizadas no inventário: solos manejados e queimadas não associadas a desmatamento; no S38
+não há NCI, então as duas brutas coincidem); líquida com NCI = as quatro; e, só como sensibilidade, líquida (SEEG) +
+'Bunker'. Fora disso, 'Bunker' (combustível de navegação e aviação internacionais, todo em Estado = 'Não Alocado')
+fica fora. Total Brasil = 26 UF + RS + 'Não Alocado' (a NEREUS, RS + RB, cobre o país todo); a versão só com as UF
+também é mostrada. Empates exatos entre métricas/bases são registrados (GTP-AR2 = GTP-AR4).
 
 Casamentos (Seção 3.1, item 3): setores S01, S02, S03, S19, S26, S39, S43 do RS (e S38 como controle) contra somas
 de 1, 2 ou 3 unidades do SEEG do RS (GWP-AR5, bruta), dentro de cada tipo de unidade: 'Atividade geral'; 'Setor de
 emissão › Categoria emissora'; 'Atividade geral › Categoria emissora › Sub-categoria emissora' (só unidades com valor
 ≠ 0). No arquivo, GTP-AR2 e GTP-AR4 têm valores idênticos linha a linha (conferido nesta execução e
-registrado no LEIAME). O sentido econômico de cada unidade para cada setor (sim / discutível / não) é uma classificação deste
-diagnóstico (HIPÓTESE, documentada na aba unidades_RS); o da combinação é o pior nível entre as suas unidades.
+registrado no LEIAME). O sentido econômico de cada unidade para cada setor (sim / discutível / não) é uma classificação
+deste diagnóstico (HIPÓTESE, documentada na aba unidades_RS); o da combinação é o pior nível entre as suas unidades.
+O critério é o do SCN para todos os setores: 'Produção de combustíveis' (refino, carvão mineral, exploração) é 'não'
+para o S38, sem exceção pela hipótese em teste; a combinação do revisor (S38 = Geração de eletricidade + Produção de
+combustíveis) é marcada à parte como 'hipótese formulada antes da busca'. Mudança de uso da terra (MUT) é 'discutível'
+para S01, S02 e S03 em U2 e em U3. 'Esperado por acaso' (nº em ±5% ÷ 50) é só ordem de grandeza (densidade uniforme);
+unidades desprezíveis (|valor| < 0.1% do alvo) geram combinações quase repetidas, por isso também se contam os
+'núcleos' distintos (a combinação sem as unidades desprezíveis).
 
 Saídas (só arquivos novos):
 - dados/externos/seeg/seeg13_2019_recorte_energia_v04.csv — o recorte da tabela da Seção 3 (versionado; as linhas
@@ -97,13 +111,21 @@ GRAFIAS_METRICA = {"CO2e (t) GTP AR4": "CO2e (t) GTP-AR4"}  # 736 linhas de Res�
 EMISSAO = ("Emissão", "Emissão NCI")
 REMOCAO = ("Remoção", "Remoção NCI")
 BUNKER = "Bunker"
+BRUTA, LIQUIDA = "bruta (SEEG)", "líquida (SEEG)"
+BRUTA_NCI, LIQUIDA_NCI, LIQUIDA_BUNKER = "bruta com NCI", "líquida com NCI", "líquida (SEEG) + Bunker"
 BASES = {  # base → valores de 'Emissão/Remoção/Bunker' somados
-    "bruta": ("Emissão", "Emissão NCI"),
-    "líquida": ("Emissão", "Emissão NCI", "Remoção", "Remoção NCI"),
-    "bruta sem NCI": ("Emissão",),
-    "líquida sem NCI": ("Emissão", "Remoção"),
+    BRUTA: ("Emissão",),  # convenção do SEEG (pivot 'Consulta Série Histórica' do próprio arquivo)
+    LIQUIDA: ("Emissão", "Remoção"),  # convenção do SEEG
+    BRUTA_NCI: ("Emissão", "Emissão NCI"),  # critério da Seção 3 (no S38 = bruta (SEEG): não há NCI)
+    LIQUIDA_NCI: ("Emissão", "Emissão NCI", "Remoção", "Remoção NCI"),
+    LIQUIDA_BUNKER: ("Emissão", "Remoção", "Bunker"),  # só sensibilidade
 }
-BASES_PRINCIPAIS = ("bruta", "líquida")
+BASES_PRINCIPAIS = (BRUTA, LIQUIDA)
+GRUPOS_BASES = {  # conjunto de bases → bases consideradas na escolha da 'métrica mais perto'
+    "convenção SEEG (bruta e líquida)": BASES_PRINCIPAIS,
+    "convenção SEEG + variantes com NCI": (BRUTA, LIQUIDA, BRUTA_NCI, LIQUIDA_NCI),
+    "todas (inclui líquida + Bunker, sensibilidade)": tuple(BASES),
+}
 
 ATIV_GE, ATIV_PC = "Geração de eletricidade", "Produção de combustíveis"
 ATIVIDADES_S38 = (ATIV_GE, ATIV_PC)
@@ -114,6 +136,8 @@ SUB_REFINO, SUB_EXPLOR, SUB_ALCOOL, SUB_CARVAO = (
 )
 
 RS, RB, NA = "RS", "RB", "Não alocado"
+TOT_BR = "Total Brasil (26 UF + RS + Não Alocado)"
+TOT_BR_UF = "Total Brasil (só UF: 26 UF + RS)"
 UF_RS, ESTADO_NA = "Rio Grande do Sul", "Não Alocado"
 
 # Componentes da tabela da Seção 3 e valores de referência das instruções (mil t CO2e; RS, RB (estados), Não alocado).
@@ -149,6 +173,7 @@ REGRA_E4 = [
     (RB, "Produção de carvão mineral e outros", ("PC_carvao_mineral",), "S04", 1155.4),
 ]
 
+ACASO = "esperado por acaso em ±0.1% (ordem de grandeza: nº em ±5% ÷ 50)"
 SETORES_CASAMENTO = ["S01", "S02", "S03", "S19", "S26", "S39", "S43", "S38"]  # S38 = controle
 TOL_CASAMENTO = 0.1  # %
 TAMANHOS = (1, 2, 3)
@@ -177,6 +202,10 @@ def sha256(caminho: Path) -> str:
     return h.hexdigest()
 
 
+NOTA_ROTULOS = ("rótulos de texto com os espaços das pontas tirados (str.strip); no bruto, 'Efluentes líquidos "
+                "industriais ', 'Disposição final ' e 'Alimentos ' têm espaço no fim; nenhuma soma muda")
+
+
 def ler_seeg_2019() -> tuple[pd.DataFrame, str]:
     """Todas as linhas da aba 'Dados' com o valor de 2019 (todas as métricas de gás), com cache conferido por SHA-256."""
     if not BRUTO.exists():
@@ -191,6 +220,9 @@ def ler_seeg_2019() -> tuple[pd.DataFrame, str]:
         if meta.get("sha256_bruto") == sha and meta.get("ano") == ANO:
             df = pd.read_csv(CACHE, dtype={c: str for c in COLUNAS_TEXTO}, keep_default_na=False)
             if len(df) == meta.get("linhas"):
+                if "rotulos" not in meta:  # caches gravados antes desta nota
+                    meta["rotulos"] = NOTA_ROTULOS
+                    CACHE_META.write_text(json.dumps(meta, ensure_ascii=False), encoding="utf-8")
                 return df, f"cache {CACHE.relative_to(RAIZ)} (SHA-256 do bruto conferido)"
     import openpyxl
 
@@ -215,7 +247,8 @@ def ler_seeg_2019() -> tuple[pd.DataFrame, str]:
     df.to_csv(CACHE, index=False, compression="gzip")
     CACHE_META.write_text(json.dumps({"sha256_bruto": sha, "ano": ANO, "linhas": len(df),
                                       "gerado_por": "scripts/rodada05_diagnostico_seeg.py",
-                                      "segundos_leitura": round(time.time() - t0, 1)}), encoding="utf-8")
+                                      "segundos_leitura": round(time.time() - t0, 1),
+                                      "rotulos": NOTA_ROTULOS}, ensure_ascii=False), encoding="utf-8")
     return df, f"xlsx bruto lido em {time.time() - t0:.0f} s; cache gravado em {CACHE.relative_to(RAIZ)}"
 
 
@@ -307,10 +340,26 @@ def tabela_componentes(rec: pd.DataFrame, nereus: pd.DataFrame) -> tuple[pd.Data
     return tab, detalhe
 
 
-def componentes_e4(rec: pd.DataFrame) -> pd.DataFrame:
-    linhas = []
+def componentes_e4(rec: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
+    linhas, conf = [], []
     for reg, rotulo, comps, destino, ref in REGRA_E4:
         sub = rec[(rec.regiao == reg) & rec.componente.isin(comps)]
+        parcelas = [float(sub.loc[sub.componente == c, COL_VALOR].sum()) / 1e3 for c in comps]
+        exato = sum(parcelas)
+        soma_arred = round(sum(round(x, 1) for x in parcelas), 1)
+        if abs(exato - ref) <= 0.05:
+            nota_ref = "confere (arredondamento a 0.1 mil t)"
+        elif abs(soma_arred - ref) <= 0.05:
+            nota_ref = (f"a referência {ref} das instruções é a soma das parcelas já arredondadas ("
+                        + " + ".join(f"{round(x, 1)}" for x in parcelas) + f" = {soma_arred}); o valor exato é "
+                        f"{exato:.2f} mil t ({exato:.1f} arredondado), e é o que vai no valor_t")
+        else:
+            nota_ref = f"DIVERGE da referência {ref} mil t (exato {exato:.2f}) — conferir"
+        conf.append({"regiao": reg, "setor_destino": destino, "componente": rotulo,
+                     "parcelas (mil t, exatas)": "; ".join(f"{c} = {x:.4f}" for c, x in zip(comps, parcelas)),
+                     "valor exato (mil t)": exato, "referência das instruções (mil t)": ref,
+                     "diferença (mil t)": exato - ref, "soma das parcelas arredondadas (mil t)": soma_arred,
+                     "nota": nota_ref})
         filtros = sorted(set(sub[ATIV] + " › " + sub[CAT] + " › " + sub[SUB]))
         filtro = (f"ano {ANO}; Gás = '{GAS_AR5}'; Emissão/Remoção/Bunker ∈ {{Emissão, Emissão NCI}}; "
                   + ("Estado = 'Rio Grande do Sul'" if reg == RS else
@@ -322,10 +371,10 @@ def componentes_e4(rec: pd.DataFrame) -> pd.DataFrame:
             "filtro_seeg": filtro,
             "fonte": (f"SEEG 13.0, Dados nacionais, aba Dados ({URL_SEEG}; SHA-256 {SHA_SEEG}); "
                       f"recorte em dados/externos/seeg/{SAIDA_RECORTE.name}; scripts/rodada05_diagnostico_seeg.py; "
-                      f"regra da E4 = instruções da Rodada 05, Seção 3.2 (referência {ref} mil t); "
+                      f"regra da E4 = instruções da Rodada 05, Seção 3.2 (referência {ref} mil t: {nota_ref}); "
                       "'Não alocado' não entra"),
         })
-    return pd.DataFrame(linhas)
+    return pd.DataFrame(linhas), pd.DataFrame(conf)
 
 
 # --------------------------------------------------------------------------------------------------------------------
@@ -338,7 +387,8 @@ def tabela_metricas(df: pd.DataFrame, nereus: pd.DataFrame) -> tuple[pd.DataFram
         "S38-RB (estados)": ner[(RB, "S38")],
         "S38-RB (estados + Não alocado)": ner[(RB, "S38")],
         "Total RS": nereus.loc[nereus.regiao == RS, "co2e_t"].sum(),
-        "Total Brasil": nereus.co2e_t.sum(),
+        TOT_BR: nereus.co2e_t.sum(),
+        TOT_BR_UF: nereus.co2e_t.sum(),
     }
     linhas = []
     for met in METRICAS:
@@ -353,7 +403,8 @@ def tabela_metricas(df: pd.DataFrame, nereus: pd.DataFrame) -> tuple[pd.DataFram
                 "S38-RB (estados)": s38.loc[s38.regiao == RB, COL_VALOR].sum(),
                 "S38-RB (estados + Não alocado)": s38.loc[s38.regiao.isin([RB, NA]), COL_VALOR].sum(),
                 "Total RS": b.loc[b.regiao == RS, COL_VALOR].sum(),
-                "Total Brasil": b[COL_VALOR].sum(),
+                TOT_BR: b[COL_VALOR].sum(),  # todas as linhas: 26 UF + RS + 'Não Alocado'
+                TOT_BR_UF: b.loc[b.regiao != NA, COL_VALOR].sum(),
             }
             for agr, v in seeg.items():
                 linhas.append({"metrica": met, "base": base, "principal": base in BASES_PRINCIPAIS,
@@ -364,25 +415,34 @@ def tabela_metricas(df: pd.DataFrame, nereus: pd.DataFrame) -> tuple[pd.DataFram
     longo["|diferença| (%)"] = longo["diferença SEEG − NEREUS (%)"].abs()
     mais_perto = []
     for agr in alvos:
-        for so_principais in (True, False):
-            sub = longo[longo.agregado == agr]
-            if so_principais:
-                sub = sub[sub.principal]
+        for grupo, bases in GRUPOS_BASES.items():
+            sub = longo[(longo.agregado == agr) & longo.base.isin(bases)]
             r = sub.loc[sub["|diferença| (%)"].idxmin()]
-            ar5 = longo[(longo.agregado == agr) & (longo.metrica == GAS_AR5) & (longo.base == "bruta")].iloc[0]
+            # empates: outras métrica/base do mesmo conjunto com o mesmo valor (ex.: GTP-AR2 = GTP-AR4)
+            emp = sub[np.isclose(sub["SEEG (t)"], r["SEEG (t)"], rtol=1e-12, atol=1e-3) & (sub.index != r.name)]
+            ar5 = {b: longo[(longo.agregado == agr) & (longo.metrica == GAS_AR5) & (longo.base == b)].iloc[0]
+                   for b in (BRUTA, LIQUIDA)}
             mais_perto.append({
-                "agregado": agr,
-                "bases consideradas": "bruta e líquida" if so_principais else "todas (inclui sem NCI)",
-                "métrica mais perto": r.metrica, "base": r.base, "SEEG (mil t)": r["SEEG (mil t)"],
+                "agregado": agr, "bases consideradas": grupo,
+                "métrica mais perto": r.metrica, "base": r.base,
+                "empatadas (mesmo valor)": "; ".join(f"{x.metrica} {x.base}" for x in emp.itertuples()) or "—",
+                "SEEG (mil t)": r["SEEG (mil t)"],
                 "NEREUS (mil t)": r["NEREUS (mil t)"], "diferença (%)": r["diferença SEEG − NEREUS (%)"],
-                "GWP-AR5 bruta: diferença (%)": ar5["diferença SEEG − NEREUS (%)"],
+                f"GWP-AR5 {BRUTA}: diferença (%)": ar5[BRUTA]["diferença SEEG − NEREUS (%)"],
+                f"GWP-AR5 {LIQUIDA}: diferença (%)": ar5[LIQUIDA]["diferença SEEG − NEREUS (%)"],
             })
     mais_perto = pd.DataFrame(mais_perto)
     erb = (df[df.metrica == GAS_AR5].groupby(ERB)[COL_VALOR].agg(["count", "sum"]).reset_index()
            .rename(columns={"count": "linhas (GWP-AR5)", "sum": "soma 2019 Brasil, GWP-AR5 (t)"}))
-    entra = {"Emissão": "bruta e líquida", "Emissão NCI": "bruta e líquida (fora nas variantes 'sem NCI')",
-             "Remoção": "só líquida", "Remoção NCI": "só líquida (fora em 'líquida sem NCI')",
-             "Bunker": "fica fora (combustível de navegação e aviação internacionais; não é emissão do território)"}
+    entra = {"Emissão": "todas as bases (bruta e líquida do SEEG e variantes)",
+             "Emissão NCI": "só nas variantes 'com NCI' (bruta com NCI = critério da Seção 3; não há NCI no S38); "
+                            "NCI = não contabilizadas no inventário: solos manejados e queimadas não associadas a "
+                            "desmatamento",
+             "Remoção": "líquida (SEEG), líquida com NCI e líquida + Bunker",
+             "Remoção NCI": "só em 'líquida com NCI' (aumento do estoque de C no solo)",
+             "Bunker": "fora das bases principais (combustível de navegação e aviação internacionais; não é emissão "
+                       "do território; todo em Estado = 'Não Alocado'); entra só na sensibilidade 'líquida (SEEG) + "
+                       "Bunker'"}
     erb["onde entra"] = erb[ERB].map(entra).fillna("NÃO PREVISTO — conferir")
     erb["soma 2019 Brasil, GWP-AR5 (mil t)"] = erb["soma 2019 Brasil, GWP-AR5 (t)"] / 1e3
     return longo, mais_perto, erb
@@ -394,6 +454,9 @@ def tabela_metricas(df: pd.DataFrame, nereus: pd.DataFrame) -> tuple[pd.DataFram
 MUT_CATS = {"Alterações de uso da terra", "Carbono orgânico no solo", "Resíduos florestais",
             "Queimadas não associadas a desmatamento"}
 AUTOPRODUCAO = "autoprodução de eletricidade, que na MIP tende a ficar no setor que a produz"
+PC_NAO_S38 = ("não", "pelo SCN, produção de combustíveis é S19/S04/S05; só entraria no S38 pela hipótese em teste, "
+                     "que não serve de critério")
+MUT_DISC = "MUT: a conta-satélite pode não seguir a atribuição do SEEG a uma atividade (mesmo critério em U2 e U3)"
 
 
 def sentido_unidade(tipo: str, chave: tuple[str, ...]) -> dict[str, tuple[str, str]]:
@@ -419,7 +482,7 @@ def sentido_unidade(tipo: str, chave: tuple[str, ...]) -> dict[str, tuple[str, s
             "Geração de eletricidade": {"S38": ("sim", "geração de eletricidade")},
             "Produção de combustíveis": {
                 "S19": ("discutível", "no RS é quase só refino, mas inclui carvão mineral (S04)"),
-                "S38": ("discutível", "produção de combustíveis; no S38 só pela hipótese em teste (SCN: S19/S04/S05)")},
+                "S38": PC_NAO_S38},
             "Saneamento Básico": {"S39": ("sim", "saneamento (resíduos sólidos e efluentes domésticos)")},
             "Produção Industrial": {"S39": ("discutível", "efluentes industriais: o tratamento pode ser da indústria")},
             "Transporte de carga": {"S43": ("sim", "transporte de carga, quase todo rodoviário e ferroviário")},
@@ -439,12 +502,12 @@ def sentido_unidade(tipo: str, chave: tuple[str, ...]) -> dict[str, tuple[str, s
             r = {CAT_PUBLICO: {"S38": ("sim", "geração de serviço público")},
                  "Produção de combustíveis": {
                      "S19": ("discutível", "no RS é quase só refino, mas inclui carvão mineral (S04)"),
-                     "S38": ("discutível", "produção de combustíveis; no S38 só pela hipótese em teste")},
+                     "S38": PC_NAO_S38},
                  "Transportes": {"S43": ("discutível", "inclui aéreo, hidroviário e automóveis das famílias")},
                  "Agropecuária": {x: ("discutível", "combustível da agropecuária, sem separar a atividade")
                                   for x in agro}}.get(c, {})
         elif s == "Mudança de Uso da Terra e Floresta":
-            r = {x: ("discutível", "MUT de várias atividades, sem separar") for x in agro}
+            r = {x: ("discutível", "MUT de várias atividades, sem separar; " + MUT_DISC) for x in agro}
         elif s == "Processos Industriais":
             r = {"Produtos minerais": {"S26": ("sim", "cimento e cerâmica (processo)")}}.get(c, {})
         elif s == "Resíduos":
@@ -454,10 +517,11 @@ def sentido_unidade(tipo: str, chave: tuple[str, ...]) -> dict[str, tuple[str, s
                 r = {"S39": ("sim", "resíduos sólidos e efluentes domésticos")}
     elif tipo == "U3":
         a, c, sb = chave
-        if a in ("Agricultura", "Pecuária"):
+        if c in MUT_CATS:  # mesmo critério do U2: MUT é 'discutível' para os três setores agropecuários
+            r = {x: ("discutível", f"MUT atribuída pelo SEEG a '{a}'; " + MUT_DISC) for x in agro}
+        elif a in ("Agricultura", "Pecuária"):
             alvo = "S01" if a == "Agricultura" else "S02"
-            txt = "MUT atribuída pelo SEEG à " + a.lower() if c in MUT_CATS else a.lower()
-            r = {alvo: ("sim", txt)}
+            r = {alvo: ("sim", a.lower())}
         elif a == "Silvicultura":
             r = {"S03": ("sim", "silvicultura")}
         elif a in ("Vegetação nativa", "Outros (geral)"):
@@ -482,7 +546,7 @@ def sentido_unidade(tipo: str, chave: tuple[str, ...]) -> dict[str, tuple[str, s
                 if c == "Agropecuária":
                     r.update({x: ("discutível", "autoprodução de eletricidade na agropecuária") for x in agro})
         elif a == ATIV_PC:
-            r = {"S38": ("discutível", "produção de combustíveis; no S38 só pela hipótese em teste")}
+            r = {"S38": PC_NAO_S38}
             if sb == SUB_REFINO:
                 r["S19"] = ("sim", "refino de petróleo")
         elif a == "Saneamento Básico":
@@ -592,10 +656,12 @@ def casamentos(unid: pd.DataFrame, nereus: pd.DataFrame) -> dict[str, pd.DataFra
                           ("melhor com sentido 'sim' ou 'discutível'", melhor_nao_nao)):
             if reg is not None:
                 melhores.append({"critério": crit, **reg})
+        nucleos = {(a["tipo de unidade"], a["núcleo (sem as desprezíveis)"]) for a in achados if a["setor"] == s}
         cont.update({"com |dif| < 0.1%": n01, "dos quais 'sim'": n01_por_nivel["sim"],
                      "dos quais 'discutível'": n01_por_nivel["discutível"], "dos quais 'não'": n01_por_nivel["não"],
+                     "núcleos distintos em |dif| < 0.1%": len(nucleos),
                      "com |dif| < 1%": n1, "com |dif| < 5%": n5,
-                     "esperado por acaso em ±0.1% (≈ nº em ±5% ÷ 50)": n5 / 50.0})
+                     ACASO: n5 / 50.0})
         contagens.append(cont)
     achados = pd.DataFrame(achados)
     if not achados.empty:
@@ -613,12 +679,22 @@ def _nome_nivel(i: int) -> str:
     return {v: k for k, v in NIVEIS.items()}[int(i)]
 
 
+HIPOTESE_REVISOR = ("S38", "U1", f"{ATIV_GE} + {ATIV_PC}")  # formulada antes da busca (Seção 3)
+TOL_DESPREZIVEL = 0.1  # % do alvo: unidade menor que isso não muda o casamento a ±0.1%
+
+
 def _registro(setor, ner, alvo, tipo, k, u, idx, soma, dif, nivel) -> dict:
     nomes = [u.unidade[i] for i in idx]
     sentidos = [u[f"sentido {setor}"][i] for i in idx]
+    desprez = [abs(float(u.valor_t[i])) < TOL_DESPREZIVEL / 100.0 * alvo for i in idx]
+    nucleo = " + ".join(n for n, d in zip(nomes, desprez) if not d) or "(só unidades desprezíveis)"
     nivel = _nome_nivel(nivel)
     nome_setor = ner.loc[setor, "nome"]
-    if nivel == "sim":
+    hipotese = (setor, tipo, " + ".join(nomes)) == HIPOTESE_REVISOR
+    if hipotese:
+        just = ("Não pelo critério SCN (refino, carvão mineral e exploração são S19/S04/S05), mas é a hipótese do "
+                "revisor, formulada antes da busca: o peso dela vem disso, não do rótulo de sentido econômico.")
+    elif nivel == "sim":
         just = f"Sim: todas as unidades são atividades do {setor} ({nome_setor}) — " + "; ".join(
             f"{n}: {t.split(': ', 1)[1]}" for n, t in zip(nomes, sentidos)) + "."
     elif nivel == "discutível":
@@ -630,7 +706,9 @@ def _registro(setor, ner, alvo, tipo, k, u, idx, soma, dif, nivel) -> dict:
     return {"setor": setor, "nome do setor": nome_setor, "NEREUS RS (t)": alvo, "tipo de unidade": tipo,
             "nº de unidades": k, "combinação": " + ".join(nomes), "SEEG RS (t)": float(soma),
             "diferença (%)": float(dif), "|diferença| (%)": abs(float(dif)), "sentido econômico": nivel,
-            "justificativa": just}
+            "hipótese formulada antes da busca": "sim" if hipotese else "não",
+            f"unidades desprezíveis (|valor| < {TOL_DESPREZIVEL}% do alvo)": int(sum(desprez)),
+            "núcleo (sem as desprezíveis)": nucleo, "justificativa": just}
 
 
 # --------------------------------------------------------------------------------------------------------------------
@@ -684,7 +762,7 @@ def main() -> None:
     df = preparar(bruto)
     print(f"SEEG 13.0: {len(df)} linhas de {ANO} ({origem})")
     erbs_arquivo = sorted(df[ERB].unique())
-    previstos = set(BASES["líquida"]) | {BUNKER}
+    previstos = set().union(*BASES.values())
     if set(erbs_arquivo) - previstos:
         raise ValueError(f"valores não previstos em '{ERB}': {set(erbs_arquivo) - previstos}")
     nereus = ler_nereus()
@@ -694,7 +772,7 @@ def main() -> None:
     SAIDA_RECORTE.parent.mkdir(parents=True, exist_ok=True)
     rec[rec[COL_VALOR] != 0.0].to_csv(SAIDA_RECORTE, index=False)  # linhas com valor 0 não mudam nenhuma soma
     tab, detalhe = tabela_componentes(rec, nereus)
-    e4 = componentes_e4(rec)
+    e4, e4_conf = componentes_e4(rec)
     e4.to_csv(SAIDA_E4, index=False)
 
     # --- 3.1 item 2: métricas ---
@@ -714,11 +792,14 @@ def main() -> None:
     max_dif = float(np.nanmax(np.abs(difs.to_numpy(dtype=float))))
     ach = cas["achados"]
     cont = cas["contagens"].set_index("setor")
-    vazio = ach.iloc[0:0] if not ach.empty else pd.DataFrame(columns=["setor", "sentido econômico"])
+    vazio = ach.iloc[0:0] if not ach.empty else pd.DataFrame(columns=["setor", "sentido econômico", "combinação",
+                                                                     "tipo de unidade", "diferença (%)"])
     ach = ach if not ach.empty else vazio
     ach_sim = ach[ach["sentido econômico"] == "sim"]
     ach_disc = ach[ach["sentido econômico"] == "discutível"]
     mel = cas["melhores"]
+    ner_tot_rs = float(nereus.loc[nereus.regiao == RS, "co2e_t"].sum())
+    ner_tot_br = float(nereus.co2e_t.sum())
 
     def _f(x, d=1):
         return f"{x:.{d}f}"
@@ -727,13 +808,21 @@ def main() -> None:
         r = longo[(longo.agregado == agr) & (longo.metrica == met) & (longo.base == base)]
         return float(r["diferença SEEG − NEREUS (%)"].iloc[0])
 
-    s38rs = "; ".join(f"{m.replace('CO2e (t) ', '')} {_f(_dif('S38-RS', m, 'bruta'), 2)}%" for m in METRICAS)
-    s38rb = "; ".join(f"{m.replace('CO2e (t) ', '')} {_f(_dif('S38-RB (estados)', m, 'bruta'), 2)}%"
-                      for m in METRICAS)
+    def _seeg(agr, met, base):
+        r = longo[(longo.agregado == agr) & (longo.metrica == met) & (longo.base == base)]
+        return float(r["SEEG (t)"].iloc[0])
 
-    def _mais_perto(agr, bases):
-        r = mais_perto[(mais_perto.agregado == agr) & (mais_perto["bases consideradas"] == bases)].iloc[0]
-        return f"{r['métrica mais perto'].replace('CO2e (t) ', '')} {r.base} ({_f(r['diferença (%)'], 2)}%)"
+    s38rs = "; ".join(f"{m.replace('CO2e (t) ', '')} {_f(_dif('S38-RS', m, BRUTA), 2)}%" for m in METRICAS)
+    s38rb = "; ".join(f"{m.replace('CO2e (t) ', '')} {_f(_dif('S38-RB (estados)', m, BRUTA), 2)}%"
+                      for m in METRICAS)
+    s38_nci_igual = all(np.isclose(_seeg(a, m, BRUTA), _seeg(a, m, BRUTA_NCI), rtol=1e-12, atol=1e-3)
+                        for a in ("S38-RS", "S38-RB (estados)") for m in METRICAS)
+
+    def _mais_perto(agr, grupo):
+        r = mais_perto[(mais_perto.agregado == agr) & (mais_perto["bases consideradas"] == grupo)].iloc[0]
+        emp = r["empatadas (mesmo valor)"]
+        emp = "" if emp == "—" else f"; empata com {emp.replace('CO2e (t) ', '')}"
+        return f"{r['métrica mais perto'].replace('CO2e (t) ', '')} {r.base} ({_f(r['diferença (%)'], 2)}%{emp})"
 
     def _melhor(setor, crit):
         r = mel[(mel.setor == setor) & (mel["critério"] == crit)]
@@ -746,52 +835,107 @@ def main() -> None:
         df[df.metrica == "CO2e (t) GTP-AR2"].set_index(COLUNAS_TEXTO[:1] + COLUNAS_TEXTO[2:])[COL_VALOR].sort_index(),
         df[df.metrica == "CO2e (t) GTP-AR4"].set_index(COLUNAS_TEXTO[:1] + COLUNAS_TEXTO[2:])[COL_VALOR].sort_index(),
         rtol=0, atol=1e-9))
-    acaso_total = float(cont.loc["Total", "esperado por acaso em ±0.1% (≈ nº em ±5% ÷ 50)"])
+    acaso_total = float(cont.loc["Total", ACASO])
+    nucleos_total = int(cont.loc["Total", "núcleos distintos em |dif| < 0.1%"])
     outros = [s for s in SETORES_CASAMENTO if s != "S38"]
     melhores_sim = "; ".join(f"{s}: {_melhor(s, chr(39).join(['melhor com sentido ', 'sim', '']))}" for s in outros)
     n_agri = int(((unid.tipo == "U3") & unid["usada na busca"] & unid.unidade.str.startswith("Agricultura › ")).sum())
     m01 = mel[(mel.setor == "S01") & (mel["critério"] == "melhor com sentido 'sim'")]
     n_s01 = int(m01["nº de unidades"].iloc[0]) if not m01.empty else 0
-    s38_ge_pc = ach[(ach.setor == "S38") & (ach["tipo de unidade"] == "U1")
-                    & (ach["combinação"] == f"{ATIV_GE} + {ATIV_PC}")]
+    hip = ach[(ach.setor == HIPOTESE_REVISOR[0]) & (ach["tipo de unidade"] == HIPOTESE_REVISOR[1])
+              & (ach["combinação"] == HIPOTESE_REVISOR[2])]
+    hip_dif = float(hip["diferença (%)"].iloc[0]) if not hip.empty else _pct(soma_rs, ner_rs)
+
+    # Casamentos concorrentes: outros setores com |dif| < 0.1% que usam o refino de 'Produção de combustíveis'
+    u_refino = f"{ATIV_PC} › {ATIV_PC} › {SUB_REFINO}"
+    u3 = unid[unid.tipo == "U3"].set_index("unidade").valor_t
+    refino_rs = float(sum(v for n, v in u3.items() if SUB_REFINO in n))  # PC › refino + GE › PC › refino
+    unid_refino = [n for n in u3.index if SUB_REFINO in n or "oque" in n.lower()]
+    conc = ach[(ach.setor != "S38") & ach["combinação"].str.contains(u_refino, regex=False)]
+    conc_s19 = conc[conc.setor == "S19"].sort_values("|diferença| (%)") if not conc.empty else conc
+    ner_s19 = float(nereus.loc[(nereus.regiao == RS) & (nereus.codigo == "S19"), "co2e_t"].iloc[0])
+    e4_rs_s19 = float(e4.loc[(e4.regiao == RS) & (e4.setor_destino == "S19"), "valor_t"].sum())
+    if not conc_s19.empty:
+        c0 = conc_s19.iloc[0]
+        txt_conc = (f"A busca também encontrou S19-RS ≈ {c0['combinação']} ({_f(float(c0['diferença (%)']), 3)}%, "
+                    f"sentido '{c0['sentido econômico']}'), que usa as mesmas emissões do refino; ao todo, "
+                    f"{len(conc)} combinações abaixo de 0.1% em outros setores usam '{u_refino}' "
+                    f"({len(conc_s19)} no S19). ")
+    else:
+        txt_conc = f"Nenhuma combinação abaixo de 0.1% de outro setor usa '{u_refino}'. "
+    txt_conc += (
+        f"As duas leituras se excluem: as {_f(u3.get(u_refino, 0.0) / 1e3)} mil t do refino não podem estar ao "
+        f"mesmo tempo no S38 e no S19. E, se o refino estiver no S38, as {_f(ner_s19 / 1e3)} mil t do S19-RS "
+        f"(Refino de petróleo e coquerias) da NEREUS não têm contrapartida no SEEG do RS, cujas únicas unidades de "
+        f"refino ou coqueria são {'; '.join(unid_refino)} ({_f(refino_rs / 1e3)} mil t, ambas usadas na hipótese "
+        f"do S38). Isso enfraquece o indício e é um risco para a E4: se o S19 da NEREUS já contiver o refino, a "
+        f"E4 o conta duas vezes no S19-RS ({_f(ner_s19 / 1e3)} + {_f(e4_rs_s19 / 1e3)} = "
+        f"{_f((ner_s19 + e4_rs_s19) / 1e3)} mil t); vale tratá-lo como sensibilidade.")
+
+    e4_div = e4_conf[e4_conf.nota.str.startswith("a referência")]
+    txt_e4 = (" Regra da E4: " + "; ".join(f"{r.regiao} → {r.setor_destino}: exato {_f(r._5, 2)} mil t contra "
+                                          f"{r._6} das instruções ({r.nota})" for r in e4_div.itertuples())
+              + "." if not e4_div.empty else " Regra da E4: as 5 linhas conferem com as referências das instruções.")
+
+    tot = {(a, b): _dif(a, GAS_AR5, b) for a in ("Total RS", TOT_BR, TOT_BR_UF) for b in BASES}
     conclusao = [
-        f"1. Reprodução da tabela da Seção 3: todos os números conferem com os das instruções (maior diferença: "
+        f"1. Reprodução da tabela da Seção 3: todos os componentes conferem com os das instruções (maior diferença: "
         f"{_f(max_dif, 2)} mil t, arredondamento a 0.1 mil t). Soma 'Geração de eletricidade' + 'Produção de "
-        f"combustíveis' (GWP-AR5, bruta): RS {_f(soma_rs / 1e3)} mil t contra {_f(ner_rs / 1e3)} no S38-RS da NEREUS "
-        f"({_f(_pct(soma_rs, ner_rs), 3)}%); RB estados {_f(soma_rb / 1e3)} mil t contra {_f(ner_rb / 1e3)} "
-        f"({_f(_pct(soma_rb, ner_rb), 2)}%). Não alocado: {_f(t.loc['soma', 'Não alocado (t)'] / 1e3)} mil t.",
-        f"2. Métricas. S38-RS (bruta = líquida, não há remoções nessas atividades): {s38rs}. A GWP-AR5 é a mais perto "
-        f"no S38-RS; nenhuma métrica aproxima o S38-RB (estados): {s38rb}. Totais (só bruta e líquida): total RS mais "
-        f"perto com {_mais_perto('Total RS', 'bruta e líquida')}, total Brasil com "
-        f"{_mais_perto('Total Brasil', 'bruta e líquida')}. Incluindo as variantes sem NCI, os totais ficam mais perto "
-        f"com a emissão líquida sem NCI (Emissão + Remoção): total RS {_mais_perto('Total RS', 'todas (inclui sem NCI)')}"
-        f", total Brasil {_mais_perto('Total Brasil', 'todas (inclui sem NCI)')}; com GWP-AR5, líquida sem NCI: RS "
-        f"{_f(_dif('Total RS', GAS_AR5, 'líquida sem NCI'), 2)}%, Brasil {_f(_dif('Total Brasil', GAS_AR5, 'líquida sem NCI'), 2)}%. "
-        "É compatível com uma base líquida sem as remoções NCI, mas a distância (0.5% a 1%) é muito maior que a do "
-        "S38-RS (0.02%) e não permite afirmar qual base ou versão do SEEG a NEREUS usou."
-        + (" GTP-AR2 e GTP-AR4 têm valores idênticos no arquivo." if gtp_iguais else ""),
-        f"3. Casamentos no RS: {cas['n_por_setor']} combinações por setor (1, 2 ou 3 unidades de um mesmo tipo) × "
+        f"combustíveis' (GWP-AR5, Emissão + Emissão NCI, que no S38 é igual à bruta do SEEG): RS {_f(soma_rs / 1e3)} "
+        f"mil t contra {_f(ner_rs / 1e3)} no S38-RS da NEREUS ({_f(_pct(soma_rs, ner_rs), 3)}%); RB estados "
+        f"{_f(soma_rb / 1e3)} mil t contra {_f(ner_rb / 1e3)} ({_f(_pct(soma_rb, ner_rb), 2)}%). Não alocado: "
+        f"{_f(t.loc['soma', 'Não alocado (t)'] / 1e3)} mil t." + txt_e4,
+        f"2. Métricas no S38 (bruta; {'igual com ou sem NCI e ' if s38_nci_igual else ''}igual à líquida, sem "
+        f"remoções nessas atividades). S38-RS: {s38rs}. A GWP-AR5 é a mais perto no S38-RS; nenhuma métrica aproxima "
+        f"o S38-RB (estados): {s38rb}."
+        + (" GTP-AR2 e GTP-AR4 têm valores idênticos linha a linha no arquivo: empatam em todo agregado." if gtp_iguais
+           else ""),
+        f"3. Totais. Bases principais = convenção do próprio SEEG (a da pivot 'Consulta Série Histórica' do arquivo): "
+        f"bruta = 'Emissão'; líquida = 'Emissão' + 'Remoção'. Com GWP-AR5: total RS bruta "
+        f"{_f(tot[('Total RS', BRUTA)], 2)}%, líquida {_f(tot[('Total RS', LIQUIDA)], 2)}%; total Brasil (26 UF + RS "
+        f"+ Não Alocado) bruta {_f(tot[(TOT_BR, BRUTA)], 2)}%, líquida {_f(tot[(TOT_BR, LIQUIDA)], 2)}%. As variantes "
+        f"com NCI (emissões e remoções não contabilizadas no inventário: solos manejados e queimadas não associadas a "
+        f"desmatamento) dão: RS bruta com NCI {_f(tot[('Total RS', BRUTA_NCI)], 2)}%, líquida com NCI "
+        f"{_f(tot[('Total RS', LIQUIDA_NCI)], 2)}%; Brasil bruta com NCI {_f(tot[(TOT_BR, BRUTA_NCI)], 2)}%, "
+        f"líquida com NCI {_f(tot[(TOT_BR, LIQUIDA_NCI)], 2)}%. Na convenção do SEEG, a métrica mais perto é: total RS "
+        f"{_mais_perto('Total RS', 'convenção SEEG (bruta e líquida)')}; total Brasil "
+        f"{_mais_perto(TOT_BR, 'convenção SEEG (bruta e líquida)')}. O total Brasil depende de incluir o 'Não "
+        f"Alocado' (inclusão é a escolha defensável, porque RS + RB cobre o país): só com as UF, GWP-AR5 líquida "
+        f"{_f(tot[(TOT_BR_UF, LIQUIDA)], 2)}% e a mais perto passa a "
+        f"{_mais_perto(TOT_BR_UF, 'convenção SEEG (bruta e líquida)')}. E a 'mais perto' depende do conjunto de "
+        f"bases testado: somando o Bunker (todo no 'Não Alocado') à líquida, o total Brasil vai a "
+        f"{_mais_perto(TOT_BR, 'todas (inclui líquida + Bunker, sensibilidade)')}, sem mudar o RS "
+        f"({_mais_perto('Total RS', 'todas (inclui líquida + Bunker, sensibilidade)')}). Com ~8 métricas × 5 bases × "
+        "2 escopos, aproximações de totais abaixo de 1% aparecem com facilidade: são coincidências possíveis, não "
+        "evidência de qual base ou versão do SEEG a conta-satélite usou; a distância (0.1% a 1%) é muito maior que a "
+        f"do S38-RS ({_f(abs(_pct(soma_rs, ner_rs)), 2)}%).",
+        f"4. Casamentos no RS: {cas['n_por_setor']} combinações por setor (1, 2 ou 3 unidades de um mesmo tipo) × "
         f"{len(SETORES_CASAMENTO)} setores (7 + o controle S38) = {n_total} testes. Com |dif| < 0.1%: {len(ach)} "
-        f"combinações; por acaso seriam esperadas cerca de {_f(acaso_total, 0)} (densidade em ±5% ÷ 50). Dessas "
-        f"{len(ach)}, {len(ach_sim)} têm sentido econômico 'sim' e {len(ach_disc)} 'discutível' "
-        + (f"(a do controle: S38 = Geração de eletricidade + Produção de combustíveis, "
-           f"{_f(float(s38_ge_pc['diferença (%)'].iloc[0]), 3)}%)" if not s38_ge_pc.empty else "")
-        + "; as demais são coincidências numéricas sem sentido econômico.",
-        f"4. No controle S38, a combinação mais perto de todas é {_melhor('S38', 'melhor de todas')}, sem sentido "
-        "econômico: mostra que, com esse número de testes, casamentos melhores que 0.1% aparecem por acaso. O casamento "
-        "do S38-RS com 'Geração de eletricidade + Produção de combustíveis' ganha peso por ter sido formulado antes da "
-        "busca e por ter leitura econômica (o SEEG põe o refino e a mineração de carvão em 'Produção de combustíveis'), "
-        "não por ser o mais exato.",
-        "5. O padrão 'atividade do SEEG → setor da MIP' não se repete nos outros setores do RS. Atividade geral "
+        f"combinações ({nucleos_total} núcleos distintos depois de tirar as unidades desprezíveis, |valor| < 0.1% do "
+        f"alvo, que geram quase repetições). Por acaso seriam esperadas da ordem de {_f(acaso_total, 0)} (heurística de "
+        "densidade uniforme: nº em ±5% ÷ 50; por setor erra até ~3 vezes, ver contagens). Pelo critério SCN, aplicado "
+        f"igual a todos os setores, {len(ach_sim)} têm sentido econômico 'sim' e {len(ach_disc)} 'discutível'; as "
+        "demais não têm sentido econômico.",
+        f"5. No controle S38, a combinação mais perto de todas é {_melhor('S38', 'melhor de todas')}, sem sentido "
+        "econômico: com esse número de testes, casamentos melhores que 0.1% aparecem por acaso. O casamento do S38-RS "
+        f"com 'Geração de eletricidade + Produção de combustíveis' ({_f(hip_dif, 3)}%) também é 'não' pelo critério "
+        "SCN (refino e carvão mineral são S19/S04): o peso dele vem só de ter sido formulado antes da busca (hipótese "
+        "do revisor) e de o SEEG pôr refino e mineração de carvão em 'Produção de combustíveis', não de ser o mais "
+        "exato nem do rótulo de sentido econômico (classificá-lo como 'discutível' seria circular).",
+        "6. Casamento concorrente. " + txt_conc,
+        "7. O padrão 'atividade do SEEG → setor da MIP' não se repete nos outros setores do RS. Atividade geral "
         "correspondente × NEREUS: " + "; ".join(f"{r.setor} = {r._3} ({_f(r._6, 1)}%)" for r in natural.itertuples()
                                                if r.setor != "S38") + ". Melhor combinação com sentido 'sim' por "
         f"setor (busca completa): {melhores_sim}. A do S01 junta {n_s01} das {n_agri} unidades U3 da agricultura, "
         "sem critério que as separe das demais: é um fragmento, não a atividade.",
-        "6. Conclusão: o S38-RS da base NEREUS é compatível com um S38 que abranja as emissões que o SEEG 13.0 "
+        "8. Conclusão: o S38-RS da base NEREUS é compatível com um S38 que abranja as emissões que o SEEG 13.0 "
         "(GWP-AR5, bruta) atribui a 'Geração de eletricidade' e 'Produção de combustíveis' (inclusive refino e carvão "
-        "mineral). É um indício, compatível com a hipótese do revisor, não uma prova: não temos a documentação da conta-satélite, o RB não "
-        f"fecha com o mesmo critério ({_f(_pct(soma_rb, ner_rb), 2)}%), os totais do RS e do Brasil não fecham com nenhuma métrica e os outros "
-        "setores do RS não mostram o mesmo padrão.",
+        "mineral). É um indício fraco, compatível com a hipótese do revisor, não uma prova: não temos a documentação "
+        f"da conta-satélite; o RB não fecha com o mesmo critério ({_f(_pct(soma_rb, ner_rb), 2)}%); os totais do RS e "
+        "do Brasil só se aproximam conforme a base e o escopo escolhidos; os outros setores do RS não mostram o mesmo "
+        f"padrão; com {n_total} combinações testadas, coincidências abaixo de 0.1% são esperadas; e há um casamento "
+        "concorrente (S19 com o mesmo refino) incompatível com ele, além do S19-RS sem contrapartida no SEEG se o "
+        "refino estiver no S38.",
     ]
 
     resumo = pd.DataFrame([
@@ -802,20 +946,37 @@ def main() -> None:
         ("S38-RB: NEREUS", ner_rb / 1e3, "mil t"),
         ("S38-RB: diferença", _pct(soma_rb, ner_rb), "%"),
         ("Não alocado (GE + PC)", t.loc["soma", "Não alocado (t)"] / 1e3, "mil t"),
-        ("Total RS: NEREUS", nereus.loc[nereus.regiao == RS, "co2e_t"].sum() / 1e3, "mil t"),
-        ("Total RS: SEEG GWP-AR5 bruta − NEREUS", _dif("Total RS", GAS_AR5, "bruta"), "%"),
-        ("Total RS: SEEG GWP-AR5 líquida − NEREUS", _dif("Total RS", GAS_AR5, "líquida"), "%"),
-        ("Total Brasil: NEREUS", nereus.co2e_t.sum() / 1e3, "mil t"),
-        ("Total Brasil: SEEG GWP-AR5 bruta − NEREUS", _dif("Total Brasil", GAS_AR5, "bruta"), "%"),
-        ("Total Brasil: SEEG GWP-AR5 líquida − NEREUS", _dif("Total Brasil", GAS_AR5, "líquida"), "%"),
+        ("Total RS: NEREUS", ner_tot_rs / 1e3, "mil t"),
+        ("Total RS: SEEG GWP-AR5 bruta (SEEG: Emissão) − NEREUS", tot[("Total RS", BRUTA)], "%"),
+        ("Total RS: SEEG GWP-AR5 líquida (SEEG: Emissão + Remoção) − NEREUS", tot[("Total RS", LIQUIDA)], "%"),
+        ("Total RS: SEEG GWP-AR5 bruta com NCI − NEREUS (variante)", tot[("Total RS", BRUTA_NCI)], "%"),
+        ("Total RS: SEEG GWP-AR5 líquida com NCI − NEREUS (variante)", tot[("Total RS", LIQUIDA_NCI)], "%"),
+        ("Total Brasil: NEREUS", ner_tot_br / 1e3, "mil t"),
+        ("Total Brasil: SEEG GWP-AR5 bruta (SEEG: Emissão; 26 UF + RS + Não Alocado) − NEREUS", tot[(TOT_BR, BRUTA)],
+         "%"),
+        ("Total Brasil: SEEG GWP-AR5 líquida (SEEG: Emissão + Remoção; 26 UF + RS + Não Alocado) − NEREUS",
+         tot[(TOT_BR, LIQUIDA)], "%"),
+        ("Total Brasil: SEEG GWP-AR5 bruta com NCI (26 UF + RS + Não Alocado) − NEREUS (variante)",
+         tot[(TOT_BR, BRUTA_NCI)], "%"),
+        ("Total Brasil: SEEG GWP-AR5 líquida com NCI (26 UF + RS + Não Alocado) − NEREUS (variante)",
+         tot[(TOT_BR, LIQUIDA_NCI)], "%"),
+        ("Total Brasil: SEEG GWP-AR5 líquida + Bunker − NEREUS (sensibilidade)", tot[(TOT_BR, LIQUIDA_BUNKER)], "%"),
+        ("Total Brasil só UF (sem Não Alocado): SEEG GWP-AR5 bruta (SEEG) − NEREUS", tot[(TOT_BR_UF, BRUTA)], "%"),
+        ("Total Brasil só UF (sem Não Alocado): SEEG GWP-AR5 líquida (SEEG) − NEREUS", tot[(TOT_BR_UF, LIQUIDA)], "%"),
         *[(f"E4 {r.regiao} → {r.setor_destino}: {r.componente}", r.valor_t / 1e3, "mil t") for r in e4.itertuples()],
         ("Casamentos: combinações por setor", cas["n_por_setor"], "nº"),
         ("Casamentos: setores testados (com o controle S38)", len(SETORES_CASAMENTO), "nº"),
         ("Casamentos: total de testes", n_total, "nº"),
         ("Casamentos: |dif| < 0.1% (todos)", len(ach), "nº"),
-        ("Casamentos: |dif| < 0.1% esperados por acaso (≈)", acaso_total, "nº"),
-        ("Casamentos: |dif| < 0.1% com sentido 'sim'", len(ach_sim), "nº"),
-        ("Casamentos: |dif| < 0.1% 'discutível'", len(ach_disc), "nº"),
+        ("Casamentos: |dif| < 0.1%, núcleos distintos (sem unidades desprezíveis)", nucleos_total, "nº"),
+        ("Casamentos: |dif| < 0.1% esperados por acaso (ordem de grandeza)", acaso_total, "nº"),
+        ("Casamentos: |dif| < 0.1% com sentido 'sim' (critério SCN)", len(ach_sim), "nº"),
+        ("Casamentos: |dif| < 0.1% 'discutível' (critério SCN)", len(ach_disc), "nº"),
+        ("Casamentos: S38 = GE + PC (hipótese formulada antes da busca), diferença", hip_dif, "%"),
+        *[(f"Casamento concorrente: S19 = {c0['combinação']}", float(c0["diferença (%)"]), "%")
+          for _, c0 in conc_s19.head(1).iterrows()],
+        ("S19-RS: NEREUS", ner_s19 / 1e3, "mil t"),
+        ("S19-RS: NEREUS + E4 RS → S19 (risco de dupla contagem do refino)", (ner_s19 + e4_rs_s19) / 1e3, "mil t"),
     ], columns=["item", "valor", "unidade"])
 
     hoje = dt.date.today().isoformat()
@@ -823,23 +984,48 @@ def main() -> None:
         "Diagnóstico da conta-satélite de emissões do S38: NEREUS × SEEG 13.0 (Rodada 05, Seção 3.1).",
         f"Gerado por scripts/rodada05_diagnostico_seeg.py em {hoje}. Não muda a MIP: só lê o SEEG e a base NEREUS.",
         f"Fonte SEEG: SEEG 13.0, Dados nacionais, aba 'Dados' — {URL_SEEG}; SHA-256 {SHA_SEEG} (conferido nesta "
-        "execução; registro em dados/externos/seeg/DOWNLOAD.txt). Leitura: " + origem + ".",
+        "execução; registro em dados/externos/seeg/DOWNLOAD.txt). Leitura: " + origem + ". O cache tem os rótulos de "
+        "texto sem os espaços das pontas (no bruto, 'Efluentes líquidos industriais ', 'Disposição final ' e "
+        "'Alimentos ' têm espaço no fim); nenhuma soma muda.",
         "Fonte NEREUS: MIP original (dados/original/, intocável), linha de CO2e (t) da conta-satélite, por setor-região.",
         f"Critérios (Seção 3): ano {ANO}; Gás = '{GAS_AR5}'; 'Emissão/Remoção/Bunker' ∈ {{Emissão, Emissão NCI}}; "
         "Estado = 'Rio Grande do Sul' → RS; 'Não Alocado' → Não alocado (separado); demais 26 UF → RB (estados).",
         "S38 pelo critério do revisor: 'Atividade geral' ∈ {Geração de eletricidade, Produção de combustíveis}. "
         f"Recorte: dados/externos/seeg/{SAIDA_RECORTE.name} ({int((rec[COL_VALOR] != 0).sum())} linhas com valor ≠ 0).",
         "componentes_S38: a tabela da Seção 3 reproduzida (t e mil t), com a referência das instruções e a diferença "
-        "(meu − instrução, mil t). componentes_S38_detalhe: a mesma soma no nível Atividade › Categoria › Sub-categoria.",
-        "metricas: Seção 3.1 item 2. Bruta = Emissão + Emissão NCI; líquida = bruta + Remoção + Remoção NCI; Bunker "
-        "fora. Variantes 'sem NCI' também. Rótulo 'CO2e (t) GTP AR4' (736 linhas de Resíduos) tratado como GTP-AR4. "
-        "S38-RB: 'estados' (sem Não alocado) e 'estados + Não alocado'. Diferença = (SEEG − NEREUS)/NEREUS.",
-        "casamentos_RS: Seção 3.1 item 3. Espaço de busca: somas de 1, 2 ou 3 unidades do SEEG do RS (GWP-AR5, bruta) "
-        "dentro de cada tipo de unidade (U1 = Atividade geral; U2 = Setor de emissão › Categoria emissora; "
-        "U3 = Atividade geral › Categoria emissora › Sub-categoria emissora); unidades com valor = 0 ficam fora. "
-        "Tipos não são misturados (evita dupla contagem). Setores: S01, S02, S03, S19, S26, S39, S43 e S38 (controle).",
+        "(meu − instrução, mil t), e a conferência da regra da E4. componentes_S38_detalhe: a mesma soma no nível "
+        "Atividade › Categoria › Sub-categoria.",
+        "E4: valor_t é sempre o valor exato do SEEG. A referência 18088.8 mil t das instruções para o refino do RB é a "
+        "soma das parcelas já arredondadas (17329.1 + 759.7); o exato é 18088.87 (18088.9 arredondado)."
+        if (e4_conf.regiao.eq(RB) & e4_conf.setor_destino.eq("S19") & e4_conf.nota.str.startswith("a referência")).any()
+        else "E4: valor_t é sempre o valor exato do SEEG; as referências das instruções conferem.",
+        f"metricas: Seção 3.1 item 2. Bases principais = convenção do próprio SEEG (pivot 'Consulta Série Histórica' do "
+        f"arquivo): '{BRUTA}' = Emissão; '{LIQUIDA}' = Emissão + Remoção. Variantes: '{BRUTA_NCI}' = Emissão + Emissão "
+        f"NCI (o critério da Seção 3; no S38 não há NCI, então coincide com a bruta do SEEG); '{LIQUIDA_NCI}' = as "
+        "quatro. NCI = emissões e remoções não contabilizadas no inventário (no arquivo: solos manejados — redução e "
+        "aumento do estoque de C no solo, queima de pasto — e queimadas não associadas a desmatamento). Bunker "
+        f"(combustível de navegação e aviação internacionais, todo em 'Não Alocado') fica fora, salvo na sensibilidade "
+        f"'{LIQUIDA_BUNKER}'. Rótulo 'CO2e (t) GTP AR4' (736 linhas de Resíduos) tratado como GTP-AR4.",
+        f"metricas, escopo: '{TOT_BR}' = todas as linhas (26 UF + RS + 'Não Alocado'; Bunker fora), comparado ao total "
+        f"da NEREUS (RS + RB, o país todo); '{TOT_BR_UF}' é a sensibilidade sem o 'Não Alocado'. S38-RB: 'estados' "
+        "(sem Não alocado) e 'estados + Não alocado'. Diferença = (SEEG − NEREUS)/NEREUS. A 'métrica mais perto' é "
+        "condicional ao conjunto de bases testado (três conjuntos na tabela) e registra os empates exatos (GTP-AR2 = "
+        "GTP-AR4).",
+        "casamentos_RS: Seção 3.1 item 3. Espaço de busca: somas de 1, 2 ou 3 unidades do SEEG do RS (GWP-AR5, Emissão + "
+        "Emissão NCI, o critério da Seção 3) dentro de cada tipo de unidade (U1 = Atividade geral; U2 = Setor de "
+        "emissão › Categoria emissora; U3 = Atividade geral › Categoria emissora › Sub-categoria emissora); unidades "
+        "com valor = 0 ficam fora. Tipos não são misturados (evita dupla contagem). Setores: S01, S02, S03, S19, S26, "
+        "S39, S43 e S38 (controle).",
         "Sentido econômico: HIPÓTESE deste diagnóstico — cada unidade recebe 'sim', 'discutível' ou 'não' para cada "
-        "setor (aba unidades_RS, com o motivo); a combinação recebe o pior nível entre as suas unidades.",
+        "setor (aba unidades_RS, com o motivo); a combinação recebe o pior nível entre as suas unidades. Critério SCN "
+        "igual para todos os setores: 'Produção de combustíveis' é 'não' para o S38 (seria circular dar 'discutível' "
+        "pela própria hipótese em teste); a hipótese do revisor é marcada na coluna 'hipótese formulada antes da "
+        "busca'. MUT (alterações de uso da terra, carbono no solo, resíduos florestais, queimadas) é 'discutível' para "
+        "S01, S02 e S03 em U2 e em U3.",
+        "Contagens: 'esperado por acaso' (nº em ±5% ÷ 50) é só ordem de grandeza (densidade uniforme); por setor pode "
+        f"errar várias vezes. Unidades desprezíveis (|valor| < {TOL_DESPREZIVEL}% do alvo) geram combinações quase "
+        "repetidas: a coluna 'núcleo' tira essas unidades e a contagem 'núcleos distintos' mede os achados efetivos.",
+        "Casamento concorrente: " + txt_conc,
         "CAUTELA: não temos a documentação da conta-satélite da NEREUS. Casamentos numéricos são indícios, não provas; "
         f"com {n_total} combinações testadas, coincidências abaixo de 0.1% são esperadas por acaso.",
         "GTP-AR2 e GTP-AR4: valores idênticos linha a linha no arquivo " + ("(conferido)." if gtp_iguais else
@@ -851,10 +1037,21 @@ def main() -> None:
     SAIDA_XLSX.parent.mkdir(parents=True, exist_ok=True)
     with pd.ExcelWriter(SAIDA_XLSX, engine="openpyxl") as xw:
         escrever_blocos(xw, "LEIAME", [("LEIAME", leiame)])
-        escrever_blocos(xw, "componentes_S38", [("Tabela da Seção 3 reproduzida (GWP-AR5, bruta, 2019)", tab)])
+        escrever_blocos(xw, "componentes_S38", [("Tabela da Seção 3 reproduzida (GWP-AR5, bruta, 2019)", tab),
+                                                ("Regra da E4 (Seção 3.2): valor exato × referência das instruções",
+                                                 e4_conf)])
         escrever_blocos(xw, "componentes_S38_detalhe", [("Detalhe por Atividade › Categoria › Sub-categoria", detalhe)])
         escrever_blocos(xw, "metricas", [
-            ("Métrica e base mais perto da NEREUS, por agregado", mais_perto),
+            ("Escopo e bases", [
+                f"Bases principais (convenção do SEEG): {BRUTA} = Emissão; {LIQUIDA} = Emissão + Remoção.",
+                f"Variantes: {BRUTA_NCI} = Emissão + Emissão NCI (critério da Seção 3); {LIQUIDA_NCI} = as quatro; "
+                f"{LIQUIDA_BUNKER} = sensibilidade.",
+                f"{TOT_BR}: todas as linhas, inclusive 'Não Alocado' (onde está todo o Bunker); {TOT_BR_UF}: sem o "
+                "'Não Alocado'. O alvo NEREUS dos dois é o total RS + RB.",
+                "A 'métrica mais perto' vale só dentro do conjunto de bases indicado; empates exatos na coluna "
+                "'empatadas'.",
+            ]),
+            ("Métrica e base mais perto da NEREUS, por agregado e conjunto de bases", mais_perto),
             ("Totais por métrica e base (SEEG 13.0, 2019) × NEREUS", longo),
             ("Valores de 'Emissão/Remoção/Bunker' no arquivo e onde entram", erb),
         ])
