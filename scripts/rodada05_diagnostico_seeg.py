@@ -61,6 +61,7 @@ import datetime as dt
 import hashlib
 import itertools
 import json
+import re
 import sys
 import time
 from pathlib import Path
@@ -850,7 +851,7 @@ def main() -> None:
     u_refino = f"{ATIV_PC} › {ATIV_PC} › {SUB_REFINO}"
     u3 = unid[unid.tipo == "U3"].set_index("unidade").valor_t
     refino_rs = float(sum(v for n, v in u3.items() if SUB_REFINO in n))  # PC › refino + GE › PC › refino
-    unid_refino = [n for n in u3.index if SUB_REFINO in n or "oque" in n.lower()]
+    unid_refino = [n for n in u3.index if SUB_REFINO in n or re.search(r"\bcoque", n, re.IGNORECASE)]
     conc = ach[(ach.setor != "S38") & ach["combinação"].str.contains(u_refino, regex=False)]
     conc_s19 = conc[conc.setor == "S19"].sort_values("|diferença| (%)") if not conc.empty else conc
     ner_s19 = float(nereus.loc[(nereus.regiao == RS) & (nereus.codigo == "S19"), "co2e_t"].iloc[0])
@@ -871,6 +872,18 @@ def main() -> None:
         f"do S38). Isso enfraquece o indício e é um risco para a E4: se o S19 da NEREUS já contiver o refino, a "
         f"E4 o conta duas vezes no S19-RS ({_f(ner_s19 / 1e3)} + {_f(e4_rs_s19 / 1e3)} = "
         f"{_f((ner_s19 + e4_rs_s19) / 1e3)} mil t); vale tratá-lo como sensibilidade.")
+
+    # Os 'discutível' abaixo de 0.1%: por setor e a unidade comum a todos (se houver)
+    txt_disc = ""
+    for s_, g in ach_disc.groupby("setor"):
+        comuns = set.intersection(*(set(c.split(" + ")) for c in g["combinação"]))
+        txt_disc += f" {len(g)} 'discutível' no {s_}"
+        for cu in sorted(comuns):
+            v = float(unid.loc[unid.unidade == cu, "valor_t"].iloc[0])
+            alvo = float(nereus.loc[(nereus.regiao == RS) & (nereus.codigo == s_), "co2e_t"].iloc[0])
+            txt_disc += (f", todas com '{cu}' ({_f(v / 1e3)} mil t, {_f(_pct(v, alvo), 1)}% do {s_} sozinha) "
+                         "mais unidades pequenas: só MUT e fragmentos, não a atividade")
+        txt_disc += "."
 
     e4_div = e4_conf[e4_conf.nota.str.startswith("a referência")]
     txt_e4 = (" Regra da E4: " + "; ".join(f"{r.regiao} → {r.setor_destino}: exato {_f(r._5, 2)} mil t contra "
@@ -915,7 +928,7 @@ def main() -> None:
         f"alvo, que geram quase repetições). Por acaso seriam esperadas da ordem de {_f(acaso_total, 0)} (heurística de "
         "densidade uniforme: nº em ±5% ÷ 50; por setor erra até ~3 vezes, ver contagens). Pelo critério SCN, aplicado "
         f"igual a todos os setores, {len(ach_sim)} têm sentido econômico 'sim' e {len(ach_disc)} 'discutível'; as "
-        "demais não têm sentido econômico.",
+        "demais não têm sentido econômico." + txt_disc,
         f"5. No controle S38, a combinação mais perto de todas é {_melhor('S38', 'melhor de todas')}, sem sentido "
         "econômico: com esse número de testes, casamentos melhores que 0.1% aparecem por acaso. O casamento do S38-RS "
         f"com 'Geração de eletricidade + Produção de combustíveis' ({_f(hip_dif, 3)}%) também é 'não' pelo critério "
