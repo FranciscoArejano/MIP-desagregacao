@@ -122,3 +122,13 @@ Não foi verificado se o total da RAP da fonte secundária (25700) inclui PIS/Pa
 diferença entre a `_rap_ons` e a principal não mede só homologado × faturado. O total da RAP 2019-2020 continua o da
 fonte secundária (25700): o texto da REH não o traz, e o Anexo na biblioteca da ANEEL respondeu 403 (desafio
 anti-robô, não contornado) em 16/10/2026.
+
+## Rodada 05 — fontes novas ou com uso novo
+
+| Uso (Rodada 05) | Fonte | Localização | Arquivo |
+|---|---|---|---|
+| D17: transmissão = encargos de uso faturados pelo ONS no ano civil de 2019 (22935.6 R$ mi) | ONS, SEAMSE dez/2018, jun/2019 e dez/2019 (os da Rodada 04) | seção 4, "Total Encargos de Uso" | `aneel_rap/ons_seamse_*` |
+| D18: GWh do espelho (SOL-RB 4978.0; PET-RB 5174.0) | EPE, BEN 2020, Tabela 5.4 (D8) | p. 112 | `dados/intermediarios/geracao_2019_regiao_subsetor_v03.csv` |
+| Diagnóstico NEREUS × SEEG (Seção 3.1) e valores da E4 (Seção 3.2) | SEEG 13.0, Dados nacionais, aba Dados (bruto de 185 MB fora do git; SHA-256 `21fc4965…aff350`; ver `seeg/DOWNLOAD.txt`) | 2019; Gás = 'CO2e (t) GWP-AR5' (e as demais métricas no diagnóstico); 'Emissão' e 'Emissão NCI'; Atividade geral = "Geração de eletricidade" e "Produção de combustíveis" | recorte `seeg/seeg13_2019_recorte_energia_v04.csv`; E4 `seeg/seeg13_2019_componentes_e4_v04.csv`; `scripts/rodada05_diagnostico_seeg.py` |
+| Referências do artigo (método) | Crossref (`api.crossref.org`) | metadados de cada DOI | `artigo/texto/referencias.md` |
+

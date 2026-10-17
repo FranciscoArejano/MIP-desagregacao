@@ -18,15 +18,26 @@ demanda final no RS com um modelo de Leontief com coeficientes de emissão.
 | 02b — continuação da 02 com rede: fontes, parâmetros reais, MIP v01 e variantes, quadro por subsetor | concluída em 15/10/2026, com pontos em aberto (EOB negativo em GN e GAS; RAP 2019-2020 com fonte secundária) | [respostas/RODADA_02b_resposta.md](respostas/RODADA_02b_resposta.md) |
 | 03 — MIP v02 consolidada (D8, D9, D10), variantes, comparativo v01 × v02 e executor de cenários | concluída em 16/10/2026 | [respostas/RODADA_03_resposta.md](respostas/RODADA_03_resposta.md) |
 | 04 — MIP v03 final (V1, V2, V3) e simulações do artigo (blocos A0, A1, A2 e B), tabelas e figuras de rascunho | concluída em 17/10/2026 | [respostas/RODADA_04_resposta.md](respostas/RODADA_04_resposta.md) |
+| 05 — MIP v04 final (D17, D18), variante E4, diagnóstico NEREUS × SEEG, simulações finais e material do artigo (`artigo/`) | concluída em 17/10/2026 (tag `mip-v04-final`) | [respostas/RODADA_05_resposta.md](respostas/RODADA_05_resposta.md) |
 
 Decisões do Francisco em vigor: D1 = C (11 subsetores), D2 = D3 = D4 = D6 = A, D5 = E1 (E2 e E3 como
 sensibilidades), D7 = A, D8 = A (geração por fonte: Brasil pelo BEN 2020, RS pelo ONS), D9 = (a) + (b) + (f) + (r)
 (correção do EOB negativo), D10 = gás por comprador no RS pela Sulgás, V1 (TUST da geração por MWh no SIN;
 remunerações da geração ∝ VBP − combustível), V2 (GAS-RB pelo preço da Sulgás), V3 (RAP 24883.4; variante com os
 encargos do ONS), D11 = R4a, D12 = renováveis → EOL-RS, D13 = fósseis → CAR-RS e GN-RS ∝ VBP, D14 = E1 pela regra do
-executor, D15 = bloco B por R$ 1 bi e por TWh, D16 = investimento fora.
+executor, D15 = bloco B por R$ 1 bi e por TWh, D16 = investimento fora, D17 = transmissão pelos encargos de uso faturados
+pelo ONS em 2019 (substitui a V3), D18 = TUST das colunas latentes pela TUST por MWh do RS, D19 = κ 0.70 (ALERTA do T12
+aceito), D20 = fósseis por D13 nas tabelas principais, D21 = E1 na principal (E3 e E4 como sensibilidades).
 
-A versão **atual (final)** é a v03 (Rodada 04): `resultados/rodada04/MIP_RS_RB_2019_S38_11sub_v03.xlsx` (+ `_longo.csv`
+A versão **final** é a **v04** (Rodada 05; tag `mip-v04-final`): `resultados/rodada05/MIP_RS_RB_2019_S38_11sub_v04.xlsx`
+(+ `_longo.csv` e `_coef_latentes.csv`; v03 + D17 + D18), com as variantes `_P2`, `_E2`, `_E3`, `_E4`, `_gas4dist`,
+`_rap_media`, `_k060` e `_eta005` (CSV longo), o quadro `resultados/rodada05/quadro_subsetores_v04.xlsx` (com o
+comparativo v03 × v04), as simulações finais em `resultados/rodada05/simulacoes_v04.xlsx`, o diagnóstico
+`resultados/rodada05/diagnostico_seeg_nereus.xlsx` e o **material do artigo** em `artigo/` (tabelas em .xlsx, .docx e
+.md; figuras em PNG e PDF; textos da metodologia, limitações, referências e números-chave em .md e .docx), todo gerado
+por `scripts/rodada05_artigo.py`.
+
+A versão anterior, v03 (Rodada 04): `resultados/rodada04/MIP_RS_RB_2019_S38_11sub_v03.xlsx` (+ `_longo.csv`
 e `_coef_latentes.csv`; principal: P1 + E1 + D9 + V1 + V2, κ = 0.70, η = 0.10, sem a extensão de viabilidade), com as
 variantes `_P2`, `_E2`, `_E3`, `_gas4dist`, `_rap_ons`, `_k060` e `_eta005` (CSV longo), o quadro
 `resultados/rodada04/quadro_subsetores_v03.xlsx` (com o comparativo v02 × v03) e as simulações do artigo em
@@ -49,7 +60,7 @@ usados em análises.
 ```
 MIP-desagregacao/
 ├── README.md
-├── requirements.txt          pandas, numpy, openpyxl, pytest, pyyaml, pyarrow, matplotlib
+├── requirements.txt          pandas, numpy, openpyxl, pytest, pyyaml, pyarrow, matplotlib, python-docx, pypandoc_binary
 ├── dados/
 │   ├── original/             planilha original (somente leitura) + CHECKSUM.txt (SHA-256)
 │   ├── externos/             dados de fontes externas + FONTES.md (registro de fontes) + valores_documentais_v01.csv;
@@ -74,12 +85,16 @@ MIP-desagregacao/
 │                             rodada02_mip.py (MIP v01, variantes, quadro e prévia);
 │                             rodada03.py, rodada03_parametros.py, rodada03_mip.py (MIP v02),
 │                             rodada03_decomposicao.py (v01 → v02 passo a passo), rodar_cenarios.py (executor);
-│                             rodada04_parametros.py, rodada04_mip.py (MIP v03), rodada04_simulacoes.py
-├── tests/                    pytest (T1–T12, T2 com as especificações reais v01, v02 e v03, e demais)
+│                             rodada04_parametros.py, rodada04_mip.py (MIP v03), rodada04_simulacoes.py;
+│                             rodada05_diagnostico_seeg.py, rodada05_parametros.py, rodada05_mip.py (MIP v04),
+│                             rodada05_simulacoes.py, rodada05_artigo.py (material do artigo)
+├── tests/                    pytest (T1–T16, T2 com as especificações reais v01 a v04, e demais)
 ├── resultados/rodada01/      saídas da Rodada 01
 ├── resultados/rodada02/      saídas das Rodadas 02 e 02b (MIP v01 e variantes, checagens, quadro, prévia, referências)
 ├── resultados/rodada03/      saídas da Rodada 03 (MIP v02 e variantes, quadro v02, prévia, decomposição, cenários)
 ├── resultados/rodada04/      saídas da Rodada 04 (MIP v03 e variantes, quadro v03, simulações, figuras)
+├── resultados/rodada05/      saídas da Rodada 05 (MIP v04 final e variantes, quadro v04, simulações, diagnóstico SEEG)
+├── artigo/                   material do artigo: tabelas/ (.xlsx, .docx, .md), figuras/ (PNG e PDF), texto/ (.md e .docx)
 ├── instrucoes/               instruções de cada rodada
 └── respostas/                relatórios das rodadas + HISTORICO.md
 ```
@@ -103,6 +118,11 @@ python scripts/rodar_cenarios.py        # executor de cenários (padrão: 9 cen�
 python scripts/rodada04_parametros.py   # Rodada 04: parâmetros v03 (V1, V2, V3)
 python scripts/rodada04_mip.py          # Rodada 04: MIP v03 + variantes e quadro v03
 python scripts/rodada04_simulacoes.py   # Rodada 04: simulações do artigo (A0, A1, A2, B), robustez, tabelas e figuras
+python scripts/rodada05_diagnostico_seeg.py  # Rodada 05: diagnóstico NEREUS × SEEG e valores da E4 (bruto do SEEG)
+python scripts/rodada05_parametros.py   # Rodada 05: parâmetros v04 (D17, D18, E4)
+python scripts/rodada05_mip.py          # Rodada 05: MIP v04 + variantes e quadro v04
+python scripts/rodada05_simulacoes.py   # Rodada 05: simulações finais, A0_E4 e robustez
+python scripts/rodada05_artigo.py       # Rodada 05: material do artigo (pasta artigo/)
 ```
 
 Executor de cenários: escreva os choques num CSV `cenario,regiao,setor,valor_R$mi` (modelo em
@@ -120,7 +140,7 @@ from mip.leitura import ler_mip_original
 from mip.desagregacao import ler_especificacao, desagregar
 from mip.modelo import ModeloLeontief
 
-res = desagregar(ler_mip_original(), ler_especificacao("parametros/especificacao_v03.yaml"))
+res = desagregar(ler_mip_original(), ler_especificacao("parametros/especificacao_v04.yaml"))
 print(res.checagens)                       # verificação (OK / ALERTA / FALHA)
 res.exportar("saida.xlsx", "saida_longo.csv")
 modelo = ModeloLeontief(res.mip)           # o mesmo modelo serve para a MIP desagregada
