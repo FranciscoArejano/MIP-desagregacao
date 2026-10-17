@@ -1,0 +1,2319 @@
+{
+ "a0_dif_fossil_renov": {
+  "casas": 1,
+  "descricao": "diferença de emissões fóssil − renovável (A0)",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › A0 › F1 − R1",
+  "unidade": "t CO₂e",
+  "valor": 139638.75294936722
+ },
+ "a0_e1_co2e": {
+  "casas": 1,
+  "descricao": "emissões totais, Energia elétrica agregada (A0)",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › A0 › A0_E1",
+  "unidade": "t CO₂e",
+  "valor": 428113.5341067808
+ },
+ "a0_e1_dx": {
+  "casas": 1,
+  "descricao": "produção bruta induzida, Energia elétrica agregada (A0)",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › A0 › A0_E1",
+  "unidade": "R$ milhões",
+  "valor": 1925.037208036543
+ },
+ "a0_e1_ic": {
+  "casas": 1,
+  "descricao": "intensidade carbônica, Energia elétrica agregada (A0)",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › A0 › A0_E1",
+  "unidade": "t CO₂e/R$ milhão",
+  "valor": 222.3923425061683
+ },
+ "a0_e1_pct_ind": {
+  "casas": 1,
+  "descricao": "emissões indiretas, Energia elétrica agregada (A0)",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › A0 › A0_E1",
+  "unidade": "%",
+  "valor": 34.88609571089764
+ },
+ "a0_e1_pct_rb": {
+  "casas": 1,
+  "descricao": "emissões no RB, Energia elétrica agregada (A0)",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › A0 › A0_E1",
+  "unidade": "%",
+  "valor": 20.73915284419193
+ },
+ "a0_e1_pct_s38": {
+  "casas": 1,
+  "descricao": "participação do S38 (ou dos subsetores) nas emissões, Energia elétrica agregada (A0)",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › A0 › A0_E1",
+  "unidade": "%",
+  "valor": 92.22377927398334
+ },
+ "a0_f1_co2e": {
+  "casas": 1,
+  "descricao": "emissões totais, Fóssil base (A0)",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › A0 › A0_F1",
+  "unidade": "t CO₂e",
+  "valor": 356045.7240370425
+ },
+ "a0_f1_dx": {
+  "casas": 1,
+  "descricao": "produção bruta induzida, Fóssil base (A0)",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › A0 › A0_F1",
+  "unidade": "R$ milhões",
+  "valor": 2120.558269623172
+ },
+ "a0_f1_ic": {
+  "casas": 1,
+  "descricao": "intensidade carbônica, Fóssil base (A0)",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › A0 › A0_F1",
+  "unidade": "t CO₂e/R$ milhão",
+  "valor": 167.9018818475159
+ },
+ "a0_f1_pct_ind": {
+  "casas": 1,
+  "descricao": "emissões indiretas, Fóssil base (A0)",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › A0 › A0_F1",
+  "unidade": "%",
+  "valor": 35.33710677770379
+ },
+ "a0_f1_pct_rb": {
+  "casas": 1,
+  "descricao": "emissões no RB, Fóssil base (A0)",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › A0 › A0_F1",
+  "unidade": "%",
+  "valor": 22.16127667498752
+ },
+ "a0_f1_pct_s38": {
+  "casas": 1,
+  "descricao": "participação do S38 (ou dos subsetores) nas emissões, Fóssil base (A0)",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › A0 › A0_F1",
+  "unidade": "%",
+  "valor": 39.42686702701253
+ },
+ "a0_f2_co2e": {
+  "casas": 1,
+  "descricao": "emissões totais, Fóssil balanceada (A0)",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › A0 › A0_F2",
+  "unidade": "t CO₂e",
+  "valor": 381702.8635022599
+ },
+ "a0_f2_dx": {
+  "casas": 1,
+  "descricao": "produção bruta induzida, Fóssil balanceada (A0)",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › A0 › A0_F2",
+  "unidade": "R$ milhões",
+  "valor": 2110.486101250903
+ },
+ "a0_f2_ic": {
+  "casas": 1,
+  "descricao": "intensidade carbônica, Fóssil balanceada (A0)",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › A0 › A0_F2",
+  "unidade": "t CO₂e/R$ milhão",
+  "valor": 180.8601645260878
+ },
+ "a0_f2_pct_ind": {
+  "casas": 1,
+  "descricao": "emissões indiretas, Fóssil balanceada (A0)",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › A0 › A0_F2",
+  "unidade": "%",
+  "valor": 32.86765362228716
+ },
+ "a0_f2_pct_rb": {
+  "casas": 1,
+  "descricao": "emissões no RB, Fóssil balanceada (A0)",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › A0 › A0_F2",
+  "unidade": "%",
+  "valor": 19.68781028697114
+ },
+ "a0_f2_pct_s38": {
+  "casas": 1,
+  "descricao": "participação do S38 (ou dos subsetores) nas emissões, Fóssil balanceada (A0)",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › A0 › A0_F2",
+  "unidade": "%",
+  "valor": 35.1014052462308
+ },
+ "a0_f3_co2e": {
+  "casas": 1,
+  "descricao": "emissões totais, Fóssil energia-intensiva (A0)",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › A0 › A0_F3",
+  "unidade": "t CO₂e",
+  "valor": 375427.2603331699
+ },
+ "a0_f3_dx": {
+  "casas": 1,
+  "descricao": "produção bruta induzida, Fóssil energia-intensiva (A0)",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › A0 › A0_F3",
+  "unidade": "R$ milhões",
+  "valor": 2073.929471749065
+ },
+ "a0_f3_ic": {
+  "casas": 1,
+  "descricao": "intensidade carbônica, Fóssil energia-intensiva (A0)",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › A0 › A0_F3",
+  "unidade": "t CO₂e/R$ milhão",
+  "valor": 181.0221926286386
+ },
+ "a0_f3_pct_ind": {
+  "casas": 1,
+  "descricao": "emissões indiretas, Fóssil energia-intensiva (A0)",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › A0 › A0_F3",
+  "unidade": "%",
+  "valor": 34.96602915887432
+ },
+ "a0_f3_pct_rb": {
+  "casas": 1,
+  "descricao": "emissões no RB, Fóssil energia-intensiva (A0)",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › A0 › A0_F3",
+  "unidade": "%",
+  "valor": 21.53139870458057
+ },
+ "a0_f3_pct_s38": {
+  "casas": 1,
+  "descricao": "participação do S38 (ou dos subsetores) nas emissões, Fóssil energia-intensiva (A0)",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › A0 › A0_F3",
+  "unidade": "%",
+  "valor": 53.03521868344571
+ },
+ "a0_r1_co2e": {
+  "casas": 1,
+  "descricao": "emissões totais, Renovável base (A0)",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › A0 › A0_R1",
+  "unidade": "t CO₂e",
+  "valor": 216406.9710876753
+ },
+ "a0_r1_dx": {
+  "casas": 1,
+  "descricao": "produção bruta induzida, Renovável base (A0)",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › A0 › A0_R1",
+  "unidade": "R$ milhões",
+  "valor": 1959.352995174775
+ },
+ "a0_r1_ic": {
+  "casas": 1,
+  "descricao": "intensidade carbônica, Renovável base (A0)",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › A0 › A0_R1",
+  "unidade": "t CO₂e/R$ milhão",
+  "valor": 110.4481793840174
+ },
+ "a0_r1_pct_ind": {
+  "casas": 1,
+  "descricao": "emissões indiretas, Renovável base (A0)",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › A0 › A0_R1",
+  "unidade": "%",
+  "valor": 51.54670887456342
+ },
+ "a0_r1_pct_rb": {
+  "casas": 1,
+  "descricao": "emissões no RB, Renovável base (A0)",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › A0 › A0_R1",
+  "unidade": "%",
+  "valor": 34.20266242301224
+ },
+ "a0_r1_pct_s38": {
+  "casas": 1,
+  "descricao": "participação do S38 (ou dos subsetores) nas emissões, Renovável base (A0)",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › A0 › A0_R1",
+  "unidade": "%",
+  "valor": 57.07523706194456
+ },
+ "a0_r2_co2e": {
+  "casas": 1,
+  "descricao": "emissões totais, Renovável balanceada (A0)",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › A0 › A0_R2",
+  "unidade": "t CO₂e",
+  "valor": 216987.1565901284
+ },
+ "a0_r2_dx": {
+  "casas": 1,
+  "descricao": "produção bruta induzida, Renovável balanceada (A0)",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › A0 › A0_R2",
+  "unidade": "R$ milhões",
+  "valor": 1920.371028203399
+ },
+ "a0_r2_ic": {
+  "casas": 1,
+  "descricao": "intensidade carbônica, Renovável balanceada (A0)",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › A0 › A0_R2",
+  "unidade": "t CO₂e/R$ milhão",
+  "valor": 112.9923089878785
+ },
+ "a0_r2_pct_ind": {
+  "casas": 1,
+  "descricao": "emissões indiretas, Renovável balanceada (A0)",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › A0 › A0_R2",
+  "unidade": "%",
+  "valor": 46.10651242373578
+ },
+ "a0_r2_pct_rb": {
+  "casas": 1,
+  "descricao": "emissões no RB, Renovável balanceada (A0)",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › A0 › A0_R2",
+  "unidade": "%",
+  "valor": 29.0592886287161
+ },
+ "a0_r2_pct_s38": {
+  "casas": 1,
+  "descricao": "participação do S38 (ou dos subsetores) nas emissões, Renovável balanceada (A0)",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › A0 › A0_R2",
+  "unidade": "%",
+  "valor": 32.76658238409503
+ },
+ "a0_r3_co2e": {
+  "casas": 1,
+  "descricao": "emissões totais, Renovável infraestrutura-intensiva (A0)",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › A0 › A0_R3",
+  "unidade": "t CO₂e",
+  "valor": 169090.0151412379
+ },
+ "a0_r3_dx": {
+  "casas": 1,
+  "descricao": "produção bruta induzida, Renovável infraestrutura-intensiva (A0)",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › A0 › A0_R3",
+  "unidade": "R$ milhões",
+  "valor": 1969.206216134805
+ },
+ "a0_r3_ic": {
+  "casas": 1,
+  "descricao": "intensidade carbônica, Renovável infraestrutura-intensiva (A0)",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › A0 › A0_R3",
+  "unidade": "t CO₂e/R$ milhão",
+  "valor": 85.86709393652586
+ },
+ "a0_r3_pct_ind": {
+  "casas": 1,
+  "descricao": "emissões indiretas, Renovável infraestrutura-intensiva (A0)",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › A0 › A0_R3",
+  "unidade": "%",
+  "valor": 62.70118854923339
+ },
+ "a0_r3_pct_rb": {
+  "casas": 1,
+  "descricao": "emissões no RB, Renovável infraestrutura-intensiva (A0)",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › A0 › A0_R3",
+  "unidade": "%",
+  "valor": 43.46371140830907
+ },
+ "a0_r3_pct_s38": {
+  "casas": 1,
+  "descricao": "participação do S38 (ou dos subsetores) nas emissões, Renovável infraestrutura-intensiva (A0)",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › A0 › A0_R3",
+  "unidade": "%",
+  "valor": 38.76883913522323
+ },
+ "a0_r4a_co2e": {
+  "casas": 1,
+  "descricao": "emissões totais, Renovável energia/transporte-intensiva (A0)",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › A0 › A0_R4a",
+  "unidade": "t CO₂e",
+  "valor": 309794.8842831829
+ },
+ "a0_r4a_dx": {
+  "casas": 1,
+  "descricao": "produção bruta induzida, Renovável energia/transporte-intensiva (A0)",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › A0 › A0_R4a",
+  "unidade": "R$ milhões",
+  "valor": 1959.488267660658
+ },
+ "a0_r4a_ic": {
+  "casas": 1,
+  "descricao": "intensidade carbônica, Renovável energia/transporte-intensiva (A0)",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › A0 › A0_R4a",
+  "unidade": "t CO₂e/R$ milhão",
+  "valor": 158.0998924035573
+ },
+ "a0_r4a_pct_ind": {
+  "casas": 1,
+  "descricao": "emissões indiretas, Renovável energia/transporte-intensiva (A0)",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › A0 › A0_R4a",
+  "unidade": "%",
+  "valor": 39.04230813560093
+ },
+ "a0_r4a_pct_rb": {
+  "casas": 1,
+  "descricao": "emissões no RB, Renovável energia/transporte-intensiva (A0)",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › A0 › A0_R4a",
+  "unidade": "%",
+  "valor": 23.77736084389895
+ },
+ "a0_r4a_pct_s38": {
+  "casas": 1,
+  "descricao": "participação do S38 (ou dos subsetores) nas emissões, Renovável energia/transporte-intensiva (A0)",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › A0 › A0_R4a",
+  "unidade": "%",
+  "valor": 58.5234621880534
+ },
+ "a0_reducao_ic": {
+  "casas": 1,
+  "descricao": "redução da intensidade carbônica da cesta renovável em relação à fóssil (A0)",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › A0 › F1 e R1",
+  "unidade": "%",
+  "valor": 34.218617344430044
+ },
+ "a0e4_e1_var": {
+  "casas": 1,
+  "descricao": "variação das emissões com a E4 na MIP original, Energia elétrica agregada",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › A0_E4 › A0_E1",
+  "unidade": "%",
+  "valor": -31.30429004422421
+ },
+ "a0e4_f1_var": {
+  "casas": 1,
+  "descricao": "variação das emissões com a E4 na MIP original, Fóssil base",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › A0_E4 › A0_F1",
+  "unidade": "%",
+  "valor": -1.408904318038324
+ },
+ "a0e4_r1_var": {
+  "casas": 1,
+  "descricao": "variação das emissões com a E4 na MIP original, Renovável base",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › A0_E4 › A0_R1",
+  "unidade": "%",
+  "valor": -17.99285027716825
+ },
+ "a1_e1_co2e": {
+  "casas": 1,
+  "descricao": "emissões totais, Energia elétrica agregada (A1)",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › A1 › A1_E1",
+  "unidade": "t CO₂e",
+  "valor": 383253.7117399096
+ },
+ "a1_f1_co2e": {
+  "casas": 1,
+  "descricao": "emissões totais, Fóssil base (A1)",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › A1 › A1_F1",
+  "unidade": "t CO₂e",
+  "valor": 340254.9498114071
+ },
+ "a1_f2_co2e": {
+  "casas": 1,
+  "descricao": "emissões totais, Fóssil balanceada (A1)",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › A1 › A1_F2",
+  "unidade": "t CO₂e",
+  "valor": 366651.3535281427
+ },
+ "a1_f3_co2e": {
+  "casas": 1,
+  "descricao": "emissões totais, Fóssil energia-intensiva (A1)",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › A1 › A1_F3",
+  "unidade": "t CO₂e",
+  "valor": 352927.6346330645
+ },
+ "a1_r1_co2e": {
+  "casas": 1,
+  "descricao": "emissões totais, Renovável base (A1)",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › A1 › A1_R1",
+  "unidade": "t CO₂e",
+  "valor": 202473.0436558337
+ },
+ "a1_r2_co2e": {
+  "casas": 1,
+  "descricao": "emissões totais, Renovável balanceada (A1)",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › A1 › A1_R2",
+  "unidade": "t CO₂e",
+  "valor": 209059.2376678106
+ },
+ "a1_r3_co2e": {
+  "casas": 1,
+  "descricao": "emissões totais, Renovável infraestrutura-intensiva (A1)",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › A1 › A1_R3",
+  "unidade": "t CO₂e",
+  "valor": 161749.6080680833
+ },
+ "a1_r4a_co2e": {
+  "casas": 1,
+  "descricao": "emissões totais, Renovável energia/transporte-intensiva (A1)",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › A1 › A1_R4a",
+  "unidade": "t CO₂e",
+  "valor": 289299.3149763778
+ },
+ "a2_dif_fossil_renov": {
+  "casas": 1,
+  "descricao": "diferença de emissões fóssil − renovável (A2)",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › A2 › F1 − R1",
+  "unidade": "t CO₂e",
+  "valor": 1930831.2022715602
+ },
+ "a2_e1_co2e": {
+  "casas": 1,
+  "descricao": "emissões totais, Energia elétrica agregada (A2)",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_E1 (versão v04)",
+  "unidade": "t CO₂e",
+  "valor": 383253.7117399096
+ },
+ "a2_e1_dx": {
+  "casas": 1,
+  "descricao": "produção bruta induzida, Energia elétrica agregada (A2)",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_E1 (versão v04)",
+  "unidade": "R$ milhões",
+  "valor": 1908.137081323806
+ },
+ "a2_e1_ic": {
+  "casas": 1,
+  "descricao": "intensidade carbônica, Energia elétrica agregada (A2)",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_E1 (versão v04)",
+  "unidade": "t CO₂e/R$ milhão",
+  "valor": 200.8522948854493
+ },
+ "a2_e1_pct_ind": {
+  "casas": 1,
+  "descricao": "emissões indiretas, Energia elétrica agregada (A2)",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_E1 (versão v04)",
+  "unidade": "%",
+  "valor": 65.95073304833994
+ },
+ "a2_e1_pct_rb": {
+  "casas": 1,
+  "descricao": "emissões no RB, Energia elétrica agregada (A2)",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_E1 (versão v04)",
+  "unidade": "%",
+  "valor": 25.99050326256677
+ },
+ "a2_e1_pct_s38": {
+  "casas": 1,
+  "descricao": "participação do S38 (ou dos subsetores) nas emissões, Energia elétrica agregada (A2)",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_E1 (versão v04)",
+  "unidade": "%",
+  "valor": 91.5561745389814
+ },
+ "a2_f1_co2e": {
+  "casas": 1,
+  "descricao": "emissões totais, Fóssil base (A2)",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_F1 (versão v04)",
+  "unidade": "t CO₂e",
+  "valor": 2026202.216579384
+ },
+ "a2_f1_dx": {
+  "casas": 1,
+  "descricao": "produção bruta induzida, Fóssil base (A2)",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_F1 (versão v04)",
+  "unidade": "R$ milhões",
+  "valor": 1997.064364625063
+ },
+ "a2_f1_ic": {
+  "casas": 1,
+  "descricao": "intensidade carbônica, Fóssil base (A2)",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_F1 (versão v04)",
+  "unidade": "t CO₂e/R$ milhão",
+  "valor": 1014.590341939125
+ },
+ "a2_f1_pct_ind": {
+  "casas": 1,
+  "descricao": "emissões indiretas, Fóssil base (A2)",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_F1 (versão v04)",
+  "unidade": "%",
+  "valor": 4.172828418958093
+ },
+ "a2_f1_pct_rb": {
+  "casas": 1,
+  "descricao": "emissões no RB, Fóssil base (A2)",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_F1 (versão v04)",
+  "unidade": "%",
+  "valor": 2.695490800707633
+ },
+ "a2_f1_pct_s38": {
+  "casas": 1,
+  "descricao": "participação do S38 (ou dos subsetores) nas emissões, Fóssil base (A2)",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_F1 (versão v04)",
+  "unidade": "%",
+  "valor": 89.41345400741176
+ },
+ "a2_f2_co2e": {
+  "casas": 1,
+  "descricao": "emissões totais, Fóssil balanceada (A2)",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_F2 (versão v04)",
+  "unidade": "t CO₂e",
+  "valor": 1972315.417116692
+ },
+ "a2_f2_dx": {
+  "casas": 1,
+  "descricao": "produção bruta induzida, Fóssil balanceada (A2)",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_F2 (versão v04)",
+  "unidade": "R$ milhões",
+  "valor": 1992.873774892974
+ },
+ "a2_f2_ic": {
+  "casas": 1,
+  "descricao": "intensidade carbônica, Fóssil balanceada (A2)",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_F2 (versão v04)",
+  "unidade": "t CO₂e/R$ milhão",
+  "valor": 989.6840642717646
+ },
+ "a2_f2_pct_ind": {
+  "casas": 1,
+  "descricao": "emissões indiretas, Fóssil balanceada (A2)",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_F2 (versão v04)",
+  "unidade": "%",
+  "valor": 4.367599817467513
+ },
+ "a2_f2_pct_rb": {
+  "casas": 1,
+  "descricao": "emissões no RB, Fóssil balanceada (A2)",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_F2 (versão v04)",
+  "unidade": "%",
+  "valor": 2.637643001730532
+ },
+ "a2_f2_pct_s38": {
+  "casas": 1,
+  "descricao": "participação do S38 (ou dos subsetores) nas emissões, Fóssil balanceada (A2)",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_F2 (versão v04)",
+  "unidade": "%",
+  "valor": 87.49632790374537
+ },
+ "a2_f3_co2e": {
+  "casas": 1,
+  "descricao": "emissões totais, Fóssil energia-intensiva (A2)",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_F3 (versão v04)",
+  "unidade": "t CO₂e",
+  "valor": 2761423.730015889
+ },
+ "a2_f3_dx": {
+  "casas": 1,
+  "descricao": "produção bruta induzida, Fóssil energia-intensiva (A2)",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_F3 (versão v04)",
+  "unidade": "R$ milhões",
+  "valor": 1897.522849683228
+ },
+ "a2_f3_ic": {
+  "casas": 1,
+  "descricao": "intensidade carbônica, Fóssil energia-intensiva (A2)",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_F3 (versão v04)",
+  "unidade": "t CO₂e/R$ milhão",
+  "valor": 1455.278248942763
+ },
+ "a2_f3_pct_ind": {
+  "casas": 1,
+  "descricao": "emissões indiretas, Fóssil energia-intensiva (A2)",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_F3 (versão v04)",
+  "unidade": "%",
+  "valor": 2.621066374790292
+ },
+ "a2_f3_pct_rb": {
+  "casas": 1,
+  "descricao": "emissões no RB, Fóssil energia-intensiva (A2)",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_F3 (versão v04)",
+  "unidade": "%",
+  "valor": 1.671143202894352
+ },
+ "a2_f3_pct_s38": {
+  "casas": 1,
+  "descricao": "participação do S38 (ou dos subsetores) nas emissões, Fóssil energia-intensiva (A2)",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_F3 (versão v04)",
+  "unidade": "%",
+  "valor": 93.67523503653537
+ },
+ "a2_r1_co2e": {
+  "casas": 1,
+  "descricao": "emissões totais, Renovável base (A2)",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_R1 (versão v04)",
+  "unidade": "t CO₂e",
+  "valor": 95371.01430782364
+ },
+ "a2_r1_dx": {
+  "casas": 1,
+  "descricao": "produção bruta induzida, Renovável base (A2)",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_R1 (versão v04)",
+  "unidade": "R$ milhões",
+  "valor": 1845.159650701164
+ },
+ "a2_r1_ic": {
+  "casas": 1,
+  "descricao": "intensidade carbônica, Renovável base (A2)",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_R1 (versão v04)",
+  "unidade": "t CO₂e/R$ milhão",
+  "valor": 51.68713410331864
+ },
+ "a2_r1_pct_ind": {
+  "casas": 1,
+  "descricao": "emissões indiretas, Renovável base (A2)",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_R1 (versão v04)",
+  "unidade": "%",
+  "valor": 77.74180256252723
+ },
+ "a2_r1_pct_rb": {
+  "casas": 1,
+  "descricao": "emissões no RB, Renovável base (A2)",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_R1 (versão v04)",
+  "unidade": "%",
+  "valor": 54.03876231984671
+ },
+ "a2_r1_pct_s38": {
+  "casas": 1,
+  "descricao": "participação do S38 (ou dos subsetores) nas emissões, Renovável base (A2)",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_R1 (versão v04)",
+  "unidade": "%",
+  "valor": 5.240342035950078
+ },
+ "a2_r1_top1_pct": {
+  "casas": 1,
+  "descricao": "participação do 1º emissor da cesta renovável no A2 (RS S43)",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › top10_A2 › A2_R1 #1",
+  "unidade": "%",
+  "valor": 37.13799241293293
+ },
+ "a2_r2_co2e": {
+  "casas": 1,
+  "descricao": "emissões totais, Renovável balanceada (A2)",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_R2 (versão v04)",
+  "unidade": "t CO₂e",
+  "valor": 149558.1102522495
+ },
+ "a2_r2_dx": {
+  "casas": 1,
+  "descricao": "produção bruta induzida, Renovável balanceada (A2)",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_R2 (versão v04)",
+  "unidade": "R$ milhões",
+  "valor": 1856.972951965483
+ },
+ "a2_r2_ic": {
+  "casas": 1,
+  "descricao": "intensidade carbônica, Renovável balanceada (A2)",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_R2 (versão v04)",
+  "unidade": "t CO₂e/R$ milhão",
+  "valor": 80.53865840854176
+ },
+ "a2_r2_pct_ind": {
+  "casas": 1,
+  "descricao": "emissões indiretas, Renovável balanceada (A2)",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_R2 (versão v04)",
+  "unidade": "%",
+  "valor": 52.87336361390497
+ },
+ "a2_r2_pct_rb": {
+  "casas": 1,
+  "descricao": "emissões no RB, Renovável balanceada (A2)",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_R2 (versão v04)",
+  "unidade": "%",
+  "valor": 33.78685684828569
+ },
+ "a2_r2_pct_s38": {
+  "casas": 1,
+  "descricao": "participação do S38 (ou dos subsetores) nas emissões, Renovável balanceada (A2)",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_R2 (versão v04)",
+  "unidade": "%",
+  "valor": 3.377435631868134
+ },
+ "a2_r3_co2e": {
+  "casas": 1,
+  "descricao": "emissões totais, Renovável infraestrutura-intensiva (A2)",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_R3 (versão v04)",
+  "unidade": "t CO₂e",
+  "valor": 108198.5933940783
+ },
+ "a2_r3_dx": {
+  "casas": 1,
+  "descricao": "produção bruta induzida, Renovável infraestrutura-intensiva (A2)",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_R3 (versão v04)",
+  "unidade": "R$ milhões",
+  "valor": 1912.233926877654
+ },
+ "a2_r3_ic": {
+  "casas": 1,
+  "descricao": "intensidade carbônica, Renovável infraestrutura-intensiva (A2)",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_R3 (versão v04)",
+  "unidade": "t CO₂e/R$ milhão",
+  "valor": 56.58229982915732
+ },
+ "a2_r3_pct_ind": {
+  "casas": 1,
+  "descricao": "emissões indiretas, Renovável infraestrutura-intensiva (A2)",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_R3 (versão v04)",
+  "unidade": "%",
+  "valor": 80.35616754725865
+ },
+ "a2_r3_pct_rb": {
+  "casas": 1,
+  "descricao": "emissões no RB, Renovável infraestrutura-intensiva (A2)",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_R3 (versão v04)",
+  "unidade": "%",
+  "valor": 57.4235822083378
+ },
+ "a2_r3_pct_s38": {
+  "casas": 1,
+  "descricao": "participação do S38 (ou dos subsetores) nas emissões, Renovável infraestrutura-intensiva (A2)",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_R3 (versão v04)",
+  "unidade": "%",
+  "valor": 5.429089370879655
+ },
+ "a2_r4a_co2e": {
+  "casas": 1,
+  "descricao": "emissões totais, Renovável energia/transporte-intensiva (A2)",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_R4a (versão v04)",
+  "unidade": "t CO₂e",
+  "valor": 128646.2709543628
+ },
+ "a2_r4a_dx": {
+  "casas": 1,
+  "descricao": "produção bruta induzida, Renovável energia/transporte-intensiva (A2)",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_R4a (versão v04)",
+  "unidade": "R$ milhões",
+  "valor": 1788.064386938778
+ },
+ "a2_r4a_ic": {
+  "casas": 1,
+  "descricao": "intensidade carbônica, Renovável energia/transporte-intensiva (A2)",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_R4a (versão v04)",
+  "unidade": "t CO₂e/R$ milhão",
+  "valor": 71.94722510782132
+ },
+ "a2_r4a_pct_ind": {
+  "casas": 1,
+  "descricao": "emissões indiretas, Renovável energia/transporte-intensiva (A2)",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_R4a (versão v04)",
+  "unidade": "%",
+  "valor": 50.71667144214111
+ },
+ "a2_r4a_pct_rb": {
+  "casas": 1,
+  "descricao": "emissões no RB, Renovável energia/transporte-intensiva (A2)",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_R4a (versão v04)",
+  "unidade": "%",
+  "valor": 31.16010335415815
+ },
+ "a2_r4a_pct_s38": {
+  "casas": 1,
+  "descricao": "participação do S38 (ou dos subsetores) nas emissões, Renovável energia/transporte-intensiva (A2)",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_R4a (versão v04)",
+  "unidade": "%",
+  "valor": 3.098847686339667
+ },
+ "a2_reducao_ic": {
+  "casas": 1,
+  "descricao": "redução da intensidade carbônica da cesta renovável em relação à fóssil (A2)",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › A2 › F1 e R1",
+  "unidade": "%",
+  "valor": 94.9056154029091
+ },
+ "bi_bio_t": {
+  "casas": 1,
+  "descricao": "emissões por R$ 1 bilhão, Biomassa",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › B_RS1bi › B_BIO",
+  "unidade": "t CO₂e",
+  "valor": 40583.46923057609
+ },
+ "bi_car_t": {
+  "casas": 1,
+  "descricao": "emissões por R$ 1 bilhão, Carvão mineral",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › B_RS1bi › B_CAR",
+  "unidade": "t CO₂e",
+  "valor": 5451530.487017048
+ },
+ "bi_dis_t": {
+  "casas": 1,
+  "descricao": "emissões por R$ 1 bilhão, distribuição (mix de 2019)",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › B_RS1bi › B_DIS",
+  "unidade": "t CO₂e",
+  "valor": 387680.1096022632
+ },
+ "bi_eol_t": {
+  "casas": 1,
+  "descricao": "emissões por R$ 1 bilhão, Eólica",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › B_RS1bi › B_EOL",
+  "unidade": "t CO₂e",
+  "valor": 26246.94724654291
+ },
+ "bi_gn_t": {
+  "casas": 1,
+  "descricao": "emissões por R$ 1 bilhão, Gás natural",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › B_RS1bi › B_GN",
+  "unidade": "t CO₂e",
+  "valor": 1636355.71269228
+ },
+ "bi_hid_t": {
+  "casas": 1,
+  "descricao": "emissões por R$ 1 bilhão, Hidrelétrica",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › B_RS1bi › B_HID",
+  "unidade": "t CO₂e",
+  "valor": 26391.53752492741
+ },
+ "bi_sol_t": {
+  "casas": 1,
+  "descricao": "emissões por R$ 1 bilhão, Solar fotovoltaica",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › B_RS1bi › B_SOL",
+  "unidade": "t CO₂e",
+  "valor": 24917.69053774675
+ },
+ "coef_tust_pet_antes": {
+  "casas": 4,
+  "descricao": "coeficiente de TUST da coluna latente S38_PET-RS sem a D18",
+  "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › d18_latentes › S38_PET",
+  "unidade": "R$/R$",
+  "valor": 0.01054868176586614
+ },
+ "coef_tust_pet_depois": {
+  "casas": 4,
+  "descricao": "coeficiente de TUST da coluna latente S38_PET-RS com a D18",
+  "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › d18_latentes › S38_PET",
+  "unidade": "R$/R$",
+  "valor": 0.04123681363240332
+ },
+ "coef_tust_sol_antes": {
+  "casas": 4,
+  "descricao": "coeficiente de TUST da coluna latente S38_SOL-RS sem a D18",
+  "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › d18_latentes › S38_SOL",
+  "unidade": "R$/R$",
+  "valor": 0.0953117068120729
+ },
+ "coef_tust_sol_depois": {
+  "casas": 4,
+  "descricao": "coeficiente de TUST da coluna latente S38_SOL-RS com a D18",
+  "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › d18_latentes › S38_SOL",
+  "unidade": "R$/R$",
+  "valor": 0.1614154616002224
+ },
+ "dev_e3_a2_e1": {
+  "casas": 1,
+  "descricao": "desvio das emissões da v04_E3 em relação à principal, A2_E1",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_E1",
+  "unidade": "%",
+  "valor": -33.971164801096265
+ },
+ "dev_e3_a2_f1": {
+  "casas": 1,
+  "descricao": "desvio das emissões da v04_E3 em relação à principal, A2_F1",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_F1",
+  "unidade": "%",
+  "valor": -0.07195637772602348
+ },
+ "dev_e3_a2_r1": {
+  "casas": 1,
+  "descricao": "desvio das emissões da v04_E3 em relação à principal, A2_R1",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_R1",
+  "unidade": "%",
+  "valor": -2.93806565743282
+ },
+ "dev_e3_b_twh_bio": {
+  "casas": 1,
+  "descricao": "desvio das emissões da v04_E3 em relação à principal, B_TWh_BIO",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › B_TWh_BIO",
+  "unidade": "%",
+  "valor": -2.061530990175753
+ },
+ "dev_e3_b_twh_car": {
+  "casas": 1,
+  "descricao": "desvio das emissões da v04_E3 em relação à principal, B_TWh_CAR",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › B_TWh_CAR",
+  "unidade": "%",
+  "valor": -0.01602621088758749
+ },
+ "dev_e3_b_twh_eol": {
+  "casas": 1,
+  "descricao": "desvio das emissões da v04_E3 em relação à principal, B_TWh_EOL",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › B_TWh_EOL",
+  "unidade": "%",
+  "valor": -2.8000350155846565
+ },
+ "dev_e3_b_twh_gn": {
+  "casas": 1,
+  "descricao": "desvio das emissões da v04_E3 em relação à principal, B_TWh_GN",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › B_TWh_GN",
+  "unidade": "%",
+  "valor": -0.08486146219232049
+ },
+ "dev_e3_b_twh_hid": {
+  "casas": 1,
+  "descricao": "desvio das emissões da v04_E3 em relação à principal, B_TWh_HID",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › B_TWh_HID",
+  "unidade": "%",
+  "valor": -2.799697045711902
+ },
+ "dev_e3_b_twh_sol": {
+  "casas": 1,
+  "descricao": "desvio das emissões da v04_E3 em relação à principal, B_TWh_SOL",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › B_TWh_SOL",
+  "unidade": "%",
+  "valor": -2.9065544192493187
+ },
+ "dev_e4_a2_e1": {
+  "casas": 1,
+  "descricao": "desvio das emissões da v04_E4 em relação à principal, A2_E1",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_E1",
+  "unidade": "%",
+  "valor": -31.224609912062352
+ },
+ "dev_e4_a2_f1": {
+  "casas": 1,
+  "descricao": "desvio das emissões da v04_E4 em relação à principal, A2_F1",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_F1",
+  "unidade": "%",
+  "valor": 2.1875596885014836
+ },
+ "dev_e4_a2_r1": {
+  "casas": 1,
+  "descricao": "desvio das emissões da v04_E4 em relação à principal, A2_R1",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_R1",
+  "unidade": "%",
+  "valor": 1.8157545345252935
+ },
+ "dev_e4_b_twh_bio": {
+  "casas": 1,
+  "descricao": "desvio das emissões da v04_E4 em relação à principal, B_TWh_BIO",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › B_TWh_BIO",
+  "unidade": "%",
+  "valor": 2.8452247170694056
+ },
+ "dev_e4_b_twh_car": {
+  "casas": 1,
+  "descricao": "desvio das emissões da v04_E4 em relação à principal, B_TWh_CAR",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › B_TWh_CAR",
+  "unidade": "%",
+  "valor": 0.04669157788026457
+ },
+ "dev_e4_b_twh_eol": {
+  "casas": 1,
+  "descricao": "desvio das emissões da v04_E4 em relação à principal, B_TWh_EOL",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › B_TWh_EOL",
+  "unidade": "%",
+  "valor": 4.196267605390758
+ },
+ "dev_e4_b_twh_gn": {
+  "casas": 1,
+  "descricao": "desvio das emissões da v04_E4 em relação à principal, B_TWh_GN",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › B_TWh_GN",
+  "unidade": "%",
+  "valor": 4.180650944169773
+ },
+ "dev_e4_b_twh_hid": {
+  "casas": 1,
+  "descricao": "desvio das emissões da v04_E4 em relação à principal, B_TWh_HID",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › B_TWh_HID",
+  "unidade": "%",
+  "valor": 4.187814494360653
+ },
+ "dev_e4_b_twh_sol": {
+  "casas": 1,
+  "descricao": "desvio das emissões da v04_E4 em relação à principal, B_TWh_SOL",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › B_TWh_SOL",
+  "unidade": "%",
+  "valor": 1.1931965820035861
+ },
+ "dev_k060_a2_e1": {
+  "casas": 1,
+  "descricao": "desvio das emissões da v04_k060 em relação à principal, A2_E1",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_E1",
+  "unidade": "%",
+  "valor": 0.01329653044412904
+ },
+ "dev_k060_a2_f1": {
+  "casas": 1,
+  "descricao": "desvio das emissões da v04_k060 em relação à principal, A2_F1",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_F1",
+  "unidade": "%",
+  "valor": -0.088501598537849
+ },
+ "dev_k060_a2_r1": {
+  "casas": 1,
+  "descricao": "desvio das emissões da v04_k060 em relação à principal, A2_R1",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_R1",
+  "unidade": "%",
+  "valor": -0.04536658731205678
+ },
+ "dev_k060_b_twh_bio": {
+  "casas": 1,
+  "descricao": "desvio das emissões da v04_k060 em relação à principal, B_TWh_BIO",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › B_TWh_BIO",
+  "unidade": "%",
+  "valor": -0.4382205346589285
+ },
+ "dev_k060_b_twh_car": {
+  "casas": 1,
+  "descricao": "desvio das emissões da v04_k060 em relação à principal, B_TWh_CAR",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › B_TWh_CAR",
+  "unidade": "%",
+  "valor": -0.0030351301189335267
+ },
+ "dev_k060_b_twh_eol": {
+  "casas": 1,
+  "descricao": "desvio das emissões da v04_k060 em relação à principal, B_TWh_EOL",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › B_TWh_EOL",
+  "unidade": "%",
+  "valor": -0.744146316472627
+ },
+ "dev_k060_b_twh_gn": {
+  "casas": 1,
+  "descricao": "desvio das emissões da v04_k060 em relação à principal, B_TWh_GN",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › B_TWh_GN",
+  "unidade": "%",
+  "valor": 0.6060648718031914
+ },
+ "dev_k060_b_twh_hid": {
+  "casas": 1,
+  "descricao": "desvio das emissões da v04_k060 em relação à principal, B_TWh_HID",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › B_TWh_HID",
+  "unidade": "%",
+  "valor": -0.7533206023728978
+ },
+ "dev_k060_b_twh_sol": {
+  "casas": 1,
+  "descricao": "desvio das emissões da v04_k060 em relação à principal, B_TWh_SOL",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › B_TWh_SOL",
+  "unidade": "%",
+  "valor": -7.225036112545979
+ },
+ "dev_p2_a2_e1": {
+  "casas": 1,
+  "descricao": "desvio das emissões da v04_P2 em relação à principal, A2_E1",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_E1",
+  "unidade": "%",
+  "valor": 2.8087552084166134e-05
+ },
+ "dev_p2_a2_f1": {
+  "casas": 1,
+  "descricao": "desvio das emissões da v04_P2 em relação à principal, A2_F1",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_F1",
+  "unidade": "%",
+  "valor": 35.98095759041111
+ },
+ "dev_p2_a2_r1": {
+  "casas": 1,
+  "descricao": "desvio das emissões da v04_P2 em relação à principal, A2_R1",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_R1",
+  "unidade": "%",
+  "valor": -0.030567623898059004
+ },
+ "dev_p2_b_twh_bio": {
+  "casas": 1,
+  "descricao": "desvio das emissões da v04_P2 em relação à principal, B_TWh_BIO",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › B_TWh_BIO",
+  "unidade": "%",
+  "valor": -7.6001294434499105
+ },
+ "dev_p2_b_twh_car": {
+  "casas": 1,
+  "descricao": "desvio das emissões da v04_P2 em relação à principal, B_TWh_CAR",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › B_TWh_CAR",
+  "unidade": "%",
+  "valor": -0.12113280497549894
+ },
+ "dev_p2_b_twh_eol": {
+  "casas": 1,
+  "descricao": "desvio das emissões da v04_P2 em relação à principal, B_TWh_EOL",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › B_TWh_EOL",
+  "unidade": "%",
+  "valor": 2.41847113738185
+ },
+ "dev_p2_b_twh_gn": {
+  "casas": 1,
+  "descricao": "desvio das emissões da v04_P2 em relação à principal, B_TWh_GN",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › B_TWh_GN",
+  "unidade": "%",
+  "valor": 1.0507102965462423e-06
+ },
+ "dev_p2_b_twh_hid": {
+  "casas": 1,
+  "descricao": "desvio das emissões da v04_P2 em relação à principal, B_TWh_HID",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › B_TWh_HID",
+  "unidade": "%",
+  "valor": 5.974944417864858
+ },
+ "dev_p2_b_twh_sol": {
+  "casas": 1,
+  "descricao": "desvio das emissões da v04_P2 em relação à principal, B_TWh_SOL",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › B_TWh_SOL",
+  "unidade": "%",
+  "valor": -29.005015545168945
+ },
+ "dev_rap_media_a2_e1": {
+  "casas": 1,
+  "descricao": "desvio das emissões da v04_rap_media em relação à principal, A2_E1",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_E1",
+  "unidade": "%",
+  "valor": -0.0008578439415929395
+ },
+ "dev_rap_media_a2_f1": {
+  "casas": 1,
+  "descricao": "desvio das emissões da v04_rap_media em relação à principal, A2_F1",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_F1",
+  "unidade": "%",
+  "valor": 2.525985579425405
+ },
+ "dev_rap_media_a2_r1": {
+  "casas": 1,
+  "descricao": "desvio das emissões da v04_rap_media em relação à principal, A2_R1",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_R1",
+  "unidade": "%",
+  "valor": 0.13600568334761753
+ },
+ "dev_rap_media_b_twh_bio": {
+  "casas": 1,
+  "descricao": "desvio das emissões da v04_rap_media em relação à principal, B_TWh_BIO",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › B_TWh_BIO",
+  "unidade": "%",
+  "valor": -0.901185380600289
+ },
+ "dev_rap_media_b_twh_car": {
+  "casas": 1,
+  "descricao": "desvio das emissões da v04_rap_media em relação à principal, B_TWh_CAR",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › B_TWh_CAR",
+  "unidade": "%",
+  "valor": -0.007634112368570811
+ },
+ "dev_rap_media_b_twh_eol": {
+  "casas": 1,
+  "descricao": "desvio das emissões da v04_rap_media em relação à principal, B_TWh_EOL",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › B_TWh_EOL",
+  "unidade": "%",
+  "valor": -1.1980750129148565
+ },
+ "dev_rap_media_b_twh_gn": {
+  "casas": 1,
+  "descricao": "desvio das emissões da v04_rap_media em relação à principal, B_TWh_GN",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › B_TWh_GN",
+  "unidade": "%",
+  "valor": -0.027592012192667603
+ },
+ "dev_rap_media_b_twh_hid": {
+  "casas": 1,
+  "descricao": "desvio das emissões da v04_rap_media em relação à principal, B_TWh_HID",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › B_TWh_HID",
+  "unidade": "%",
+  "valor": -1.1397038161159556
+ },
+ "dev_rap_media_b_twh_sol": {
+  "casas": 1,
+  "descricao": "desvio das emissões da v04_rap_media em relação à principal, B_TWh_SOL",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › B_TWh_SOL",
+  "unidade": "%",
+  "valor": -1.2767534215700649
+ },
+ "diag_disponivel": {
+  "casas": 0,
+  "descricao": "diagnóstico NEREUS × SEEG gerado",
+  "origem": "resultados/rodada05/diagnostico_seeg_nereus.xlsx",
+  "unidade": "",
+  "valor": 1.0
+ },
+ "e4_movido_rb": {
+  "casas": 1,
+  "descricao": "emissões movidas do S38 na E4, RB",
+  "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › realocacao_E4 › RB",
+  "unidade": "t CO₂e",
+  "valor": 42743465.99482903
+ },
+ "e4_movido_rs": {
+  "casas": 1,
+  "descricao": "emissões movidas do S38 na E4, RS",
+  "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › realocacao_E4 › RS",
+  "unidade": "t CO₂e",
+  "valor": 1900181.996674465
+ },
+ "fator_e1_rb_bio": {
+  "casas": 3,
+  "descricao": "fator de emissão E1 RB S38_BIO",
+  "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RB S38_BIO",
+  "unidade": "t CO₂e/MWh",
+  "valor": 0.006883556534375941
+ },
+ "fator_e1_rb_car": {
+  "casas": 3,
+  "descricao": "fator de emissão E1 RB S38_CAR",
+  "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RB S38_CAR",
+  "unidade": "t CO₂e/MWh",
+  "valor": 0.8669797164970893
+ },
+ "fator_e1_rb_eol": {
+  "casas": 3,
+  "descricao": "fator de emissão E1 RB S38_EOL",
+  "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RB S38_EOL",
+  "unidade": "t CO₂e/MWh",
+  "valor": 0.0
+ },
+ "fator_e1_rb_gn": {
+  "casas": 3,
+  "descricao": "fator de emissão E1 RB S38_GN",
+  "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RB S38_GN",
+  "unidade": "t CO₂e/MWh",
+  "valor": 0.4325599155286444
+ },
+ "fator_e1_rb_hid": {
+  "casas": 3,
+  "descricao": "fator de emissão E1 RB S38_HID",
+  "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RB S38_HID",
+  "unidade": "t CO₂e/MWh",
+  "valor": 0.0
+ },
+ "fator_e1_rb_nuc": {
+  "casas": 3,
+  "descricao": "fator de emissão E1 RB S38_NUC",
+  "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RB S38_NUC",
+  "unidade": "t CO₂e/MWh",
+  "valor": 0.0
+ },
+ "fator_e1_rb_pet": {
+  "casas": 3,
+  "descricao": "fator de emissão E1 RB S38_PET",
+  "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RB S38_PET",
+  "unidade": "t CO₂e/MWh",
+  "valor": 0.8294599693660611
+ },
+ "fator_e1_rb_sol": {
+  "casas": 3,
+  "descricao": "fator de emissão E1 RB S38_SOL",
+  "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RB S38_SOL",
+  "unidade": "t CO₂e/MWh",
+  "valor": 0.0
+ },
+ "fator_e1_rs_bio": {
+  "casas": 3,
+  "descricao": "fator de emissão E1 RS S38_BIO",
+  "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RS S38_BIO",
+  "unidade": "t CO₂e/MWh",
+  "valor": 4.94730699878923e-05
+ },
+ "fator_e1_rs_car": {
+  "casas": 3,
+  "descricao": "fator de emissão E1 RS S38_CAR",
+  "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RS S38_CAR",
+  "unidade": "t CO₂e/MWh",
+  "valor": 1.434683387553202
+ },
+ "fator_e1_rs_eol": {
+  "casas": 3,
+  "descricao": "fator de emissão E1 RS S38_EOL",
+  "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RS S38_EOL",
+  "unidade": "t CO₂e/MWh",
+  "valor": 0.0
+ },
+ "fator_e1_rs_gn": {
+  "casas": 3,
+  "descricao": "fator de emissão E1 RS S38_GN",
+  "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RS S38_GN",
+  "unidade": "t CO₂e/MWh",
+  "valor": 0.4364369138406436
+ },
+ "fator_e1_rs_hid": {
+  "casas": 3,
+  "descricao": "fator de emissão E1 RS S38_HID",
+  "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RS S38_HID",
+  "unidade": "t CO₂e/MWh",
+  "valor": 0.0
+ },
+ "mult_em_rb_bio": {
+  "casas": 1,
+  "descricao": "multiplicador de emissões RB S38_BIO",
+  "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RB S38_BIO",
+  "unidade": "t CO₂e/R$ milhão",
+  "valor": 81.57672862286299
+ },
+ "mult_em_rb_car": {
+  "casas": 1,
+  "descricao": "multiplicador de emissões RB S38_CAR",
+  "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RB S38_CAR",
+  "unidade": "t CO₂e/R$ milhão",
+  "valor": 4520.868380526529
+ },
+ "mult_em_rb_dis": {
+  "casas": 1,
+  "descricao": "multiplicador de emissões RB S38_DIS",
+  "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RB S38_DIS",
+  "unidade": "t CO₂e/R$ milhão",
+  "valor": 422.6125128330976
+ },
+ "mult_em_rb_eol": {
+  "casas": 1,
+  "descricao": "multiplicador de emissões RB S38_EOL",
+  "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RB S38_EOL",
+  "unidade": "t CO₂e/R$ milhão",
+  "valor": 25.78164136652243
+ },
+ "mult_em_rb_gas": {
+  "casas": 1,
+  "descricao": "multiplicador de emissões RB S38_GAS",
+  "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RB S38_GAS",
+  "unidade": "t CO₂e/R$ milhão",
+  "valor": 269.7965944628818
+ },
+ "mult_em_rb_gn": {
+  "casas": 1,
+  "descricao": "multiplicador de emissões RB S38_GN",
+  "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RB S38_GN",
+  "unidade": "t CO₂e/R$ milhão",
+  "valor": 1916.120388670084
+ },
+ "mult_em_rb_hid": {
+  "casas": 1,
+  "descricao": "multiplicador de emissões RB S38_HID",
+  "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RB S38_HID",
+  "unidade": "t CO₂e/R$ milhão",
+  "valor": 26.0520084373274
+ },
+ "mult_em_rb_nuc": {
+  "casas": 1,
+  "descricao": "multiplicador de emissões RB S38_NUC",
+  "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RB S38_NUC",
+  "unidade": "t CO₂e/R$ milhão",
+  "valor": 25.04981628574196
+ },
+ "mult_em_rb_pet": {
+  "casas": 1,
+  "descricao": "multiplicador de emissões RB S38_PET",
+  "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RB S38_PET",
+  "unidade": "t CO₂e/R$ milhão",
+  "valor": 1184.180633082289
+ },
+ "mult_em_rb_sol": {
+  "casas": 1,
+  "descricao": "multiplicador de emissões RB S38_SOL",
+  "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RB S38_SOL",
+  "unidade": "t CO₂e/R$ milhão",
+  "valor": 24.71929973316731
+ },
+ "mult_em_rb_tra": {
+  "casas": 1,
+  "descricao": "multiplicador de emissões RB S38_TRA",
+  "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RB S38_TRA",
+  "unidade": "t CO₂e/R$ milhão",
+  "valor": 24.44447589970749
+ },
+ "mult_em_rs_bio": {
+  "casas": 1,
+  "descricao": "multiplicador de emissões RS S38_BIO",
+  "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RS S38_BIO",
+  "unidade": "t CO₂e/R$ milhão",
+  "valor": 40.58346923057609
+ },
+ "mult_em_rs_car": {
+  "casas": 1,
+  "descricao": "multiplicador de emissões RS S38_CAR",
+  "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RS S38_CAR",
+  "unidade": "t CO₂e/R$ milhão",
+  "valor": 5451.530487017047
+ },
+ "mult_em_rs_dis": {
+  "casas": 1,
+  "descricao": "multiplicador de emissões RS S38_DIS",
+  "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RS S38_DIS",
+  "unidade": "t CO₂e/R$ milhão",
+  "valor": 387.6801096022632
+ },
+ "mult_em_rs_eol": {
+  "casas": 1,
+  "descricao": "multiplicador de emissões RS S38_EOL",
+  "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RS S38_EOL",
+  "unidade": "t CO₂e/R$ milhão",
+  "valor": 26.24694724654291
+ },
+ "mult_em_rs_gas": {
+  "casas": 1,
+  "descricao": "multiplicador de emissões RS S38_GAS",
+  "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RS S38_GAS",
+  "unidade": "t CO₂e/R$ milhão",
+  "valor": 213.8678836555717
+ },
+ "mult_em_rs_gn": {
+  "casas": 1,
+  "descricao": "multiplicador de emissões RS S38_GN",
+  "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RS S38_GN",
+  "unidade": "t CO₂e/R$ milhão",
+  "valor": 1636.35571269228
+ },
+ "mult_em_rs_hid": {
+  "casas": 1,
+  "descricao": "multiplicador de emissões RS S38_HID",
+  "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RS S38_HID",
+  "unidade": "t CO₂e/R$ milhão",
+  "valor": 26.39153752492741
+ },
+ "mult_em_rs_pet": {
+  "casas": 1,
+  "descricao": "multiplicador de emissões RS S38_PET",
+  "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RS S38_PET",
+  "unidade": "t CO₂e/R$ milhão",
+  "valor": 1187.596798429766
+ },
+ "mult_em_rs_sol": {
+  "casas": 1,
+  "descricao": "multiplicador de emissões RS S38_SOL",
+  "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RS S38_SOL",
+  "unidade": "t CO₂e/R$ milhão",
+  "valor": 24.91769053774674
+ },
+ "mult_em_rs_tra": {
+  "casas": 1,
+  "descricao": "multiplicador de emissões RS S38_TRA",
+  "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RS S38_TRA",
+  "unidade": "t CO₂e/R$ milhão",
+  "valor": 23.93629521218996
+ },
+ "mult_prod_rb_bio": {
+  "casas": 3,
+  "descricao": "multiplicador de produção RB S38_BIO",
+  "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RB S38_BIO",
+  "unidade": "",
+  "valor": 1.516989283291159
+ },
+ "mult_prod_rb_car": {
+  "casas": 3,
+  "descricao": "multiplicador de produção RB S38_CAR",
+  "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RB S38_CAR",
+  "unidade": "",
+  "valor": 1.630804233151826
+ },
+ "mult_prod_rb_dis": {
+  "casas": 3,
+  "descricao": "multiplicador de produção RB S38_DIS",
+  "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RB S38_DIS",
+  "unidade": "",
+  "valor": 1.921852379490097
+ },
+ "mult_prod_rb_eol": {
+  "casas": 3,
+  "descricao": "multiplicador de produção RB S38_EOL",
+  "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RB S38_EOL",
+  "unidade": "",
+  "valor": 1.491742170112585
+ },
+ "mult_prod_rb_gas": {
+  "casas": 3,
+  "descricao": "multiplicador de produção RB S38_GAS",
+  "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RB S38_GAS",
+  "unidade": "",
+  "valor": 1.774682173526201
+ },
+ "mult_prod_rb_gn": {
+  "casas": 3,
+  "descricao": "multiplicador de produção RB S38_GN",
+  "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RB S38_GN",
+  "unidade": "",
+  "valor": 1.850794095667347
+ },
+ "mult_prod_rb_hid": {
+  "casas": 3,
+  "descricao": "multiplicador de produção RB S38_HID",
+  "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RB S38_HID",
+  "unidade": "",
+  "valor": 1.509880605530247
+ },
+ "mult_prod_rb_nuc": {
+  "casas": 3,
+  "descricao": "multiplicador de produção RB S38_NUC",
+  "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RB S38_NUC",
+  "unidade": "",
+  "valor": 1.442110317703913
+ },
+ "mult_prod_rb_pet": {
+  "casas": 3,
+  "descricao": "multiplicador de produção RB S38_PET",
+  "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RB S38_PET",
+  "unidade": "",
+  "valor": 2.759954418743637
+ },
+ "mult_prod_rb_sol": {
+  "casas": 3,
+  "descricao": "multiplicador de produção RB S38_SOL",
+  "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RB S38_SOL",
+  "unidade": "",
+  "valor": 1.419414855856191
+ },
+ "mult_prod_rb_tra": {
+  "casas": 3,
+  "descricao": "multiplicador de produção RB S38_TRA",
+  "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RB S38_TRA",
+  "unidade": "",
+  "valor": 1.30468519866825
+ },
+ "mult_prod_rs_bio": {
+  "casas": 3,
+  "descricao": "multiplicador de produção RS S38_BIO",
+  "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RS S38_BIO",
+  "unidade": "",
+  "valor": 1.567822837603512
+ },
+ "mult_prod_rs_car": {
+  "casas": 3,
+  "descricao": "multiplicador de produção RS S38_CAR",
+  "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RS S38_CAR",
+  "unidade": "",
+  "valor": 1.514107489007332
+ },
+ "mult_prod_rs_dis": {
+  "casas": 3,
+  "descricao": "multiplicador de produção RS S38_DIS",
+  "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RS S38_DIS",
+  "unidade": "",
+  "valor": 1.896741588878895
+ },
+ "mult_prod_rs_eol": {
+  "casas": 3,
+  "descricao": "multiplicador de produção RS S38_EOL",
+  "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RS S38_EOL",
+  "unidade": "",
+  "valor": 1.543892949379633
+ },
+ "mult_prod_rs_gas": {
+  "casas": 3,
+  "descricao": "multiplicador de produção RS S38_GAS",
+  "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RS S38_GAS",
+  "unidade": "",
+  "valor": 2.344210607525952
+ },
+ "mult_prod_rs_gn": {
+  "casas": 3,
+  "descricao": "multiplicador de produção RS S38_GN",
+  "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RS S38_GN",
+  "unidade": "",
+  "valor": 2.396925224583616
+ },
+ "mult_prod_rs_hid": {
+  "casas": 3,
+  "descricao": "multiplicador de produção RS S38_HID",
+  "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RS S38_HID",
+  "unidade": "",
+  "valor": 1.552910481791872
+ },
+ "mult_prod_rs_pet": {
+  "casas": 3,
+  "descricao": "multiplicador de produção RS S38_PET",
+  "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RS S38_PET",
+  "unidade": "",
+  "valor": 2.801481802009222
+ },
+ "mult_prod_rs_sol": {
+  "casas": 3,
+  "descricao": "multiplicador de produção RS S38_SOL",
+  "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RS S38_SOL",
+  "unidade": "",
+  "valor": 1.508255449942891
+ },
+ "mult_prod_rs_tra": {
+  "casas": 3,
+  "descricao": "multiplicador de produção RS S38_TRA",
+  "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RS S38_TRA",
+  "unidade": "",
+  "valor": 1.321166321733432
+ },
+ "p_pet_rb": {
+  "casas": 1,
+  "descricao": "R$/MWh do espelho S38_PET-RB",
+  "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › d18_latentes › S38_PET",
+  "unidade": "R$/MWh",
+  "valor": 785.9676713530407
+ },
+ "p_sol_rb": {
+  "casas": 1,
+  "descricao": "R$/MWh do espelho S38_SOL-RB",
+  "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › d18_latentes › S38_SOL",
+  "unidade": "R$/MWh",
+  "valor": 200.7911885476695
+ },
+ "residuo_rb": {
+  "casas": 1,
+  "descricao": "resíduo de emissões do S38 (E1), RB",
+  "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › niveis_emissoes › v04 RB",
+  "unidade": "t CO₂e",
+  "valor": 49689733.89448699
+ },
+ "residuo_rb_pct": {
+  "casas": 1,
+  "descricao": "resíduo de emissões em % do CO₂e do S38, RB",
+  "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › niveis_emissoes › v04 RB",
+  "unidade": "%",
+  "valor": 58.7916522851085
+ },
+ "residuo_rs": {
+  "casas": 1,
+  "descricao": "resíduo de emissões do S38 (E1), RS",
+  "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › niveis_emissoes › v04 RS",
+  "unidade": "t CO₂e",
+  "valor": 1975857.725355113
+ },
+ "residuo_rs_pct": {
+  "casas": 1,
+  "descricao": "resíduo de emissões em % do CO₂e do S38, RS",
+  "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › niveis_emissoes › v04 RS",
+  "unidade": "%",
+  "valor": 33.8447387032148
+ },
+ "rob_a2_e1_max": {
+  "casas": 1,
+  "descricao": "maior valor entre as 9 versões (v04_E2), A2_E1",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_E1",
+  "unidade": "t CO₂e",
+  "valor": 437947.0453997472
+ },
+ "rob_a2_e1_min": {
+  "casas": 1,
+  "descricao": "menor valor entre as 9 versões (v04_E3), A2_E1",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_E1",
+  "unidade": "t CO₂e",
+  "valor": 253057.9617184265
+ },
+ "rob_a2_f1_max": {
+  "casas": 1,
+  "descricao": "maior valor entre as 9 versões (v04_E2), A2_F1",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_F1",
+  "unidade": "t CO₂e",
+  "valor": 2951716.490104317
+ },
+ "rob_a2_f1_min": {
+  "casas": 1,
+  "descricao": "menor valor entre as 9 versões (v04_k060), A2_F1",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_F1",
+  "unidade": "t CO₂e",
+  "valor": 2024408.995228102
+ },
+ "rob_a2_r1_max": {
+  "casas": 1,
+  "descricao": "maior valor entre as 9 versões (v04_E4), A2_R1",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_R1",
+  "unidade": "t CO₂e",
+  "valor": 97102.71782474071
+ },
+ "rob_a2_r1_min": {
+  "casas": 1,
+  "descricao": "menor valor entre as 9 versões (v04_E3), A2_R1",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_R1",
+  "unidade": "t CO₂e",
+  "valor": 92568.95128930014
+ },
+ "rob_b_twh_bio_max": {
+  "casas": 1,
+  "descricao": "maior valor entre as 9 versões (v04_E4), B_TWh_BIO",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › B_TWh_BIO",
+  "unidade": "t CO₂e",
+  "valor": 9059.660555334896
+ },
+ "rob_b_twh_bio_min": {
+  "casas": 1,
+  "descricao": "menor valor entre as 9 versões (v04_P2), B_TWh_BIO",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › B_TWh_BIO",
+  "unidade": "t CO₂e",
+  "valor": 8139.526797691854
+ },
+ "rob_b_twh_car_max": {
+  "casas": 1,
+  "descricao": "maior valor entre as 9 versões (v04_E2), B_TWh_CAR",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › B_TWh_CAR",
+  "unidade": "t CO₂e",
+  "valor": 2176164.779703946
+ },
+ "rob_b_twh_car_min": {
+  "casas": 1,
+  "descricao": "menor valor entre as 9 versões (v04_P2), B_TWh_CAR",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › B_TWh_CAR",
+  "unidade": "t CO₂e",
+  "valor": 1440413.600973896
+ },
+ "rob_b_twh_eol_max": {
+  "casas": 1,
+  "descricao": "maior valor entre as 9 versões (v04_E4), B_TWh_EOL",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › B_TWh_EOL",
+  "unidade": "t CO₂e",
+  "valor": 4988.720163774262
+ },
+ "rob_b_twh_eol_min": {
+  "casas": 1,
+  "descricao": "menor valor entre as 9 versões (v04_E3), B_TWh_EOL",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › B_TWh_EOL",
+  "unidade": "t CO₂e",
+  "valor": 4653.750430603887
+ },
+ "rob_b_twh_gn_max": {
+  "casas": 1,
+  "descricao": "maior valor entre as 9 versões (v04_E2), B_TWh_GN",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › B_TWh_GN",
+  "unidade": "t CO₂e",
+  "valor": 682288.861876712
+ },
+ "rob_b_twh_gn_min": {
+  "casas": 1,
+  "descricao": "menor valor entre as 9 versões (v04_E3), B_TWh_GN",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › B_TWh_GN",
+  "unidade": "t CO₂e",
+  "valor": 458629.0667476
+ },
+ "rob_b_twh_hid_max": {
+  "casas": 1,
+  "descricao": "maior valor entre as 9 versões (v04_P2), B_TWh_HID",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › B_TWh_HID",
+  "unidade": "t CO₂e",
+  "valor": 4903.602632303452
+ },
+ "rob_b_twh_hid_min": {
+  "casas": 1,
+  "descricao": "menor valor entre as 9 versões (v04_E3), B_TWh_HID",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › B_TWh_HID",
+  "unidade": "t CO₂e",
+  "valor": 4497.58821809763
+ },
+ "rob_b_twh_sol_max": {
+  "casas": 1,
+  "descricao": "maior valor entre as 9 versões (v04_E4), B_TWh_SOL",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › B_TWh_SOL",
+  "unidade": "t CO₂e",
+  "valor": 5062.951339129909
+ },
+ "rob_b_twh_sol_min": {
+  "casas": 1,
+  "descricao": "menor valor entre as 9 versões (v04_P2), B_TWh_SOL",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › B_TWh_SOL",
+  "unidade": "t CO₂e",
+  "valor": 3552.058475846372
+ },
+ "s38_co2e_rb": {
+  "casas": 1,
+  "descricao": "emissões do S38 na base NEREUS, RB",
+  "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › niveis_emissoes › v04 RB",
+  "unidade": "t CO₂e",
+  "valor": 84518349.05662796
+ },
+ "s38_co2e_rs": {
+  "casas": 1,
+  "descricao": "emissões do S38 na base NEREUS, RS",
+  "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › niveis_emissoes › v04 RS",
+  "unidade": "t CO₂e",
+  "valor": 5838005.554368285
+ },
+ "tau_rs": {
+  "casas": 2,
+  "descricao": "TUST por MWh das fontes do RS (τ_RS)",
+  "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › d18_latentes",
+  "unidade": "R$/MWh",
+  "valor": 32.41080238467936
+ },
+ "twh_bio_evit_car": {
+  "casas": 1,
+  "descricao": "emissões evitadas por TWh em relação ao carvão, Biomassa",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › B_TWh › S38_BIO (v04)",
+  "unidade": "t CO₂e/TWh",
+  "valor": 1433351.506450309
+ },
+ "twh_bio_evit_gn": {
+  "casas": 1,
+  "descricao": "emissões evitadas por TWh em relação ao gás natural, Biomassa",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › B_TWh › S38_BIO (v04)",
+  "unidade": "t CO₂e/TWh",
+  "valor": 450209.5726140406
+ },
+ "twh_bio_gkwh": {
+  "casas": 1,
+  "descricao": "g CO₂e/kWh, Biomassa",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › B_TWh › S38_BIO (v04)",
+  "unidade": "g CO₂e/kWh",
+  "valor": 8.809024026403092
+ },
+ "twh_bio_pct_rb": {
+  "casas": 1,
+  "descricao": "emissões no RB por TWh, Biomassa",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › B_TWh › S38_BIO (v04)",
+  "unidade": "%",
+  "valor": 68.86003531748143
+ },
+ "twh_bio_preco": {
+  "casas": 1,
+  "descricao": "preço médio, Biomassa",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › B_TWh › S38_BIO (v04)",
+  "unidade": "R$/MWh",
+  "valor": 217.0594134364014
+ },
+ "twh_bio_t": {
+  "casas": 1,
+  "descricao": "emissões por TWh, Biomassa",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › B_TWh › S38_BIO (v04)",
+  "unidade": "t CO₂e/TWh",
+  "valor": 8809.024026403093
+ },
+ "twh_car_evit_car": {
+  "casas": 1,
+  "descricao": "emissões evitadas por TWh em relação ao carvão, Carvão mineral",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › B_TWh › S38_CAR (v04)",
+  "unidade": "t CO₂e/TWh",
+  "valor": 0.0
+ },
+ "twh_car_evit_gn": {
+  "casas": 1,
+  "descricao": "emissões evitadas por TWh em relação ao gás natural, Carvão mineral",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › B_TWh › S38_CAR (v04)",
+  "unidade": "t CO₂e/TWh",
+  "valor": -983141.9338362685
+ },
+ "twh_car_gkwh": {
+  "casas": 1,
+  "descricao": "g CO₂e/kWh, Carvão mineral",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › B_TWh › S38_CAR (v04)",
+  "unidade": "g CO₂e/kWh",
+  "valor": 1442.160530476712
+ },
+ "twh_car_pct_rb": {
+  "casas": 1,
+  "descricao": "emissões no RB por TWh, Carvão mineral",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › B_TWh › S38_CAR (v04)",
+  "unidade": "%",
+  "valor": 0.2822595977346183
+ },
+ "twh_car_preco": {
+  "casas": 1,
+  "descricao": "preço médio, Carvão mineral",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › B_TWh › S38_CAR (v04)",
+  "unidade": "R$/MWh",
+  "valor": 264.5423214473903
+ },
+ "twh_car_t": {
+  "casas": 1,
+  "descricao": "emissões por TWh, Carvão mineral",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › B_TWh › S38_CAR (v04)",
+  "unidade": "t CO₂e/TWh",
+  "valor": 1442160.530476712
+ },
+ "twh_eol_evit_car": {
+  "casas": 1,
+  "descricao": "emissões evitadas por TWh em relação ao carvão, Eólica",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › B_TWh › S38_EOL (v04)",
+  "unidade": "t CO₂e/TWh",
+  "valor": 1437372.719666955
+ },
+ "twh_eol_evit_gn": {
+  "casas": 1,
+  "descricao": "emissões evitadas por TWh em relação ao gás natural, Eólica",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › B_TWh › S38_EOL (v04)",
+  "unidade": "t CO₂e/TWh",
+  "valor": 454230.7858306867
+ },
+ "twh_eol_gkwh": {
+  "casas": 1,
+  "descricao": "g CO₂e/kWh, Eólica",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › B_TWh › S38_EOL (v04)",
+  "unidade": "g CO₂e/kWh",
+  "valor": 4.787810809757032
+ },
+ "twh_eol_pct_rb": {
+  "casas": 1,
+  "descricao": "emissões no RB por TWh, Eólica",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › B_TWh › S38_EOL (v04)",
+  "unidade": "%",
+  "valor": 54.72019630973455
+ },
+ "twh_eol_preco": {
+  "casas": 1,
+  "descricao": "preço médio, Eólica",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › B_TWh › S38_EOL (v04)",
+  "unidade": "R$/MWh",
+  "valor": 182.4140066570086
+ },
+ "twh_eol_t": {
+  "casas": 1,
+  "descricao": "emissões por TWh, Eólica",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › B_TWh › S38_EOL (v04)",
+  "unidade": "t CO₂e/TWh",
+  "valor": 4787.810809757031
+ },
+ "twh_gn_evit_car": {
+  "casas": 1,
+  "descricao": "emissões evitadas por TWh em relação ao carvão, Gás natural",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › B_TWh › S38_GN (v04)",
+  "unidade": "t CO₂e/TWh",
+  "valor": 983141.9338362685
+ },
+ "twh_gn_evit_gn": {
+  "casas": 1,
+  "descricao": "emissões evitadas por TWh em relação ao gás natural, Gás natural",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › B_TWh › S38_GN (v04)",
+  "unidade": "t CO₂e/TWh",
+  "valor": 0.0
+ },
+ "twh_gn_gkwh": {
+  "casas": 1,
+  "descricao": "g CO₂e/kWh, Gás natural",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › B_TWh › S38_GN (v04)",
+  "unidade": "g CO₂e/kWh",
+  "valor": 459.0185966404437
+ },
+ "twh_gn_pct_rb": {
+  "casas": 1,
+  "descricao": "emissões no RB por TWh, Gás natural",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › B_TWh › S38_GN (v04)",
+  "unidade": "%",
+  "valor": 4.693876508084952
+ },
+ "twh_gn_preco": {
+  "casas": 1,
+  "descricao": "preço médio, Gás natural",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › B_TWh › S38_GN (v04)",
+  "unidade": "R$/MWh",
+  "valor": 280.5127229245437
+ },
+ "twh_gn_t": {
+  "casas": 1,
+  "descricao": "emissões por TWh, Gás natural",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › B_TWh › S38_GN (v04)",
+  "unidade": "t CO₂e/TWh",
+  "valor": 459018.5966404437
+ },
+ "twh_hid_evit_car": {
+  "casas": 1,
+  "descricao": "emissões evitadas por TWh em relação ao carvão, Hidrelétrica",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › B_TWh › S38_HID (v04)",
+  "unidade": "t CO₂e/TWh",
+  "valor": 1437533.396526098
+ },
+ "twh_hid_evit_gn": {
+  "casas": 1,
+  "descricao": "emissões evitadas por TWh em relação ao gás natural, Hidrelétrica",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › B_TWh › S38_HID (v04)",
+  "unidade": "t CO₂e/TWh",
+  "valor": 454391.4626898296
+ },
+ "twh_hid_gkwh": {
+  "casas": 1,
+  "descricao": "g CO₂e/kWh, Hidrelétrica",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › B_TWh › S38_HID (v04)",
+  "unidade": "g CO₂e/kWh",
+  "valor": 4.627133950614104
+ },
+ "twh_hid_pct_rb": {
+  "casas": 1,
+  "descricao": "emissões no RB por TWh, Hidrelétrica",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › B_TWh › S38_HID (v04)",
+  "unidade": "%",
+  "valor": 54.8448327510414
+ },
+ "twh_hid_preco": {
+  "casas": 1,
+  "descricao": "preço médio, Hidrelétrica",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › B_TWh › S38_HID (v04)",
+  "unidade": "R$/MWh",
+  "valor": 175.3264259895306
+ },
+ "twh_hid_t": {
+  "casas": 1,
+  "descricao": "emissões por TWh, Hidrelétrica",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › B_TWh › S38_HID (v04)",
+  "unidade": "t CO₂e/TWh",
+  "valor": 4627.133950614105
+ },
+ "twh_sol_evit_car": {
+  "casas": 1,
+  "descricao": "emissões evitadas por TWh em relação ao carvão, Solar fotovoltaica",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › B_TWh › S38_SOL (v04)",
+  "unidade": "t CO₂e/TWh",
+  "valor": 1437157.277777775
+ },
+ "twh_sol_evit_gn": {
+  "casas": 1,
+  "descricao": "emissões evitadas por TWh em relação ao gás natural, Solar fotovoltaica",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › B_TWh › S38_SOL (v04)",
+  "unidade": "t CO₂e/TWh",
+  "valor": 454015.3439415065
+ },
+ "twh_sol_gkwh": {
+  "casas": 1,
+  "descricao": "g CO₂e/kWh, Solar fotovoltaica",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › B_TWh › S38_SOL (v04)",
+  "unidade": "g CO₂e/kWh",
+  "valor": 5.003252698937188
+ },
+ "twh_sol_pct_rb": {
+  "casas": 1,
+  "descricao": "emissões no RB por TWh, Solar fotovoltaica",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › B_TWh › S38_SOL (v04)",
+  "unidade": "%",
+  "valor": 52.9998799209711
+ },
+ "twh_sol_preco": {
+  "casas": 1,
+  "descricao": "preço médio, Solar fotovoltaica",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › B_TWh › S38_SOL (v04)",
+  "unidade": "R$/MWh",
+  "valor": 200.7911885476695
+ },
+ "twh_sol_t": {
+  "casas": 1,
+  "descricao": "emissões por TWh, Solar fotovoltaica",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › B_TWh › S38_SOL (v04)",
+  "unidade": "t CO₂e/TWh",
+  "valor": 5003.252698937188
+ },
+ "var_a1_a0_e1": {
+  "casas": 1,
+  "descricao": "variação das emissões A1/A0, Energia elétrica agregada",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › A1 e A0 › E1",
+  "unidade": "%",
+  "valor": -10.478487315395679
+ },
+ "var_a1_a0_f1": {
+  "casas": 1,
+  "descricao": "variação das emissões A1/A0, Fóssil base",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › A1 e A0 › F1",
+  "unidade": "%",
+  "valor": -4.435041108369719
+ },
+ "var_a1_a0_f2": {
+  "casas": 1,
+  "descricao": "variação das emissões A1/A0, Fóssil balanceada",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › A1 e A0 › F2",
+  "unidade": "%",
+  "valor": -3.943253093784582
+ },
+ "var_a1_a0_f3": {
+  "casas": 1,
+  "descricao": "variação das emissões A1/A0, Fóssil energia-intensiva",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › A1 e A0 › F3",
+  "unidade": "%",
+  "valor": -5.993071914953186
+ },
+ "var_a1_a0_r1": {
+  "casas": 1,
+  "descricao": "variação das emissões A1/A0, Renovável base",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › A1 e A0 › R1",
+  "unidade": "%",
+  "valor": -6.438760896568541
+ },
+ "var_a1_a0_r2": {
+  "casas": 1,
+  "descricao": "variação das emissões A1/A0, Renovável balanceada",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › A1 e A0 › R2",
+  "unidade": "%",
+  "valor": -3.65363510306419
+ },
+ "var_a1_a0_r3": {
+  "casas": 1,
+  "descricao": "variação das emissões A1/A0, Renovável infraestrutura-intensiva",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › A1 e A0 › R3",
+  "unidade": "%",
+  "valor": -4.341123907892075
+ },
+ "var_a1_a0_r4a": {
+  "casas": 1,
+  "descricao": "variação das emissões A1/A0, Renovável energia/transporte-intensiva",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › A1 e A0 › R4a",
+  "unidade": "%",
+  "valor": -6.615851438034115
+ },
+ "var_a2_a0_e1": {
+  "casas": 1,
+  "descricao": "variação das emissões A2/A0, Energia elétrica agregada",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › A2 e A0 › E1",
+  "unidade": "%",
+  "valor": -10.478487315395679
+ },
+ "var_a2_a0_f1": {
+  "casas": 1,
+  "descricao": "variação das emissões A2/A0, Fóssil base",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › A2 e A0 › F1",
+  "unidade": "%",
+  "valor": 469.08483371326224
+ },
+ "var_a2_a0_f2": {
+  "casas": 1,
+  "descricao": "variação das emissões A2/A0, Fóssil balanceada",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › A2 e A0 › F2",
+  "unidade": "%",
+  "valor": 416.7148600930039
+ },
+ "var_a2_a0_f3": {
+  "casas": 1,
+  "descricao": "variação das emissões A2/A0, Fóssil energia-intensiva",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › A2 e A0 › F3",
+  "unidade": "%",
+  "valor": 635.5416139907596
+ },
+ "var_a2_a0_r1": {
+  "casas": 1,
+  "descricao": "variação das emissões A2/A0, Renovável base",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › A2 e A0 › R1",
+  "unidade": "%",
+  "valor": -55.9297864442708
+ },
+ "var_a2_a0_r2": {
+  "casas": 1,
+  "descricao": "variação das emissões A2/A0, Renovável balanceada",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › A2 e A0 › R2",
+  "unidade": "%",
+  "valor": -31.075132462907497
+ },
+ "var_a2_a0_r3": {
+  "casas": 1,
+  "descricao": "variação das emissões A2/A0, Renovável infraestrutura-intensiva",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › A2 e A0 › R3",
+  "unidade": "%",
+  "valor": -36.01124625620151
+ },
+ "var_a2_a0_r4a": {
+  "casas": 1,
+  "descricao": "variação das emissões A2/A0, Renovável energia/transporte-intensiva",
+  "origem": "resultados/rodada05/simulacoes_v04.xlsx › A2 e A0 › R4a",
+  "unidade": "%",
+  "valor": -58.473726494215605
+ },
+ "vbp_gas_rb": {
+  "casas": 1,
+  "descricao": "VBP do gás canalizado, RB",
+  "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › variantes_resumo › v04",
+  "unidade": "R$ milhões",
+  "valor": 19421.04544377357
+ },
+ "vbp_rb_bio": {
+  "casas": 1,
+  "descricao": "VBP RB S38_BIO",
+  "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RB S38_BIO",
+  "unidade": "R$ milhões",
+  "valor": 281.255334907724
+ },
+ "vbp_rb_car": {
+  "casas": 1,
+  "descricao": "VBP RB S38_CAR",
+  "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RB S38_CAR",
+  "unidade": "R$ milhões",
+  "valor": 2166.419696778494
+ },
+ "vbp_rb_dis": {
+  "casas": 1,
+  "descricao": "VBP RB S38_DIS",
+  "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RB S38_DIS",
+  "unidade": "R$ milhões",
+  "valor": 208427.8922088759
+ },
+ "vbp_rb_eol": {
+  "casas": 1,
+  "descricao": "VBP RB S38_EOL",
+  "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RB S38_EOL",
+  "unidade": "R$ milhões",
+  "valor": 6761.937014537989
+ },
+ "vbp_rb_gas": {
+  "casas": 1,
+  "descricao": "VBP RB S38_GAS",
+  "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RB S38_GAS",
+  "unidade": "R$ milhões",
+  "valor": 19421.04544377357
+ },
+ "vbp_rb_gn": {
+  "casas": 1,
+  "descricao": "VBP RB S38_GN",
+  "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RB S38_GN",
+  "unidade": "R$ milhões",
+  "valor": 10981.93425757629
+ },
+ "vbp_rb_hid": {
+  "casas": 1,
+  "descricao": "VBP RB S38_HID",
+  "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RB S38_HID",
+  "unidade": "R$ milhões",
+  "valor": 46660.99212599756
+ },
+ "vbp_rb_nuc": {
+  "casas": 1,
+  "descricao": "VBP RB S38_NUC",
+  "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RB S38_NUC",
+  "unidade": "R$ milhões",
+  "valor": 3075.0637711953
+ },
+ "vbp_rb_pet": {
+  "casas": 1,
+  "descricao": "VBP RB S38_PET",
+  "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RB S38_PET",
+  "unidade": "R$ milhões",
+  "valor": 4066.596731580632
+ },
+ "vbp_rb_sol": {
+  "casas": 1,
+  "descricao": "VBP RB S38_SOL",
+  "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RB S38_SOL",
+  "unidade": "R$ milhões",
+  "valor": 999.538536590299
+ },
+ "vbp_rb_tra": {
+  "casas": 1,
+  "descricao": "VBP RB S38_TRA",
+  "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RB S38_TRA",
+  "unidade": "R$ milhões",
+  "valor": 21544.66645168056
+ },
+ "vbp_rs_bio": {
+  "casas": 1,
+  "descricao": "VBP RS S38_BIO",
+  "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RS S38_BIO",
+  "unidade": "R$ milhões",
+  "valor": 14.81071154844496
+ },
+ "vbp_rs_car": {
+  "casas": 1,
+  "descricao": "VBP RS S38_CAR",
+  "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RS S38_CAR",
+  "unidade": "R$ milhões",
+  "valor": 694.4827481078984
+ },
+ "vbp_rs_dis": {
+  "casas": 1,
+  "descricao": "VBP RS S38_DIS",
+  "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RS S38_DIS",
+  "unidade": "R$ milhões",
+  "valor": 14384.2967767677
+ },
+ "vbp_rs_eol": {
+  "casas": 1,
+  "descricao": "VBP RS S38_EOL",
+  "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RS S38_EOL",
+  "unidade": "R$ milhões",
+  "valor": 960.7595306562334
+ },
+ "vbp_rs_gas": {
+  "casas": 1,
+  "descricao": "VBP RS S38_GAS",
+  "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RS S38_GAS",
+  "unidade": "R$ milhões",
+  "valor": 898.71033854
+ },
+ "vbp_rs_gn": {
+  "casas": 1,
+  "descricao": "VBP RS S38_GN",
+  "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RS S38_GN",
+  "unidade": "R$ milhões",
+  "valor": 48.96694328784385
+ },
+ "vbp_rs_hid": {
+  "casas": 1,
+  "descricao": "VBP RS S38_HID",
+  "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RS S38_HID",
+  "unidade": "R$ milhões",
+  "valor": 2549.693654128071
+ },
+ "vbp_rs_nuc": {
+  "casas": 1,
+  "descricao": "VBP RS S38_NUC",
+  "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RS S38_NUC",
+  "unidade": "R$ milhões",
+  "valor": 0.0
+ },
+ "vbp_rs_pet": {
+  "casas": 1,
+  "descricao": "VBP RS S38_PET",
+  "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RS S38_PET",
+  "unidade": "R$ milhões",
+  "valor": 0.0
+ },
+ "vbp_rs_sol": {
+  "casas": 1,
+  "descricao": "VBP RS S38_SOL",
+  "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RS S38_SOL",
+  "unidade": "R$ milhões",
+  "valor": 0.0
+ },
+ "vbp_rs_tra": {
+  "casas": 1,
+  "descricao": "VBP RS S38_TRA",
+  "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RS S38_TRA",
+  "unidade": "R$ milhões",
+  "valor": 1390.937723469444
+ },
+ "vbp_tra_media": {
+  "casas": 1,
+  "descricao": "VBP da transmissão na variante _rap_media",
+  "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › variantes_resumo › v04_rap_media",
+  "unidade": "R$ milhões",
+  "valor": 24883.427435680005
+ },
+ "vbp_tra_rs": {
+  "casas": 1,
+  "descricao": "VBP da transmissão, RS",
+  "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › variantes_resumo › v04",
+  "unidade": "R$ milhões",
+  "valor": 1390.937723469444
+ },
+ "vbp_tra_total": {
+  "casas": 1,
+  "descricao": "VBP da transmissão (Brasil, D17)",
+  "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › variantes_resumo › v04",
+  "unidade": "R$ milhões",
+  "valor": 22935.604175150005
+ }
+}

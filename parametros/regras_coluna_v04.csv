@@ -1,0 +1,11 @@
+regiao,fornecedor,regiao_fornecedor,regra,subsetor,valor,teto_vbp,destino_excedente,grupo_teto,fonte
+*,*,*,proporcional_vbp,,,,,,padrão: na proporção do VBP
+*,S04,*,fixa,S38_CAR,1.0,,,,"D9-f: S04 (carvão) → 100% CAR, sem teto"
+RS,S05,*,fixa,S38_GN,0.051246,,,,"D9-f: S05 → GN por θ_RS = 0.051246, sem teto; o restante ao GAS"
+RS,S05,*,fixa,S38_GAS,0.948754,,,,D9-f: S05 → 1 − θ_RS ao GAS
+RB,S05,*,fixa,S38_GN,0.430852,,,,"D9-f: S05 → GN por θ_RB = 0.430852, sem teto; o restante ao GAS"
+RB,S05,*,fixa,S38_GAS,0.569148,,,,D9-f: S05 → 1 − θ_RB ao GAS
+RB,S19,*,fixa,S38_PET,1.0,,,,D9-f: S19 (refino) → 100% PET no RB
+RS,S19,*,proporcional_vbp,,,,,,D9-f: no RS o PET é latente; o S19 vai aos demais subsetores na proporção do VBP
+*,S03,*,fixa,S38_BIO,1.0,,,,"D9-f: S03 e S09 (lenha; bagaço) → 100% BIO, sem teto"
+*,S09,*,fixa,S38_BIO,1.0,,,,"D9-f: S03 e S09 (lenha; bagaço) → 100% BIO, sem teto"

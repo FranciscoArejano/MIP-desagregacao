@@ -72,6 +72,7 @@ COLS_COEF_LATENTES = ["regiao", "subsetor", "tipo_linha", "regiao_linha", "codig
 COLS_LATENTES_ESPELHO = ["regiao", "subsetor", "regiao_espelho", "fonte"]
 COLS_COMPONENTES = ["regiao", "componente", "valor", "fonte"]
 COLS_PESOS_TUST = ["regiao", "subsetor", "valor", "fonte"]
+COLS_REALOCACAO = ["regiao", "item", "setor_destino", "valor", "fonte"]
 
 
 def tipo_canonico(tipo: str) -> str:
@@ -138,6 +139,10 @@ class Especificacao:
     # Rodada 04 — V1: TUST paga pela geração repartida por pesos próprios (ex.: MWh no SIN), e não pelo VBP
     pesos_tust_geracao: pd.DataFrame | None = None  # colunas regiao, subsetor, valor, fonte
     alerta_insumos_nao_energeticos: float | None = None  # T12: ALERTA se insumos não energéticos ÷ VBP < este valor
+    # Rodada 05 — D18: TUST das colunas latentes pela TUST por MWh da própria região (regra da V1)
+    tust_latentes: dict = field(default_factory=dict)  # {gwh_espelho: {subsetor: GWh do espelho}, fonte}
+    # Rodada 05 — E4: parte do resíduo de um item satélite sai dos subsetores do resíduo para setores de fora do alvo
+    realocacao_emissoes: pd.DataFrame | None = None  # colunas regiao, item, setor_destino, valor, fonte
     ras_tolerancia: float = 1e-8
     ras_max_iter: int = 10000
     aviso: str | None = None
@@ -160,6 +165,9 @@ class Especificacao:
         self.reequilibrio = dict(self.reequilibrio or {})
         if self.pesos_tust_geracao is not None:
             self.pesos_tust_geracao = _tabela(self.pesos_tust_geracao, COLS_PESOS_TUST)
+        self.tust_latentes = dict(self.tust_latentes or {})
+        if self.realocacao_emissoes is not None:
+            self.realocacao_emissoes = _tabela(self.realocacao_emissoes, COLS_REALOCACAO)
 
     def componente(self, regiao: str, nome: str) -> float | None:
         """Valor de um componente do bloco para a região (linha da região vence a linha '*')."""
@@ -226,6 +234,8 @@ def ler_especificacao(caminho_yaml: str | Path) -> Especificacao:
         pesos_tust_geracao=ler("pesos_tust_geracao"),
         alerta_insumos_nao_energeticos=(float(cfg["alerta_insumos_nao_energeticos"])
                                         if cfg.get("alerta_insumos_nao_energeticos") is not None else None),
+        tust_latentes=cfg.get("tust_latentes") or {},
+        realocacao_emissoes=ler("realocacao_emissoes"),
         ras_tolerancia=float(ras.get("tolerancia", 1e-8)),
         ras_max_iter=int(ras.get("max_iter", 10000)),
         aviso=cfg.get("aviso"),
@@ -444,6 +454,44 @@ def validar_especificacao(espec: Especificacao, mip: MIP) -> None:
         for r in espec.regioes:
             if pt.loc[pt["regiao"] == r, "valor"].sum() <= 0:
                 erros.append(f"pesos_tust_geracao: região {r} sem peso positivo")
+    tl = espec.tust_latentes
+    if tl:  # D18 (Rodada 05)
+        if not len(espec.latentes_espelho):
+            erros.append("tust_latentes exige latentes_espelho")
+        if pt is None or not len(pt) or espec.bloco != "roteamento_por_componentes":
+            erros.append("tust_latentes exige pesos_tust_geracao (MWh no SIN) e o roteamento_por_componentes")
+        gw = tl.get("gwh_espelho") or {}
+        lat = set(espec.latentes_espelho["subsetor"]) if len(espec.latentes_espelho) else set()
+        if set(gw) - lat:
+            erros.append(f"tust_latentes.gwh_espelho: subsetores que não são latentes {sorted(set(gw) - lat)}")
+        if lat - set(gw):  # sem o GWh, o latente ficaria com a TUST do espelho em silêncio
+            erros.append(f"tust_latentes.gwh_espelho: falta o GWh do espelho de {sorted(lat - set(gw))}")
+        for c, v in gw.items():
+            try:
+                ok = float(v) > 0
+            except (TypeError, ValueError):
+                ok = False
+            if not ok:
+                erros.append(f"tust_latentes.gwh_espelho.{c}: precisa ser > 0 (tem {v!r})")
+    ra = espec.realocacao_emissoes
+    if ra is not None and len(ra):  # E4 (Rodada 05)
+        for x in ra.itertuples(index=False):
+            cfg_n = espec.niveis.get(x.item) or {}
+            if x.item not in ITENS_SATELITE or cfg_n.get("modo") != "residuo":
+                erros.append(f"realocacao_emissoes: o item '{x.item}' precisa ser satélite com niveis.{x.item}.modo = residuo")
+            if x.regiao not in espec.regioes:
+                erros.append(f"realocacao_emissoes: região {x.regiao} não desagregada")
+            elif x.setor_destino == espec.setor_alvo or not ((mip.setores["regiao"] == x.regiao)
+                                                             & (mip.setores["codigo"] == x.setor_destino)).any():
+                erros.append(f"realocacao_emissoes: destino {x.regiao} {x.setor_destino} inválido (setor de fora do alvo)")
+            try:
+                ok = float(x.valor) >= 0
+            except (TypeError, ValueError):
+                ok = False
+            if not ok:
+                erros.append(f"realocacao_emissoes: valor inválido {x.valor!r} ({x.regiao} {x.setor_destino})")
+        if ra.duplicated(["regiao", "item", "setor_destino"]).any():
+            erros.append("realocacao_emissoes: (regiao, item, setor_destino) repetido")
     if pv and pv.get("viabilidade_eta") is not None:
         if not rq:
             erros.append("piso_vbp.viabilidade_eta exige o bloco reequilibrio (o piso de viabilidade só existe para ele)")
@@ -1096,6 +1144,115 @@ def _latentes_por_espelho(espec: Especificacao, mip: MIP, grupos: dict, setores2
     return pd.DataFrame(linhas, columns=COLS_COEF_LATENTES)
 
 
+def _tust_latentes_por_mwh(espec: Especificacao, grupos: dict, setores2: pd.DataFrame, Z2: np.ndarray,
+                           X2: np.ndarray, lat: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
+    """D18 (Rodada 05): coeficiente total de TUST da coluna latente k da região r = τ_r ÷ p_k.
+
+    τ_r = TUST paga pelas fontes de geração de r ÷ MWh no SIN dessas fontes (pesos_tust_geracao; regra da V1);
+    p_k = VBP do espelho ÷ GWh do espelho (tust_latentes.gwh_espelho). A repartição entre as linhas de
+    transmissão (origens) da coluna é mantida; os demais coeficientes não mudam (a diferença sai do valor
+    adicionado implícito da coluna latente, que não tem VBP). Devolve as colunas ajustadas e a tabela do ajuste."""
+    tipos = dict(zip(espec.subsetores["codigo"], espec.subsetores["tipo"].map(tipo_canonico)))
+    tra = [c for c, t in tipos.items() if t == "transmissao"]
+    linhas_tra = np.flatnonzero(setores2["codigo"].isin(tra).to_numpy())
+    pt = espec.pesos_tust_geracao
+    gw = {c: float(v) for c, v in (espec.tust_latentes.get("gwh_espelho") or {}).items()}
+    fonte_cfg = espec.tust_latentes.get("fonte") or "tust_latentes (D18)"
+    lat = lat.copy()
+    tab = []
+    for le in espec.latentes_espelho.itertuples(index=False):
+        g = grupos[le.regiao]
+        pr = pt[pt["regiao"] == le.regiao].set_index("subsetor")["valor"].astype(float)
+        cols = [(j, float(pr.get(c, 0.0))) for c, j in zip(g.codigos, g.idx_novo)
+                if tipos[c] == "geracao" and X2[j] > 0 and float(pr.get(c, 0.0)) > 0]
+        if not cols:
+            raise EspecificacaoInvalida(f"tust_latentes: {le.regiao} sem fonte de geração com MWh no SIN")
+        tust = np.array([Z2[linhas_tra, j].sum() for j, _ in cols])
+        mwh = np.array([w for _, w in cols])
+        tau = tust.sum() / mwh.sum()  # R$ mi por GWh = R$ mil por MWh
+        dispersao = float(np.abs(tust / mwh - tau).max() / tau) if tau > 0 else 0.0
+        m = grupos[le.regiao_espelho].idx_novo[grupos[le.regiao_espelho].codigos.index(le.subsetor)]
+        p = X2[m] / gw[le.subsetor]
+        sel = ((lat["regiao"] == le.regiao) & (lat["subsetor"] == le.subsetor) & (lat["tipo_linha"] == "setor")
+               & lat["codigo_linha"].isin(tra))
+        c0 = float(lat.loc[sel, "coeficiente"].sum())
+        c1 = tau / p
+        if c0 <= 0:
+            raise EspecificacaoInvalida(f"tust_latentes: a coluna latente {le.regiao} {le.subsetor} não tem TUST para "
+                                        "reescalar (repartição entre as origens indefinida)")
+        lat.loc[sel, "coeficiente"] = lat.loc[sel, "coeficiente"] * (c1 / c0)
+        lat.loc[sel, "fonte"] = lat.loc[sel, "fonte"] + (
+            f"; HIPÓTESE (D18): TUST por MWh das fontes de {le.regiao} no SIN (τ = {tau * 1000:.4f} R$/MWh) ao R$/MWh "
+            f"do espelho (p = {p * 1000:.4f} R$/MWh): coeficiente total {c0:.6f} → {c1:.6f}; repartição entre as "
+            f"origens mantida; {fonte_cfg}")
+        tab.append({"regiao": le.regiao, "subsetor": le.subsetor, "regiao_espelho": le.regiao_espelho,
+                    "tau (R$/MWh)": tau * 1000, "dispersao_relativa_tau_entre_fontes": dispersao,
+                    "VBP do espelho (R$ mi)": float(X2[m]), "GWh do espelho": gw[le.subsetor], "p (R$/MWh)": p * 1000,
+                    "coeficiente de TUST antes": c0, "coeficiente de TUST depois": c1,
+                    "TUST por MWh antes (R$/MWh)": c0 * p * 1000, "TUST por MWh depois (R$/MWh)": c1 * p * 1000,
+                    "fonte": fonte_cfg})
+    return lat, pd.DataFrame(tab)
+
+
+def _realocar_emissoes(res: ResultadoDesagregacao) -> pd.DataFrame:
+    """E4 (Rodada 05): retira da parte de resíduo dos subsetores de `niveis.<item>.residuo_para` (na proporção do
+    resíduo de cada um, ou seja, do VBP, sem mexer nos níveis identificados) os valores de
+    `realocacao_emissoes` e os soma aos setores de destino da mesma região (fora do setor-alvo). O total da
+    economia não muda; o setor-alvo da região cai exatamente no valor movido (altera res.mip.S)."""
+    espec, m2, mapa = res.especificacao, res.mip, res.mapa
+    niv = res.extras.get("niveis")
+    ra = espec.realocacao_emissoes.copy()
+    ra["valor"] = ra["valor"].astype(float)
+    linhas = []
+    for (r, item), g in ra.groupby(["regiao", "item"], sort=False):
+        k = ITENS_SATELITE.index(item)
+        info = niv[(niv["regiao"] == r) & (niv["item"] == item)] if niv is not None else pd.DataFrame()
+        if not len(info):
+            raise EspecificacaoInvalida(f"realocacao_emissoes: {r} {item} sem níveis (E1) para definir o resíduo")
+        R = float(info["residuo"].iloc[0])
+        if float(info["fator_reducao_identificados"].iloc[0]) < 1 or R < 0:
+            raise EspecificacaoInvalida(f"realocacao_emissoes: {r} {item} tem resíduo negativo")
+        M = float(g["valor"].sum())
+        if M > R * (1 + 1e-12) + 1e-9:
+            raise EspecificacaoInvalida(f"realocacao_emissoes: {r} {item}: o valor movido ({M:.4f}) passa do resíduo ({R:.4f})")
+        sel = mapa[(mapa["regiao"] == r) & mapa["desagregado"] & mapa["codigo_novo"].isin(espec.niveis[item]["residuo_para"])]
+        idx = sel["indice_novo"].astype(int).to_numpy()
+        base = m2.X[idx].astype(float)
+        if M > 0 and base.sum() <= 0:
+            raise EspecificacaoInvalida(f"realocacao_emissoes: {r} {item} sem subsetor de resíduo com VBP > 0")
+        retirado = M * base / base.sum() if M > 0 else base * 0.0
+        antes = m2.S[k, idx].copy()
+        m2.S[k, idx] = m2.S[k, idx] - retirado
+        for x in g.itertuples(index=False):
+            j = m2.indice(r, x.setor_destino)
+            linhas.append({"regiao": r, "item": item, "setor_destino": x.setor_destino, "valor": x.valor,
+                           "destino_antes": float(m2.S[k, j]), "destino_depois": float(m2.S[k, j] + x.valor),
+                           "fonte": x.fonte})
+            m2.S[k, j] += x.valor
+        for c, j, a, d in zip(sel["codigo_novo"], idx, antes, retirado):
+            linhas.append({"regiao": r, "item": item, "setor_destino": f"(retirado de {c})", "valor": -float(d),
+                           "destino_antes": float(a), "destino_depois": float(m2.S[k, j]),
+                           "fonte": f"parte do resíduo E1 de {c} (resíduo da região {R:.4f}; sobra {R - M:.4f})"})
+    return pd.DataFrame(linhas)
+
+
+def realocar_emissoes_original(mip: MIP, tabela: pd.DataFrame, setor_alvo: str) -> MIP:
+    """A0_E4 (Rodada 05): cópia da MIP com os valores de `tabela` (regiao, item, setor_destino, valor) retirados do
+    setor-alvo de cada região e somados aos setores de destino da mesma região (só a conta satélite muda)."""
+    from copy import deepcopy
+
+    m = deepcopy(mip)
+    for x in tabela.itertuples(index=False):
+        k = ITENS_SATELITE.index(x.item)
+        v = float(x.valor)
+        jo, jd = m.indice(x.regiao, setor_alvo), m.indice(x.regiao, x.setor_destino)
+        if m.S[k, jo] - v < -1e-9:
+            raise ValueError(f"realocar_emissoes_original: {x.regiao} {setor_alvo} ficaria negativo")
+        m.S[k, jo] -= v
+        m.S[k, jd] += v
+    return m
+
+
 def desagregar(mip: MIP, espec: Especificacao, estrito: bool = True) -> ResultadoDesagregacao:
     """Desagrega `espec.setor_alvo` em subsetores e verifica o resultado.
 
@@ -1113,6 +1270,8 @@ def desagregar(mip: MIP, espec: Especificacao, estrito: bool = True) -> Resultad
     res = _desagregar_passo(mip, espec_final, reequilibrar=bool(espec.reequilibrio))
     if pisos is not None:
         res.extras["pisos_vbp"] = pisos
+    if espec.realocacao_emissoes is not None and len(espec.realocacao_emissoes):
+        res.extras["realocacao_emissoes"] = _realocar_emissoes(res)
     res.checagens = verificar(res)
     if estrito and not res.ok:
         falhas = res.checagens[res.checagens["status"] == "FALHA"]
@@ -1671,7 +1830,10 @@ def _desagregar_passo(mip: MIP, espec: Especificacao, reequilibrar: bool = True)
     if espec.coef_latentes is not None and len(espec.coef_latentes):
         partes.append(espec.coef_latentes.copy())
     if len(espec.latentes_espelho):
-        partes.append(_latentes_por_espelho(espec, mip, grupos, setores2, Z2, X2, S2))
+        lat = _latentes_por_espelho(espec, mip, grupos, setores2, Z2, X2, S2)
+        if espec.tust_latentes:
+            lat, extras["tust_latentes"] = _tust_latentes_por_mwh(espec, grupos, setores2, Z2, X2, lat)
+        partes.append(lat)
     coef_lat = pd.concat(partes, ignore_index=True) if partes else None
     if coef_lat is not None:
         ids2 = set(zip(setores2["regiao"], setores2["codigo"]))
@@ -1747,6 +1909,15 @@ def verificar(res: ResultadoDesagregacao) -> pd.DataFrame:
     if nao_preserva:
         for x in niv[~niv["preserva_total"].astype(bool)].itertuples():
             S_esperado[ITENS_SATELITE.index(x.item), m1.indice(x.regiao, res.especificacao.setor_alvo)] = x.identificado
+    # E4: valores movidos do setor-alvo para setores de fora dele (só o total da economia é preservado)
+    ra = res.especificacao.realocacao_emissoes
+    realocados = set()
+    if ra is not None and len(ra):
+        for x in ra.itertuples(index=False):
+            k_ = ITENS_SATELITE.index(x.item)
+            S_esperado[k_, m1.indice(x.regiao, res.especificacao.setor_alvo)] -= float(x.valor)
+            S_esperado[k_, m1.indice(x.regiao, x.setor_destino)] += float(x.valor)
+            realocados.add(x.item)
 
     # 1) re-agregação
     ag = agregar(m2, mapa, m1.setores)
@@ -1756,6 +1927,9 @@ def verificar(res: ResultadoDesagregacao) -> pd.DataFrame:
         if nome == "S" and nao_preserva:
             detalhe += (f"; para {sorted(nao_preserva)} sem resíduo (E3), o esperado no setor-alvo é a soma dos níveis "
                         "(original − resíduo)")
+        if nome == "S" and realocados:
+            detalhe += (f"; para {sorted(realocados)} com realocação (E4), o esperado é a original com os valores "
+                        "movidos do setor-alvo para os destinos")
         d = float(np.abs(A - B).max()) if np.size(A) else 0.0
         add(f"reagregacao_{nome}", d <= TOL_REAGREGACAO, d, TOL_REAGREGACAO, detalhe)
     d = max((abs(m2.totais_ev[k] - m1.totais_ev[k]) for k in m1.totais_ev), default=0.0)
@@ -1816,6 +1990,13 @@ def verificar(res: ResultadoDesagregacao) -> pd.DataFrame:
     for k, it in enumerate(ITENS_SATELITE):
         dif = m2.S[k] @ _matriz_agregacao(mapa, m1.n, m2.n).T - m1.S[k]
         d = float(np.abs(dif).max())
+        if it in realocados:
+            agg = m2.S[k] @ _matriz_agregacao(mapa, m1.n, m2.n).T
+            dt = float(abs(agg.sum() - m1.S[k].sum()))
+            add(f"satelite_{it}_preservado", False, d, TOL_REAGREGACAO,
+                f"REALOCAÇÃO (E4): só o total da economia é preservado (diferença total = {dt:.6f}); por setor, a "
+                "diferença é o valor movido (checagens realocacao_*)", alerta=dt <= max(TOL_REAGREGACAO, 1e-12 * abs(m1.S[k].sum())))
+            continue
         if it in nao_preserva:
             ok_niv = float(np.abs(m2.S[k] @ _matriz_agregacao(mapa, m1.n, m2.n).T - S_esperado[k]).max()) <= TOL_REAGREGACAO
             add(f"satelite_{it}_preservado", False, d, TOL_REAGREGACAO,
@@ -1823,6 +2004,26 @@ def verificar(res: ResultadoDesagregacao) -> pd.DataFrame:
                 + ("a diferença é exatamente o resíduo" if ok_niv else "A DIFERENÇA NÃO É O RESÍDUO"), alerta=ok_niv)
         else:
             add(f"satelite_{it}_preservado", d <= TOL_REAGREGACAO, d, TOL_REAGREGACAO)
+    if realocados:  # T14
+        A_ = _matriz_agregacao(mapa, m1.n, m2.n)
+        t = res.especificacao.setor_alvo
+        for it in sorted(realocados):
+            k = ITENS_SATELITE.index(it)
+            agg = m2.S[k] @ A_.T
+            r_ = ra[ra["item"] == it]
+            d_dest = max(abs((agg[m1.indice(x.regiao, x.setor_destino)] - m1.S[k, m1.indice(x.regiao, x.setor_destino)])
+                             - float(x.valor)) for x in r_.itertuples(index=False))
+            add(f"realocacao_{it}_valores_movidos", d_dest <= TOL_REAGREGACAO, d_dest, TOL_REAGREGACAO,
+                "máx |(destino depois − destino antes) − valor movido|")
+            d_alvo = max(abs((m1.S[k, m1.indice(q, t)] - agg[m1.indice(q, t)])
+                             - float(r_.loc[r_["regiao"] == q, "valor"].astype(float).sum())) for q in set(r_["regiao"]))
+            add(f"realocacao_{it}_setor_alvo", d_alvo <= TOL_REAGREGACAO, d_alvo, TOL_REAGREGACAO,
+                f"máx |redução do {t} da região − Σ valores movidos|")
+            dt = float(abs(agg.sum() - m1.S[k].sum()))
+            tol_t = max(TOL_REAGREGACAO, 1e-12 * abs(m1.S[k].sum()))  # erro de arredondamento da soma de ~10⁹ t
+            add(f"realocacao_{it}_total_economia", dt <= tol_t, dt, tol_t, "|Σ depois − Σ original| (total da economia)")
+            negs = int((m2.S[k] < -1e-9).sum())
+            add(f"realocacao_{it}_sem_negativos", negs == 0, negs, 0, "setores com emissão negativa")
     if niv is not None and len(niv):
         neg_res = niv[niv["fator_reducao_identificados"] < 1]
         add("niveis_residuo_nao_negativo", not len(neg_res), len(neg_res), 0,
