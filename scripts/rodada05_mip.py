@@ -181,10 +181,14 @@ def main():
                 "D17: transmissão = encargos de uso faturados pelo ONS no ano civil de 2019 (22935.6 R$ mi). D18 "
                 "(HIPÓTESE): as colunas latentes SOL-RS e PET-RS pagam a TUST por MWh das fontes do RS no SIN.",
                 "Abas: v03_x_v04 (comparativo por subsetor), passos_v03_v04 (efeito de D17 e D18), d18_latentes (τ_RS, "
-                "p_k, coeficiente de TUST e multiplicadores das latentes sem e com a D18), tust_latentes_versoes, "
+                "p_k, coeficiente de TUST e multiplicadores das latentes sem e com a D18; EOB/VBP implícito das latentes), "
+                "d18_eob_implicito_versoes (o mesmo nas 9 versões; o PET-RS latente fica abaixo de η), tust_latentes_versoes, "
                 "realocacao_E4 (valores movidos na variante _E4), insumos_nao_energeticos (T12), tust_geracao, pisos_vbp, "
                 "reequilibrio_RAS, reequilibrio_insumos, variantes_resumo e variantes_subsetores, gas_por_comprador e "
                 "gas_por_grupo, checagens de todas as versões, niveis_emissoes.",
+                "realocacao_E4: sai de DIS e GAS só a parte de resíduo da E1, na proporção do resíduo de cada um (= do VBP); "
+                "o SF₆, nível identificado na E1, fica. O que sobra em DIS + GAS = resíduo não movido + SF₆ do DIS; é esse "
+                "total que corresponde à sobra de referência das instruções (Seção 3.2).",
                 "GWh (D8): Brasil pelo BEN 2020 (Tabela 5.4), RS pelo ONS, RB = Brasil − RS.",
                 "Gerado por scripts/rodada05_mip.py."])
     print(f"[quadro v04] {len(q)} linhas; D18: {d18[['regiao', 'subsetor', 'tau (R$/MWh)', 'p (R$/MWh)', 'coeficiente de TUST antes', 'coeficiente de TUST depois']].round(4).to_dict('records')}; "

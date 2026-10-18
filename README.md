@@ -18,7 +18,7 @@ demanda final no RS com um modelo de Leontief com coeficientes de emissão.
 | 02b — continuação da 02 com rede: fontes, parâmetros reais, MIP v01 e variantes, quadro por subsetor | concluída em 15/10/2026, com pontos em aberto (EOB negativo em GN e GAS; RAP 2019-2020 com fonte secundária) | [respostas/RODADA_02b_resposta.md](respostas/RODADA_02b_resposta.md) |
 | 03 — MIP v02 consolidada (D8, D9, D10), variantes, comparativo v01 × v02 e executor de cenários | concluída em 16/10/2026 | [respostas/RODADA_03_resposta.md](respostas/RODADA_03_resposta.md) |
 | 04 — MIP v03 final (V1, V2, V3) e simulações do artigo (blocos A0, A1, A2 e B), tabelas e figuras de rascunho | concluída em 17/10/2026 | [respostas/RODADA_04_resposta.md](respostas/RODADA_04_resposta.md) |
-| 05 — MIP v04 final (D17, D18), variante E4, diagnóstico NEREUS × SEEG, simulações finais e material do artigo (`artigo/`) | concluída em 17/10/2026 (tag `mip-v04-final`) | [respostas/RODADA_05_resposta.md](respostas/RODADA_05_resposta.md) |
+| 05 — MIP v04 final (D17, D18), variante E4, diagnóstico NEREUS × SEEG, simulações finais e material do artigo (`artigo/`) | concluída em 18/10/2026 (tag `mip-v04-final`) | [respostas/RODADA_05_resposta.md](respostas/RODADA_05_resposta.md) |
 
 Decisões do Francisco em vigor: D1 = C (11 subsetores), D2 = D3 = D4 = D6 = A, D5 = E1 (E2 e E3 como
 sensibilidades), D7 = A, D8 = A (geração por fonte: Brasil pelo BEN 2020, RS pelo ONS), D9 = (a) + (b) + (f) + (r)
@@ -35,7 +35,8 @@ A versão **final** é a **v04** (Rodada 05; tag `mip-v04-final`): `resultados/r
 comparativo v03 × v04), as simulações finais em `resultados/rodada05/simulacoes_v04.xlsx`, o diagnóstico
 `resultados/rodada05/diagnostico_seeg_nereus.xlsx` e o **material do artigo** em `artigo/` (tabelas em .xlsx, .docx e
 .md; figuras em PNG e PDF; textos da metodologia, limitações, referências e números-chave em .md e .docx), todo gerado
-por `scripts/rodada05_artigo.py`.
+por `scripts/rodada05_artigo.py`. Os textos saem dos modelos em `artigo/texto/modelos/`, com os números como `{{chave}}`:
+para mudar um texto, edite o modelo e rode o script de novo.
 
 A versão anterior, v03 (Rodada 04): `resultados/rodada04/MIP_RS_RB_2019_S38_11sub_v03.xlsx` (+ `_longo.csv`
 e `_coef_latentes.csv`; principal: P1 + E1 + D9 + V1 + V2, κ = 0.70, η = 0.10, sem a extensão de viabilidade), com as
