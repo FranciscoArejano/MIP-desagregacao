@@ -52,6 +52,9 @@ FONTE_D17 = ("D17: encargos de uso do sistema de transmissão faturados pelo ONS
 FONTE_D18 = ("HIPÓTESE (D18, Rodada 05): as colunas latentes do RS pagam a TUST por MWh das fontes do RS no SIN (regra da "
              "V1), ao R$/MWh do espelho do RB (VBP do espelho ÷ GWh da D8, geracao_2019_regiao_subsetor_v03.csv), e não "
              "a TUST por real do espelho")
+HIPOTESE_E4 = ("HIPÓTESE (E4, sensibilidade; Rodada 05, Seção 3.2): a conta-satélite da NEREUS incluiria no S38 estas "
+               "emissões do SEEG (indício do diagnóstico NEREUS × SEEG, não prova); se elas já estiverem nos setores de "
+               "destino, a E4 as conta duas vezes (no S19-RS, por exemplo) —")
 # Seção 3.2 das instruções da Rodada 05 (mil t CO2e), para conferência dos valores lidos do SEEG
 REFERENCIA_E4 = {("RS", "S19"): 1812.1, ("RS", "S04"): 88.1, ("RB", "S19"): 18088.8, ("RB", "S05"): 23499.2,
                  ("RB", "S04"): 1155.4}
@@ -94,7 +97,7 @@ def realocacao_e4() -> pd.DataFrame:
         raise SystemExit(f"E4: esperadas {len(REFERENCIA_E4)} linhas, há {len(g)}")
     return pd.DataFrame({"regiao": g["regiao"], "item": "co2e", "setor_destino": g["setor_destino"],
                          "valor": [repr(float(v)) for v in g["valor"]],
-                         "fonte": [f"E4 (Rodada 05, Seção 3.2): {c} — {f}" for c, f in zip(g["componente"], g["fonte"])]})
+                         "fonte": [f"{HIPOTESE_E4} {c} — {f}" for c, f in zip(g["componente"], g["fonte"])]})
 
 
 def main():
@@ -106,7 +109,12 @@ def main():
     D = r03.docs()
 
     # ---- D17: transmissão pelos encargos do ONS ------------------------------------------------------
-    ons, fons = r03.exigir(D, "ons_encargos_uso_ano_civil_2019")
+    ons, _ = r03.exigir(D, "ons_encargos_uso_ano_civil_2019")
+    seamse = D.set_index("parametro").loc[["ons_encargos_uso_ciclo1819_jul_dez_2018",
+                                           "ons_encargos_uso_ciclo1819_jul2018_jun2019",
+                                           "ons_encargos_uso_ciclo1920_jul_dez_2019"]]
+    fons = ("ano civil 2019 = (jun/2019 − dez/2018) + dez/2019 = " + " ; ".join(
+        f"{x.documento}, {x.localizacao}, {x.url}, SHA-256 {str(x.sha256)[:12]}…" for x in seamse.itertuples()))
     rap_1819, f1819 = r03.exigir(D, "rap_total_ciclo_2018_2019")
     rap_1920, f1920 = r03.exigir(D, "rap_total_ciclo_2019_2020")
     rap = (rap_1819 + rap_1920) / 2

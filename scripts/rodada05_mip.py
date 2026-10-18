@@ -26,6 +26,7 @@ import pandas as pd  # noqa: E402
 
 from mip.caminhos import PASTA_PARAMETROS, PASTA_RESULTADOS  # noqa: E402
 from mip.desagregacao import desagregar, insumos_nao_energeticos, ler_especificacao  # noqa: E402
+from mip.estrutura import ITENS_PRIMARIOS  # noqa: E402
 from mip.exportacao import exportar_longo, salvar_tabelas  # noqa: E402
 from mip.leitura import caminho_coef_latentes_ao_lado, ler_mip_original  # noqa: E402
 
@@ -66,6 +67,25 @@ def gerar(mip) -> dict:
             if r.mip.coef_latentes is not None and len(r.mip.coef_latentes):
                 r.mip.coef_latentes.to_csv(caminho_coef_latentes_ao_lado(longo), index=False)
     return res
+
+
+def eob_implicito_latentes(r, nome) -> pd.DataFrame:
+    """VA e EOB implícitos das colunas latentes: os do espelho menos o aumento do coeficiente de TUST (a D18 tira a
+    diferença do valor adicionado, Seção 2.2). Mostra quando a coluna latente fica com EOB implícito abaixo de η."""
+    m = r.mip
+    ip = {it: k for k, it in enumerate(ITENS_PRIMARIOS)}
+    eta = float(r.especificacao.reequilibrio.get("eta", float("nan")))
+    linhas = []
+    for x in r.extras["tust_latentes"].itertuples(index=False):
+        j = m.indice(x.regiao_espelho, x.subsetor)
+        delta = x[list(r.extras["tust_latentes"].columns).index("coeficiente de TUST depois")] - \
+            x[list(r.extras["tust_latentes"].columns).index("coeficiente de TUST antes")]
+        va, eob = m.V[ip["va"], j] / m.X[j], m.V[ip["eob"], j] / m.X[j]
+        linhas.append({"versao": nome, "regiao": x.regiao, "subsetor": x.subsetor,
+                       "Δ coeficiente de TUST (D18)": delta, "VA/VBP do espelho": va, "EOB/VBP do espelho": eob,
+                       "VA/VBP implícito da latente": va - delta, "EOB/VBP implícito da latente": eob - delta,
+                       "η da versão": eta, "EOB implícito abaixo de η": bool(eob - delta < eta - 1e-12)})
+    return pd.DataFrame(linhas)
 
 
 def efeito_d18(mip, r04, G) -> pd.DataFrame:
@@ -143,7 +163,10 @@ def main():
     salvar_tabelas(
         SAIDA / "quadro_subsetores_v04.xlsx",
         {"quadro": q, "v03_x_v04": r04m.comparar(q03, q04, "v03", "v04"), "passos_v03_v04": tab_passos.reset_index(),
-         "d18_latentes": d18, "tust_latentes_versoes": pd.concat(
+         "d18_latentes": d18.merge(eob_implicito_latentes(res["v04"], "v04").drop(columns=["versao"]),
+                                   on=["regiao", "subsetor"]),
+         "d18_eob_implicito_versoes": pd.concat([eob_implicito_latentes(r, n) for n, r in res.items()], ignore_index=True),
+         "tust_latentes_versoes": pd.concat(
              [r.extras["tust_latentes"].assign(versao=n) for n, r in res.items()], ignore_index=True),
          "realocacao_E4": res["v04_E4"].extras["realocacao_emissoes"],
          "insumos_nao_energeticos": ne, "tust_geracao": tust,

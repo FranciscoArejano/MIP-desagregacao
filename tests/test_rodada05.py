@@ -81,8 +81,11 @@ def test_d17_transmissao_ons(mip, v04):
     assert f.str.startswith("D17: encargos de uso do sistema de transmissão faturados pelo ONS").all()
 
 
-def test_t16_d18_tust_latentes(v04):
-    """T16: a TUST por MWh das colunas latentes, ao p_k do espelho, é igual a τ_RS (TUST por MWh das fontes do RS)."""
+@pytest.mark.parametrize("suf", VARIANTES)
+def test_t16_d18_tust_latentes(mip, suf):
+    """T16: a TUST por MWh das colunas latentes, ao p_k do espelho, é igual a τ_RS (TUST por MWh das fontes do RS), na
+    versão final e em cada variante (τ muda com a transmissão; p_k com os preços e o piso κ)."""
+    v04 = desagregar(mip, _espec(suf), estrito=False)
     m = v04.mip
     tra = [m.indice(q, "S38_TRA") for q in ("RS", "RB")]
     pesos = v04.especificacao.pesos_tust_geracao
@@ -151,21 +154,31 @@ def test_t14_e4(mip, v04, v04_e4):
     assert (b >= -1e-9).all()
     np.testing.assert_array_equal(v04.mip.Z, v04_e4.mip.Z)  # a MIP monetária é a da versão final
     c = v04_e4.checagens.set_index("checagem")["status"]
-    for nome in ("valores_movidos", "setor_alvo", "total_economia", "sem_negativos"):
+    for nome in ("valores_movidos", "setor_alvo", "total_economia", "sem_negativos", "proporcao_residuo"):
         assert c[f"realocacao_co2e_{nome}"] == "OK"
     assert c["satelite_co2e_preservado"] == "ALERTA"
 
 
 def test_t14_a0_e4(mip, v04_e4):
+    """T14 no A0_E4: cada valor chega exato ao setor de destino da mesma região; só o S38 e os destinos mudam."""
     ra = v04_e4.especificacao.realocacao_emissoes.assign(valor=lambda d: d["valor"].astype(float))
     m0 = realocar_emissoes_original(mip, ra, "S38")
+    esperado = mip.S[K_CO2].copy()
+    for x in ra.itertuples(index=False):
+        j = mip.indice(x.regiao, x.setor_destino)
+        assert m0.S[K_CO2, j] - mip.S[K_CO2, j] == pytest.approx(x.valor, abs=1e-6), (x.regiao, x.setor_destino)
+        esperado[j] += x.valor
+        esperado[mip.indice(x.regiao, "S38")] -= x.valor
+    np.testing.assert_allclose(m0.S[K_CO2], esperado, rtol=0, atol=1e-6)  # nenhum outro setor mudou
     for r in ("RS", "RB"):
         movido = ra.loc[ra["regiao"] == r, "valor"].sum()
         assert mip.S[K_CO2, mip.indice(r, "S38")] - m0.S[K_CO2, mip.indice(r, "S38")] == pytest.approx(movido, abs=1e-6)
     assert m0.S[K_CO2].sum() == pytest.approx(mip.S[K_CO2].sum(), rel=1e-13)
     assert (m0.S[K_CO2] >= 0).all()
+    outros = [k for k in range(len(ITENS_SATELITE)) if k != K_CO2]
+    np.testing.assert_array_equal(m0.S[outros], mip.S[outros])
     np.testing.assert_array_equal(m0.Z, mip.Z)
-    assert mip.S[K_CO2].sum() == pytest.approx(ler_mip_original().S[K_CO2].sum())  # a original não foi alterada
+    np.testing.assert_array_equal(mip.S, ler_mip_original().S)  # a original não foi alterada
 
 
 def test_e4_validacao(mip):

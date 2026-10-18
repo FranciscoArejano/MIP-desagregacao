@@ -142,6 +142,16 @@ def main():
         if suf in ("_E4", "_rap_media"):
             abas_var[suf.lstrip("_")] = desvios(ind, base, "na v04")
     rob = robustez(por_versao)
+    # A0_E4 na robustez (Seção 4): os cenários do artigo na MIP original, sem e com a realocação da E4
+    i0 = r04s.indicadores(a0).set_index("cenario")
+    i4 = r04s.indicadores(a0_e4).set_index("cenario")
+    rob = pd.concat([rob, pd.DataFrame([
+        {"cenario": c, "versões": 2, "CO₂e total (t) original": i0.loc[c, "CO₂e total (t)"],
+         "CO₂e total (t) original_E4": i4.loc[c, "CO₂e total (t)"],
+         "CO₂e total (t) variação A0_E4 ÷ A0 (%)": 100 * (i4.loc[c, "CO₂e total (t)"] / i0.loc[c, "CO₂e total (t)"] - 1),
+         "IC original": i0.loc[c, "IC (t CO₂e por R$ mi)"], "IC original_E4": i4.loc[c, "IC (t CO₂e por R$ mi)"],
+         "% no RB original": i0.loc[c, "% CO₂e no RB"], "% no RB original_E4": i4.loc[c, "% CO₂e no RB"]}
+        for c in i0.index])], ignore_index=True)
     # D18: o SOL por TWh sem a D18 (coluna latente com a TUST por real do espelho), só para registro no relatório
     d18 = pd.read_excel(SAIDA / f"quadro_subsetores_{V}.xlsx", "d18_latentes").set_index("subsetor")
     m_sem = copy.copy(m04)
@@ -197,8 +207,9 @@ def main():
         "da tecnologia, por TWh.",
         LIMITACAO,
         "robustez: A2 (E1, R1, F1) e B por TWh na v04 e nas 8 variantes (_P2, _E2, _E3, _E4, _gas4dist, _rap_media, "
-        "_k060, _eta005): faixa mín–máx de CO₂e total, IC e % no RB; robustez_detalhe: todos os cenários em cada "
-        "versão; E4 e rap_media: os cenários dessas variantes com a variação em relação à v04.",
+        "_k060, _eta005): faixa mín–máx de CO₂e total, IC e % no RB; no fim, o A0_E4 (os 9 cenários do artigo na MIP "
+        "original, sem e com a realocação da E4); robustez_detalhe: todos os cenários em cada versão; E4 e rap_media: "
+        "os cenários dessas variantes com a variação em relação à v04.",
         "tabela1_artigo a tabela4_artigo: as tabelas da Rodada 04 (formato de trabalho); as tabelas no formato do "
         "artigo saem de scripts/rodada05_artigo.py (pasta artigo/).",
         "d18_SOL: 1 TWh de SOL-RS com a D18 (principal) e sem ela (TUST por real do espelho do RB), só para registro.",

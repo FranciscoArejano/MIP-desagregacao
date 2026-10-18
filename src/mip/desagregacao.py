@@ -2024,6 +2024,19 @@ def verificar(res: ResultadoDesagregacao) -> pd.DataFrame:
             add(f"realocacao_{it}_total_economia", dt <= tol_t, dt, tol_t, "|Σ depois − Σ original| (total da economia)")
             negs = int((m2.S[k] < -1e-9).sum())
             add(f"realocacao_{it}_sem_negativos", negs == 0, negs, 0, "setores com emissão negativa")
+            # a retirada sai dos subsetores do resíduo na proporção do resíduo de cada um (= do VBP), sem tocar nos níveis
+            tab = res.extras.get("realocacao_emissoes")
+            dev = 0.0
+            if tab is not None and len(tab):
+                ret = tab[(tab["item"] == it) & tab["setor_destino"].astype(str).str.startswith("(retirado de ")]
+                for q, gq in ret.groupby("regiao"):
+                    cods = gq["setor_destino"].str.slice(len("(retirado de "), -1)
+                    x = np.array([m2.X[m2.indice(q, c)] for c in cods], dtype=float)
+                    v = -gq["valor"].astype(float).to_numpy()
+                    if v.sum() > 0:
+                        dev = max(dev, float(np.abs(v / v.sum() - x / x.sum()).max()))
+            add(f"realocacao_{it}_proporcao_residuo", dev <= 1e-9, dev, 1e-9,
+                "máx |parcela retirada de cada subsetor do resíduo − parcela dele no VBP dos subsetores do resíduo|")
     if niv is not None and len(niv):
         neg_res = niv[niv["fator_reducao_identificados"] < 1]
         add("niveis_residuo_nao_negativo", not len(neg_res), len(neg_res), 0,

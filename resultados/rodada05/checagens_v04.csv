@@ -164,6 +164,7 @@ realocacao_co2e_valores_movidos,OK,3.725290298461914e-09,1e-06,máx |(destino de
 realocacao_co2e_setor_alvo,OK,2.3283064365386963e-10,1e-06,máx |redução do S38 da região − Σ valores movidos|,v04_E4
 realocacao_co2e_total_economia,OK,2.384185791015625e-07,0.001836705849275134,|Σ depois − Σ original| (total da economia),v04_E4
 realocacao_co2e_sem_negativos,OK,0.0,0.0,setores com emissão negativa,v04_E4
+realocacao_co2e_proporcao_residuo,OK,1.3877787807814457e-17,1e-09,máx |parcela retirada de cada subsetor do resíduo − parcela dele no VBP dos subsetores do resíduo|,v04_E4
 niveis_residuo_nao_negativo,OK,0.0,0.0,"RS co2e (residuo): identificado 3862147.8290, resíduo 1975857.7254; RB co2e (residuo): identificado 34828615.1621, resíduo 49689733.8945",v04_E4
 EOB_nao_negativo_subsetores,OK,0.0,0.0,todos ≥ 0,v04_E4
 subsetores_producao_zero_zerados,OK,3.0,0.0,"3 subsetor(es) com produção zero: RS_S38_SOL, RS_S38_PET, RS_S38_NUC",v04_E4
