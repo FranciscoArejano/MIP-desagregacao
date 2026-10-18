@@ -35,7 +35,7 @@ Decisões aplicadas: as anteriores (D1 = C; D2, D3, D4, D6, D7 e D8 = A; D5 = E1
 
 | Item | Status | Observação |
 |---|---|---|
-| Git: trabalhar a partir da `main` | concluído | Partiu de `607d68c`; commits na `main`; tag `mip-v04-final` |
+| Git: trabalhar a partir da `main` | concluído, com uma pendência | Partiu de `607d68c`; tudo está na `main`. A tag `mip-v04-final` foi criada no commit final, mas o ambiente recusou o push dela (Seção 12) |
 | D17 — transmissão pelo ONS | concluído | 22935.6 R$ mi; `_rap_media` com 24883.4 |
 | D18 — TUST das latentes | concluído | τ_RS = 32.41 R$/MWh; HIPÓTESE marcada no `coef_latentes` |
 | D19 a D21 | respeitadas | κ = 0.70; D13 nas tabelas principais; E1 na principal |
@@ -221,6 +221,7 @@ O ponto que não se confirmou foi a sobra da E4. O agente somou o SF₆ total. C
    - Multiplicador de produção acima de 2.2: GN-RS (2.397), GAS-RS (2.344), PET-RB (2.760) e PET-RS latente (2.801).
 8. **Formato das tabelas:** confira se o `.docx` das Tabelas 1–7 atende às normas da revista. Confira também os nomes curtos dos setores fora da lista do artigo (Tabelas 2 e A2 e Figuras 1 e A1), que escrevi no script.
 9. **Repositório:** não mexi na visibilidade. Ele continua público, com os dados da MIP original.
+10. **Tag `mip-v04-final`:** o ambiente não deixou enviar a tag (HTTP 403). Ela precisa ser criada por você no GitHub ou num clone local; os passos estão na Seção 12.
 
 ## 11. Como reproduzir
 
@@ -238,7 +239,17 @@ O bruto do SEEG (185 MB) não está no git. O endereço e o SHA-256 estão em `d
 
 ## 12. Git
 
-Trabalho na `main`, a partir de `607d68c`: commits intermediários (`b8d0aef`, `8a2cd11`, `477b794`, `3e584a4`, `ab71e51`, `532e747`, `8276084`, `8ff74b3`, `d7bdb22`, `b3d0cda` e os da revisão dos textos) e o final. A tag `mip-v04-final` aponta para o commit final. Push direto para a `main`, com a tag.
+Trabalho na `main`, a partir de `607d68c`: commits intermediários (`b8d0aef`, `8a2cd11`, `477b794`, `3e584a4`, `ab71e51`, `532e747`, `8276084`, `8ff74b3`, `d7bdb22`, `b3d0cda` e os da revisão dos textos) e o final. Push direto para a `main`.
+
+A tag anotada `mip-v04-final` foi criada aqui no commit final, "R05: versão final (MIP v04) …", o último desta rodada na `main`. O proxy do ambiente recusou o push da tag (HTTP 403), embora o push da `main` tenha passado; por ser recusa de política, não insisti. Para publicá-la, há dois caminhos:
+- no GitHub: Releases → Draft a new release → tag `mip-v04-final`, com esse commit como alvo;
+- num clone local:
+
+```bash
+git fetch origin
+git tag -a mip-v04-final <hash do commit "R05: versão final (MIP v04) …"> -m "MIP v04 final (Rodada 05)"
+git push origin mip-v04-final
+```
 
 ## 13. Fontes de dados
 
