@@ -434,7 +434,7 @@ Gerado por `scripts/rodada05_artigo.py`.
 | Soma das duas atividades | 5839.2 | 79018.9 | 18700.0 |
 | S38 na base NEREUS | 5838.0 | 84518.3 |  |
 
-*Nota: emissões brutas (Emissão e Emissão NCI). RB = estados exceto o RS; 'Não alocado' = sem estado. No RS, a soma das duas atividades é compatível com o S38 da base NEREUS, o que é um indício de que a conta-satélite inclui no S38 o refino e a produção de carvão mineral; não há documentação da conta-satélite que o confirme.*
+*Nota: emissões de 'Emissão' e 'Emissão NCI' (não há NCI nessas duas atividades). RB = estados exceto o RS; 'Não alocado' = sem estado. No RS, a soma das duas atividades é compatível com o S38 da base NEREUS, o que é um indício fraco de que a conta-satélite inclua no S38 o refino e a produção de carvão mineral: o RB não fecha pelo mesmo critério, coincidências são esperadas com o número de combinações testadas (Apêndice B) e há uma combinação concorrente que atribui o refino ao S19. Não há documentação da conta-satélite que permita confirmar.*
 *Fonte: Elaboração própria a partir da base NEREUS/USP e do SEEG 13.0 (Observatório do Clima).*
 
 **Tabela A8:** Testes de consistência da desagregação

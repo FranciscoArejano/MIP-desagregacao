@@ -1185,7 +1185,7 @@
  "diag_acaso": {
   "casas": 0,
   "descricao": "combinações < 0,1% esperadas por acaso",
-  "origem": "resultados/rodada05/diagnostico_seeg_nereus.xlsx › resumo › Casamentos: |dif| < 0.1% esperados por acaso (≈)",
+  "origem": "resultados/rodada05/diagnostico_seeg_nereus.xlsx › resumo › Casamentos: |dif| < 0.1% esperados por acaso (ordem de grandeza)",
   "unidade": "combinações",
   "valor": 210.72
  },
@@ -1255,16 +1255,16 @@
  "diag_total_br_bruta": {
   "casas": 1,
   "descricao": "total Brasil, SEEG AR5 bruta − NEREUS",
-  "origem": "resultados/rodada05/diagnostico_seeg_nereus.xlsx › resumo › Total Brasil: SEEG GWP-AR5 bruta − NEREUS",
+  "origem": "resultados/rodada05/diagnostico_seeg_nereus.xlsx › resumo › Total Brasil: SEEG GWP-AR5 bruta (SEEG: Emissão; 26 UF + RS + Não Alocado) − NEREUS",
   "unidade": "%",
-  "valor": 46.62783315617315
+  "valor": 36.48259684978039
  },
  "diag_total_br_liq": {
   "casas": 1,
   "descricao": "total Brasil, SEEG AR5 líquida − NEREUS",
-  "origem": "resultados/rodada05/diagnostico_seeg_nereus.xlsx › resumo › Total Brasil: SEEG GWP-AR5 líquida − NEREUS",
+  "origem": "resultados/rodada05/diagnostico_seeg_nereus.xlsx › resumo › Total Brasil: SEEG GWP-AR5 líquida (SEEG: Emissão + Remoção; 26 UF + RS + Não Alocado) − NEREUS",
   "unidade": "%",
-  "valor": -1.9132204855362
+  "valor": 0.9938371251375626
  },
  "e4_movido_rb": {
   "casas": 1,

@@ -581,7 +581,11 @@ def tabelaA7(d) -> Tabela | None:
     c = _com_cabecalho(d["diag"]["componentes_S38"], "RS (mil t)")
     comp = next(x for x in c.columns if x.startswith("componente"))
     regs = [("RS (mil t)", "RS"), ("RB estados (mil t)", "RB (estados)"), ("Não alocado (mil t)", "Não alocado")]
-    t = c[[comp] + [a for a, _ in regs]].dropna(subset=[comp]).copy()
+    t = c[[comp] + [a for a, _ in regs]].copy()
+    fim = t.index[t[comp].astype(str).str.startswith("S38 na base NEREUS")]
+    if not len(fim):
+        raise SystemExit("diagnóstico: linha 'S38 na base NEREUS' não encontrada na aba componentes_S38")
+    t = t.loc[:fim[0]].dropna(subset=[comp])  # a aba continua com a conferência da E4, que não entra na tabela
     t = t.rename(columns={comp: "Componente (SEEG: atividade › categoria › subcategoria)"}
                  | {a: f"{b} (mil t CO₂e)" for a, b in regs})
     for a, b in regs:
@@ -589,10 +593,12 @@ def tabelaA7(d) -> Tabela | None:
     return Tabela("Tabela A7", "Emissões do S38 na base NEREUS e componentes do SEEG 13.0 (2019, GWP-AR5)",
                   [(None, t.reset_index(drop=True))], fonte="Fonte: Elaboração própria a partir da base NEREUS/USP e do "
                                                             "SEEG 13.0 (Observatório do Clima).",
-                  notas=["Nota: emissões brutas (Emissão e Emissão NCI). RB = estados exceto o RS; 'Não alocado' = sem "
-                         "estado. No RS, a soma das duas atividades é compatível com o S38 da base NEREUS, o que é um "
-                         "indício de que a conta-satélite inclui no S38 o refino e a produção de carvão mineral; não há "
-                         "documentação da conta-satélite que o confirme."], aba="TabelaA7")
+                  notas=["Nota: emissões de 'Emissão' e 'Emissão NCI' (não há NCI nessas duas atividades). RB = estados "
+                         "exceto o RS; 'Não alocado' = sem estado. No RS, a soma das duas atividades é compatível com o "
+                         "S38 da base NEREUS, o que é um indício fraco de que a conta-satélite inclua no S38 o refino e a "
+                         "produção de carvão mineral: o RB não fecha pelo mesmo critério, coincidências são esperadas com "
+                         "o número de combinações testadas (Apêndice B) e há uma combinação concorrente que atribui o "
+                         "refino ao S19. Não há documentação da conta-satélite que permita confirmar."], aba="TabelaA7")
 
 
 def tabelaA8(d) -> Tabela:

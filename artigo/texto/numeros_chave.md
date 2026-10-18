@@ -173,7 +173,7 @@ Gerado por `scripts/rodada05_artigo.py` a partir dos arquivos de resultado. Cada
 | `dev_rap_media_b_twh_gn` | desvio das emissões da v04_rap_media em relação à principal, B_TWh_GN | -0.027592012192667603 | 0,0 | % | resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › B_TWh_GN |
 | `dev_rap_media_b_twh_hid` | desvio das emissões da v04_rap_media em relação à principal, B_TWh_HID | -1.1397038161159556 | −1,1 | % | resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › B_TWh_HID |
 | `dev_rap_media_b_twh_sol` | desvio das emissões da v04_rap_media em relação à principal, B_TWh_SOL | -1.2767534215700649 | −1,3 | % | resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › B_TWh_SOL |
-| `diag_acaso` | combinações < 0,1% esperadas por acaso | 210.72 | 211 | combinações | resultados/rodada05/diagnostico_seeg_nereus.xlsx › resumo › Casamentos: \|dif\| < 0.1% esperados por acaso (≈) |
+| `diag_acaso` | combinações < 0,1% esperadas por acaso | 210.72 | 211 | combinações | resultados/rodada05/diagnostico_seeg_nereus.xlsx › resumo › Casamentos: \|dif\| < 0.1% esperados por acaso (ordem de grandeza) |
 | `diag_casamentos` | combinações com diferença < 0,1% | 224.0 | 224 | combinações | resultados/rodada05/diagnostico_seeg_nereus.xlsx › resumo › Casamentos: \|dif\| < 0.1% (todos) |
 | `diag_nao_alocado` | 'Não alocado' das duas atividades | 18699.95597566485 | 18.700,0 | mil t CO₂e | resultados/rodada05/diagnostico_seeg_nereus.xlsx › resumo › Não alocado (GE + PC) |
 | `diag_s38_rb_dif` | diferença SEEG − NEREUS no S38-RB | -6.506752684567207 | −6,51 | % | resultados/rodada05/diagnostico_seeg_nereus.xlsx › resumo › S38-RB: diferença |
@@ -183,8 +183,8 @@ Gerado por `scripts/rodada05_artigo.py` a partir dos arquivos de resultado. Cada
 | `diag_s38_rs_nereus` | S38-RS na base NEREUS | 5838.005554368286 | 5.838,0 | mil t CO₂e | resultados/rodada05/diagnostico_seeg_nereus.xlsx › resumo › S38-RS: NEREUS |
 | `diag_s38_rs_seeg` | S38-RS pelo SEEG (geração de eletricidade + produção de combustíveis) | 5839.215789747564 | 5.839,2 | mil t CO₂e | resultados/rodada05/diagnostico_seeg_nereus.xlsx › resumo › S38-RS: SEEG GE + PC (GWP-AR5, bruta) |
 | `diag_testes` | combinações testadas no casamento de setores | 679856.0 | 679.856 | combinações | resultados/rodada05/diagnostico_seeg_nereus.xlsx › resumo › Casamentos: total de testes |
-| `diag_total_br_bruta` | total Brasil, SEEG AR5 bruta − NEREUS | 46.62783315617315 | 46,6 | % | resultados/rodada05/diagnostico_seeg_nereus.xlsx › resumo › Total Brasil: SEEG GWP-AR5 bruta − NEREUS |
-| `diag_total_br_liq` | total Brasil, SEEG AR5 líquida − NEREUS | -1.9132204855362 | −1,9 | % | resultados/rodada05/diagnostico_seeg_nereus.xlsx › resumo › Total Brasil: SEEG GWP-AR5 líquida − NEREUS |
+| `diag_total_br_bruta` | total Brasil, SEEG AR5 bruta − NEREUS | 36.48259684978039 | 36,5 | % | resultados/rodada05/diagnostico_seeg_nereus.xlsx › resumo › Total Brasil: SEEG GWP-AR5 bruta (SEEG: Emissão; 26 UF + RS + Não Alocado) − NEREUS |
+| `diag_total_br_liq` | total Brasil, SEEG AR5 líquida − NEREUS | 0.9938371251375626 | 1,0 | % | resultados/rodada05/diagnostico_seeg_nereus.xlsx › resumo › Total Brasil: SEEG GWP-AR5 líquida (SEEG: Emissão + Remoção; 26 UF + RS + Não Alocado) − NEREUS |
 | `e4_movido_rb` | emissões movidas do S38 na E4, RB | 42743465.99482903 | 42.743.466,0 | t CO₂e | resultados/rodada05/quadro_subsetores_v04.xlsx › realocacao_E4 › RB |
 | `e4_movido_rs` | emissões movidas do S38 na E4, RS | 1900181.996674465 | 1.900.182,0 | t CO₂e | resultados/rodada05/quadro_subsetores_v04.xlsx › realocacao_E4 › RS |
 | `e4_sobra_rb` | resíduo de emissões que fica em DIS e GAS na E4, RB | 6946267.899657965 | 6.946.267,9 | t CO₂e | resultados/rodada05/quadro_subsetores_v04.xlsx › niveis_emissoes e realocacao_E4 › RB |
