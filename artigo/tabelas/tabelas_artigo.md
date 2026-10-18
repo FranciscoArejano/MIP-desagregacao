@@ -447,8 +447,9 @@ Gerado por `scripts/rodada05_artigo.py`; números no padrão brasileiro.
 | Não negatividade | Nenhum fluxo, valor adicionado ou emissão negativo novo | 0,000000 | número de células |
 | Excedente operacional | EOB ≥ 10% do VBP em todos os subsetores com produção | 0,100000 | fração do VBP |
 | Modelo | A inversa de Leontief é não negativa, com diagonal ≥ 1, também com as colunas latentes | 0,000000 | menor elemento de L |
-| Reprodução do artigo | Os nove cenários do artigo, rodados na MIP original, reproduzem os valores publicados | 0,004859 | t CO₂e (maior diferença) |
+| Reprodução do artigo | Os nove cenários do artigo, rodados na MIP original, reproduzem os valores de referência; arredondados a uma casa, os Painéis B das Tabelas 1, 3 e 4 (exceto a linha R4a da Tabela 4) e a Tabela A2 são idênticos aos publicados | 0,004859 | t CO₂e (maior diferença nas emissões totais) |
 | Variantes | As 9 especificações (principal e 8 variantes) passam nas mesmas checagens; nas variantes E3 e E4 as emissões preservam só o total | 9,000000 | especificações |
+| Alertas | Sem falhas. Alertas registrados: multiplicador de produção acima de 2,2 em 9 das 9 especificações (na principal: geração a gás natural do RS; geração a derivados de petróleo do RS, latente; gás canalizado e outras utilidades do RS; geração a derivados de petróleo do RB); insumos não energéticos da geração a gás natural abaixo de 5% do VBP em 7 (todas, exceto κ = 0,60 e η = 0,05) | 0,000000 | falhas |
 
 *Nota: 'Valor' é a maior diferença absoluta encontrada (ou a contagem indicada); tolerância de 10⁻⁶ nas igualdades.*
 *Fonte: Elaboração própria.*

@@ -611,6 +611,19 @@ def tabelaA8(d) -> Tabela:
     dif_a0 = max(abs(a0.loc[f"A0_{e.cenario}", "CO₂e total (t)"] - e.co2e_total) for e in ref.ESPERADO.itertuples())
     eob_min = float(vr.loc[vr["versao"] == V, "EOB/VBP mínimo"].iloc[0])
     nao_neg = p.loc["nao_negatividade", "status"] == "OK"
+    e = d["espec"]
+    alerta = c[c["status"] == "ALERTA"]
+    n_mult = int((alerta["checagem"] == "multiplicador_producao_subsetores").sum())
+    sem_ne = sorted(set(c["versao"]) - set(alerta.loc[alerta["checagem"] == "insumos_nao_energeticos_minimo", "versao"]))
+    n_ne = c["versao"].nunique() - len(sem_ne)
+    if sem_ne != [f"{V}_eta005", f"{V}_k060"]:
+        raise SystemExit(f"Tabela A8: versões sem o alerta do T12 mudaram: {sem_ne}")
+    kappa_sens, eta_sens = (yaml.safe_load(open(PASTA_PARAMETROS / f"especificacao_{V}{suf}.yaml", encoding="utf-8"))[a][b]
+                            for suf, a, b in (("_k060", "piso_vbp", "kappa"), ("_eta005", "reequilibrio", "eta")))
+    q = d["q_quadro"]
+    qm = q[(q["versao"] == V) & q["alertas"].fillna("").str.contains("multiplicador")]
+    mult = [f"{NOMES[x.subsetor].lower()} do {x.regiao}" + (", latente" if x["VBP (R$ mi)"] == 0 else "")
+            for _, x in qm.iterrows()]
     linhas = [
         ("Re-agregação", "A soma dos 11 subsetores de cada região reproduz a matriz original (fluxos intermediários, "
          "demanda final, produção, valor adicionado e importações)", reag, "R$ milhões"),
@@ -624,10 +637,15 @@ def tabelaA8(d) -> Tabela:
          "fração do VBP"),
         ("Modelo", "A inversa de Leontief é não negativa, com diagonal ≥ 1, também com as colunas latentes",
          float(p.loc["L_nao_negativa", "valor"]), "menor elemento de L"),
-        ("Reprodução do artigo", "Os nove cenários do artigo, rodados na MIP original, reproduzem os valores publicados",
-         dif_a0, "t CO₂e (maior diferença)"),
+        ("Reprodução do artigo", "Os nove cenários do artigo, rodados na MIP original, reproduzem os valores de "
+         "referência; arredondados a uma casa, os Painéis B das Tabelas 1, 3 e 4 (exceto a linha R4a da Tabela 4) e a "
+         "Tabela A2 são idênticos aos publicados", dif_a0, "t CO₂e (maior diferença nas emissões totais)"),
         ("Variantes", "As 9 especificações (principal e 8 variantes) passam nas mesmas checagens; nas variantes E3 e E4 "
          "as emissões preservam só o total", float(len(vr)), "especificações"),
+        ("Alertas", f"Sem falhas. Alertas registrados: multiplicador de produção acima de {br(e['alerta_multiplicador_producao'], 1)} "
+         f"em {n_mult} das 9 especificações (na principal: {'; '.join(mult)}); insumos não energéticos da geração a gás natural abaixo de "
+         f"{br(100 * e['alerta_insumos_nao_energeticos'], 0)}% do VBP em {n_ne} (todas, exceto κ = {br(kappa_sens, 2)} e "
+         f"η = {br(eta_sens, 2)})", float((c["status"] == "FALHA").sum()), "falhas"),
     ]
     return Tabela("Tabela A8", "Testes de consistência da desagregação",
                   [(None, pd.DataFrame(linhas, columns=["Teste", "Resultado", "Valor", "Unidade"]))],

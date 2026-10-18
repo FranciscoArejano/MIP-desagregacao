@@ -128,7 +128,15 @@ Ficam com ALERTA de multiplicador de produção acima de 2.2: GN-RS (2.397), GAS
 | T14 | Checagens `realocacao_co2e_valores_movidos`, `_setor_alvo`, `_total_economia`, `_sem_negativos` e `_proporcao_residuo` (a retirada de DIS e GAS segue o resíduo de cada um). A `satelite_co2e_preservado` vira ALERTA, porque na E4 só o total da economia é preservado, como na E3 |
 | A0_E4 | `realocar_emissoes_original(mip, tabela, "S38")`: cópia da MIP original com os mesmos valores tirados do S38 de cada região |
 
-**Revisão adversarial.** Rodei revisores independentes para o motor (D18 e E4) e para os scripts e resultados da v04, com um verificador cético por achado. Os agentes pararam várias vezes no limite de uso. Dois achados foram verificados por agente; os outros, **conferi eu mesmo**, reproduzindo cada um com scripts próprios antes de corrigir. O diagnóstico NEREUS × SEEG e as referências tiveram construtor e verificador independentes (Seções 19 e 20). O revisor do material do artigo e os verificadores dos textos também pararam no limite. Por isso, conferi eu mesmo a seção 3.x e o Apêndice B contra o código e as saídas, e escrevi as limitações. Revisão dos textos: PENDENTE.
+**Revisão adversarial.** Rodei revisores independentes para o motor (D18 e E4) e para os scripts e resultados da v04, com um verificador cético por achado. Os agentes pararam várias vezes no limite de uso. Dois achados foram verificados por agente; os outros, **conferi eu mesmo**, reproduzindo cada um com scripts próprios antes de corrigir. O diagnóstico NEREUS × SEEG e as referências tiveram construtor e verificador independentes (Seções 19 e 20). O revisor do material do artigo e os verificadores dos textos também pararam no limite. Por isso, conferi eu mesmo a seção 3.x e o Apêndice B contra o código e as saídas, e escrevi as limitações. Depois, um revisor independente conferiu os três textos contra o código, os parâmetros e as planilhas. Ele achou 7 problemas, todos de redação, nenhum de método ou de número. Conferi e corrigi os 7:
+- **Quadro 2:** faltava o piso na geração a derivados de petróleo; o critério da nuclear parecia "GWh × tarifa", quando é a parcela de E_r ponderada por GWh × tarifa.
+- **Reprodução do artigo** (seção 3.x, B.12 e Tabela A8): "diferença máxima de 0.005 t em relação aos valores publicados" misturava duas coisas. A comparação é com a referência de duas casas; contra os valores publicados, os números são idênticos após o arredondamento a uma casa, exceto a linha R4a da Tabela 4.
+- **Limitação 1:** a diferença da solar por TWh vem também da coluna latente do RB, que não compra derivados de petróleo.
+- **B.12 e Tabela A8:** faltava declarar o alerta de multiplicador acima de 2.2. Ele aparece nas 9 especificações; o do T12, em 7, porque a `_k060` e a `_eta005` passam. A Tabela A8 ganhou a linha "Alertas".
+- **Seção 3.x:** dizia "duas sensibilidades" de emissões, mas a E2 também foi calculada.
+- **Limitação 6:** "a maior variação" com κ = 0.60 vale só entre as emissões da Tabela A6.
+
+Dois ajustes menores: a Eq. (28) ganhou o max(·, 0) da (B.35); as citações cujo ano está entre colchetes na referência passaram a usar o colchete ("ONS, [2026]").
 
 | # | Achado | Gravidade | Conferência | Correção |
 |---|---|---|---|---|
