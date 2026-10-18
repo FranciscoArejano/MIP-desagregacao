@@ -14,7 +14,7 @@ BRASIL. Ministério de Minas e Energia. Secretaria de Petróleo, Gás Natural e 
 
 BRASIL. Ministério do Desenvolvimento, Indústria, Comércio e Serviços. **Comex Stat**: importações brasileiras de 2019 por NCM (2716.00.00, 2711.11.00 e 2711.21.00), valor FOB. Brasília: MDIC, [2026]. Consulta pela API (https://api-comexstat.mdic.gov.br/general). Disponível em: <https://comexstat.mdic.gov.br/>. Acesso em: 15 out. 2026.
 
-CANALENERGIA. Aneel define Receitas Anuais Permitidas das transmissoras em R$ 25,7 bilhões. **CanalEnergia**, [*S. l.*], 25 jun. 2019. Disponível em: <https://www.canalenergia.com.br/noticias/53103542/aneel-define-receitas-anuais-permitidas-das-transmissoras-em-r-257-milhoes>. [CONFERIR]
+CANALENERGIA. Aneel define Receitas Anuais Permitidas das transmissoras em R\$ 25,7 bilhões. **CanalEnergia**, [*S. l.*], 25 jun. 2019. Disponível em: <https://www.canalenergia.com.br/noticias/53103542/aneel-define-receitas-anuais-permitidas-das-transmissoras-em-r-257-milhoes>. [CONFERIR]
 
 COMPANHIA DE GÁS DE MINAS GERAIS (GASMIG). **Demonstrações Financeiras Padronizadas (DFP)**: 31/12/2019. Belo Horizonte: Gasmig, [2020]. Documento entregue à Comissão de Valores Mobiliários (CVM), Rede de Divulgação Externa (RAD). Disponível em: <https://www.rad.cvm.gov.br/ENETCONSULTA/frmDownloadDocumento.aspx?CodigoInstituicao=1&NumeroSequencialDocumento=92390>. Acesso em: 15 out. 2026.
 

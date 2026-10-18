@@ -1196,12 +1196,47 @@
   "unidade": "combinações",
   "valor": 224.0
  },
+ "diag_concorrente_dif": {
+  "casas": 3,
+  "descricao": "diferença do casamento concorrente S19-RS ≈ refino + química",
+  "origem": "resultados/rodada05/diagnostico_seeg_nereus.xlsx › resumo › Casamento concorrente: S19 = Produção de combustíveis › Produção de combustíveis › Refino de petróleo + Química › Industrial › Química",
+  "unidade": "%",
+  "valor": 0.0709071787122213
+ },
+ "diag_discutivel": {
+  "casas": 0,
+  "descricao": "combinações < 0,1% com sentido discutível (critério SCN)",
+  "origem": "resultados/rodada05/diagnostico_seeg_nereus.xlsx › resumo › Casamentos: |dif| < 0.1% 'discutível' (critério SCN)",
+  "unidade": "combinações",
+  "valor": 9.0
+ },
  "diag_nao_alocado": {
   "casas": 1,
   "descricao": "'Não alocado' das duas atividades",
   "origem": "resultados/rodada05/diagnostico_seeg_nereus.xlsx › resumo › Não alocado (GE + PC)",
   "unidade": "mil t CO₂e",
   "valor": 18699.95597566485
+ },
+ "diag_nucleos": {
+  "casas": 0,
+  "descricao": "núcleos distintos entre as combinações < 0,1% (sem unidades desprezíveis)",
+  "origem": "resultados/rodada05/diagnostico_seeg_nereus.xlsx › resumo › Casamentos: |dif| < 0.1%, núcleos distintos (sem unidades desprezíveis)",
+  "unidade": "combinações",
+  "valor": 126.0
+ },
+ "diag_s19_rs_e4": {
+  "casas": 1,
+  "descricao": "S19-RS na E4 (base NEREUS + refino do SEEG do RS)",
+  "origem": "resultados/rodada05/diagnostico_seeg_nereus.xlsx › resumo › S19-RS: NEREUS + E4 RS → S19 (risco de dupla contagem do refino)",
+  "unidade": "mil t CO₂e",
+  "valor": 4505.982774093187
+ },
+ "diag_s19_rs_nereus": {
+  "casas": 1,
+  "descricao": "S19-RS na base NEREUS",
+  "origem": "resultados/rodada05/diagnostico_seeg_nereus.xlsx › resumo › S19-RS: NEREUS",
+  "unidade": "mil t CO₂e",
+  "valor": 2693.926278882722
  },
  "diag_s38_rb_dif": {
   "casas": 2,
@@ -1244,6 +1279,13 @@
   "origem": "resultados/rodada05/diagnostico_seeg_nereus.xlsx › resumo › S38-RS: SEEG GE + PC (GWP-AR5, bruta)",
   "unidade": "mil t CO₂e",
   "valor": 5839.215789747564
+ },
+ "diag_sentido_sim": {
+  "casas": 0,
+  "descricao": "combinações < 0,1% com sentido econômico (critério SCN)",
+  "origem": "resultados/rodada05/diagnostico_seeg_nereus.xlsx › resumo › Casamentos: |dif| < 0.1% com sentido 'sim' (critério SCN)",
+  "unidade": "combinações",
+  "valor": 0.0
  },
  "diag_testes": {
   "casas": 0,
@@ -1293,6 +1335,34 @@
   "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › niveis_emissoes e realocacao_E4 › RS",
   "unidade": "t CO₂e",
   "valor": 75675.72868064791
+ },
+ "eob_espelho_pet_rb": {
+  "casas": 1,
+  "descricao": "EOB/VBP do espelho S38_PET-RB",
+  "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › d18_latentes › S38_PET",
+  "unidade": "% do VBP",
+  "valor": 10.0
+ },
+ "eob_espelho_sol_rb": {
+  "casas": 1,
+  "descricao": "EOB/VBP do espelho S38_SOL-RB",
+  "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › d18_latentes › S38_SOL",
+  "unidade": "% do VBP",
+  "valor": 55.18306678299485
+ },
+ "eob_impl_pet_rs": {
+  "casas": 1,
+  "descricao": "EOB/VBP implícito da coluna latente S38_PET-RS com a D18 (espelho − Δ TUST)",
+  "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › d18_latentes › S38_PET",
+  "unidade": "% do VBP",
+  "valor": 6.931186813346285
+ },
+ "eob_impl_sol_rs": {
+  "casas": 1,
+  "descricao": "EOB/VBP implícito da coluna latente S38_SOL-RS com a D18 (espelho − Δ TUST)",
+  "origem": "resultados/rodada05/quadro_subsetores_v04.xlsx › d18_latentes › S38_SOL",
+  "unidade": "% do VBP",
+  "valor": 48.5726913041799
  },
  "fator_e1_rb_bio": {
   "casas": 3,
@@ -1735,12 +1805,33 @@
   "unidade": "R$/MWh",
   "valor": 200.7911885476695
  },
+ "param_alerta_mult": {
+  "casas": 1,
+  "descricao": "limiar do alerta do multiplicador de produção",
+  "origem": "parametros/especificacao_v04.yaml › alerta_multiplicador_producao",
+  "unidade": "",
+  "valor": 2.2
+ },
+ "param_alerta_ne": {
+  "casas": 2,
+  "descricao": "limiar do ALERTA do T12 (insumos não energéticos ÷ VBP)",
+  "origem": "parametros/especificacao_v04.yaml › alerta_insumos_nao_energeticos",
+  "unidade": "",
+  "valor": 0.05
+ },
  "param_alfa": {
   "casas": 1,
   "descricao": "parcela da transmissão paga pela distribuição (α)",
   "origem": "parametros/componentes_v04.csv › fracao_transmissao_distribuicao",
   "unidade": "",
   "valor": 0.5
+ },
+ "param_consumo_gas_rs": {
+  "casas": 2,
+  "descricao": "consumo específico de gás das térmicas usado no θ_RS (HIPÓTESE)",
+  "origem": "dados/externos/valores_documentais_v03.csv › theta_RS",
+  "unidade": "m³/kWh",
+  "valor": 0.2
  },
  "param_eta": {
   "casas": 2,

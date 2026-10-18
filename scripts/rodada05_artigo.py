@@ -1157,6 +1157,22 @@ def numeros_chave(d: dict) -> dict:
             f"{qd} › insumos_nao_energeticos › v04 {r} S38_GN", f"insumos não energéticos ÷ VBP da geração a gás, {r} (T12)")
     put("t12_min_k060", vr.loc["v04_k060", "insumos não energéticos / VBP mínimo"], 3, "fração do VBP",
         f"{qd} › variantes_resumo › v04_k060", "menor razão insumos não energéticos ÷ VBP com κ = 0,60")
+    for chave, campo, casas, descricao in (
+            ("param_alerta_ne", "alerta_insumos_nao_energeticos", 2, "limiar do ALERTA do T12 (insumos não energéticos ÷ VBP)"),
+            ("param_alerta_mult", "alerta_multiplicador_producao", 1, "limiar do alerta do multiplicador de produção")):
+        put(chave, e[campo], casas, "", f"parametros/especificacao_{V}.yaml › {campo}", descricao)
+    vd = pd.read_csv(RAIZ / "dados" / "externos" / "valores_documentais_v03.csv").set_index("parametro")
+    m = re.search(r"×\s*([0-9.]+)\s*m³/kWh", str(vd.loc["theta_RS"].to_dict()))
+    if m is None:
+        raise SystemExit("valores_documentais_v03.csv › theta_RS: consumo específico (m³/kWh) não encontrado")
+    put("param_consumo_gas_rs", float(m.group(1)), 2, "m³/kWh", "dados/externos/valores_documentais_v03.csv › theta_RS",
+        "consumo específico de gás das térmicas usado no θ_RS (HIPÓTESE)")
+    for s in ("S38_SOL", "S38_PET"):
+        k = s.replace("S38_", "").lower()
+        put(f"eob_impl_{k}_rs", 100 * d18.loc[s, "EOB/VBP implícito da latente"], 1, "% do VBP",
+            f"{qd} › d18_latentes › {s}", f"EOB/VBP implícito da coluna latente {s}-RS com a D18 (espelho − Δ TUST)")
+        put(f"eob_espelho_{k}_rb", 100 * d18.loc[s, "EOB/VBP do espelho"], 1, "% do VBP",
+            f"{qd} › d18_latentes › {s}", f"EOB/VBP do espelho {s}-RB")
     put("mult_em_rs_sol_sem_d18", d18.loc["S38_SOL", "multiplicador de emissões (t/R$ mi) sem D18"], 1, "t CO₂e/R$ milhão",
         f"{qd} › d18_latentes › S38_SOL", "multiplicador de emissões do SOL-RS latente sem a D18")
     put("mult_prod_rs_sol_sem_d18", d18.loc["S38_SOL", "multiplicador de produção sem D18"], 3, "",
@@ -1176,8 +1192,8 @@ def numeros_chave(d: dict) -> dict:
         rs = rs.dropna(subset=["valor"])
         val = {str(i): float(v) for i, v in zip(rs["item"], rs["valor"]) if isinstance(v, (int, float, np.number))}
 
-        def diag(chave, prefixo, casas, unidade, descricao):
-            k = next((i for i in val if i.startswith(prefixo)), None)
+        def diag(chave, prefixo, casas, unidade, descricao, exato=False):
+            k = next((i for i in val if (i == prefixo if exato else i.startswith(prefixo))), None)
             if k is None:
                 raise SystemExit(f"diagnóstico: '{prefixo}' não encontrado na aba resumo")
             put(chave, val[k], casas, unidade, f"{dg} › resumo › {k}", descricao)
@@ -1194,6 +1210,15 @@ def numeros_chave(d: dict) -> dict:
         diag("diag_acaso", "Casamentos: |dif| < 0.1% esperados", 0, "combinações", "combinações < 0,1% esperadas por acaso")
         diag("diag_total_br_liq", "Total Brasil: SEEG GWP-AR5 líquida", 1, "%", "total Brasil, SEEG AR5 líquida − NEREUS")
         diag("diag_total_br_bruta", "Total Brasil: SEEG GWP-AR5 bruta", 1, "%", "total Brasil, SEEG AR5 bruta − NEREUS")
+        diag("diag_nucleos", "Casamentos: |dif| < 0.1%, núcleos distintos", 0, "combinações",
+             "núcleos distintos entre as combinações < 0,1% (sem unidades desprezíveis)")
+        diag("diag_sentido_sim", "Casamentos: |dif| < 0.1% com sentido 'sim'", 0, "combinações",
+             "combinações < 0,1% com sentido econômico (critério SCN)")
+        diag("diag_discutivel", "Casamentos: |dif| < 0.1% 'discutível'", 0, "combinações",
+             "combinações < 0,1% com sentido discutível (critério SCN)")
+        diag("diag_concorrente_dif", "Casamento concorrente", 3, "%", "diferença do casamento concorrente S19-RS ≈ refino + química")
+        diag("diag_s19_rs_nereus", "S19-RS: NEREUS", 1, "mil t CO₂e", "S19-RS na base NEREUS", exato=True)
+        diag("diag_s19_rs_e4", "S19-RS: NEREUS + E4", 1, "mil t CO₂e", "S19-RS na E4 (base NEREUS + refino do SEEG do RS)")
     return N
 
 
@@ -1208,8 +1233,8 @@ def escrever_numeros(N: dict) -> None:
               "| Chave | Descrição | Valor bruto | Padrão brasileiro | Unidade | Origem |", "|---|---|---:|---:|---|---|"]
     for k in sorted(N):
         x = N[k]
-        esc = lambda t: str(t).replace("|", "\\|")  # noqa: E731
-        linhas.append(f"| `{k}` | {esc(x['descricao'])} | {x['valor']!r} | {br(x['valor'], x['casas'])} | {x['unidade']} | "
+        esc = lambda t: str(t).replace("|", "\\|").replace("$", "\\$")  # noqa: E731 (R$ não vira LaTeX no pandoc)
+        linhas.append(f"| `{k}` | {esc(x['descricao'])} | {x['valor']!r} | {br(x['valor'], x['casas'])} | {esc(x['unidade'])} | "
                       f"{esc(x['origem'])} |")
     (TXT / "numeros_chave.md").write_text("\n".join(linhas) + "\n", encoding="utf-8")
 

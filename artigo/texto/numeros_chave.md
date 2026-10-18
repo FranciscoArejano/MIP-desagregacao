@@ -7,50 +7,50 @@ Gerado por `scripts/rodada05_artigo.py` a partir dos arquivos de resultado. Cada
 | `a0_dif_artigo` | maior diferença entre o A0 e os valores publicados | 0.004858762084040791 | 0,00 | t CO₂e | resultados/rodada05/simulacoes_v04.xlsx › A0 × src/mip/referencia.py |
 | `a0_dif_fossil_renov` | diferença de emissões fóssil − renovável (A0) | 139638.75294936722 | 139.638,8 | t CO₂e | resultados/rodada05/simulacoes_v04.xlsx › A0 › F1 − R1 |
 | `a0_e1_co2e` | emissões totais, Energia elétrica agregada (A0) | 428113.5341067808 | 428.113,5 | t CO₂e | resultados/rodada05/simulacoes_v04.xlsx › A0 › A0_E1 |
-| `a0_e1_dx` | produção bruta induzida, Energia elétrica agregada (A0) | 1925.037208036543 | 1.925,0 | R$ milhões | resultados/rodada05/simulacoes_v04.xlsx › A0 › A0_E1 |
-| `a0_e1_ic` | intensidade carbônica, Energia elétrica agregada (A0) | 222.3923425061683 | 222,4 | t CO₂e/R$ milhão | resultados/rodada05/simulacoes_v04.xlsx › A0 › A0_E1 |
+| `a0_e1_dx` | produção bruta induzida, Energia elétrica agregada (A0) | 1925.037208036543 | 1.925,0 | R\$ milhões | resultados/rodada05/simulacoes_v04.xlsx › A0 › A0_E1 |
+| `a0_e1_ic` | intensidade carbônica, Energia elétrica agregada (A0) | 222.3923425061683 | 222,4 | t CO₂e/R\$ milhão | resultados/rodada05/simulacoes_v04.xlsx › A0 › A0_E1 |
 | `a0_e1_pct_ind` | emissões indiretas, Energia elétrica agregada (A0) | 34.88609571089764 | 34,9 | % | resultados/rodada05/simulacoes_v04.xlsx › A0 › A0_E1 |
 | `a0_e1_pct_rb` | emissões no RB, Energia elétrica agregada (A0) | 20.73915284419193 | 20,7 | % | resultados/rodada05/simulacoes_v04.xlsx › A0 › A0_E1 |
 | `a0_e1_pct_s38` | participação do S38 (ou dos subsetores) nas emissões, Energia elétrica agregada (A0) | 92.22377927398334 | 92,2 | % | resultados/rodada05/simulacoes_v04.xlsx › A0 › A0_E1 |
 | `a0_f1_co2e` | emissões totais, Fóssil base (A0) | 356045.7240370425 | 356.045,7 | t CO₂e | resultados/rodada05/simulacoes_v04.xlsx › A0 › A0_F1 |
-| `a0_f1_dx` | produção bruta induzida, Fóssil base (A0) | 2120.558269623172 | 2.120,6 | R$ milhões | resultados/rodada05/simulacoes_v04.xlsx › A0 › A0_F1 |
-| `a0_f1_ic` | intensidade carbônica, Fóssil base (A0) | 167.9018818475159 | 167,9 | t CO₂e/R$ milhão | resultados/rodada05/simulacoes_v04.xlsx › A0 › A0_F1 |
+| `a0_f1_dx` | produção bruta induzida, Fóssil base (A0) | 2120.558269623172 | 2.120,6 | R\$ milhões | resultados/rodada05/simulacoes_v04.xlsx › A0 › A0_F1 |
+| `a0_f1_ic` | intensidade carbônica, Fóssil base (A0) | 167.9018818475159 | 167,9 | t CO₂e/R\$ milhão | resultados/rodada05/simulacoes_v04.xlsx › A0 › A0_F1 |
 | `a0_f1_pct_ind` | emissões indiretas, Fóssil base (A0) | 35.33710677770379 | 35,3 | % | resultados/rodada05/simulacoes_v04.xlsx › A0 › A0_F1 |
 | `a0_f1_pct_rb` | emissões no RB, Fóssil base (A0) | 22.16127667498752 | 22,2 | % | resultados/rodada05/simulacoes_v04.xlsx › A0 › A0_F1 |
 | `a0_f1_pct_s38` | participação do S38 (ou dos subsetores) nas emissões, Fóssil base (A0) | 39.42686702701253 | 39,4 | % | resultados/rodada05/simulacoes_v04.xlsx › A0 › A0_F1 |
 | `a0_f2_co2e` | emissões totais, Fóssil balanceada (A0) | 381702.8635022599 | 381.702,9 | t CO₂e | resultados/rodada05/simulacoes_v04.xlsx › A0 › A0_F2 |
-| `a0_f2_dx` | produção bruta induzida, Fóssil balanceada (A0) | 2110.486101250903 | 2.110,5 | R$ milhões | resultados/rodada05/simulacoes_v04.xlsx › A0 › A0_F2 |
-| `a0_f2_ic` | intensidade carbônica, Fóssil balanceada (A0) | 180.8601645260878 | 180,9 | t CO₂e/R$ milhão | resultados/rodada05/simulacoes_v04.xlsx › A0 › A0_F2 |
+| `a0_f2_dx` | produção bruta induzida, Fóssil balanceada (A0) | 2110.486101250903 | 2.110,5 | R\$ milhões | resultados/rodada05/simulacoes_v04.xlsx › A0 › A0_F2 |
+| `a0_f2_ic` | intensidade carbônica, Fóssil balanceada (A0) | 180.8601645260878 | 180,9 | t CO₂e/R\$ milhão | resultados/rodada05/simulacoes_v04.xlsx › A0 › A0_F2 |
 | `a0_f2_pct_ind` | emissões indiretas, Fóssil balanceada (A0) | 32.86765362228716 | 32,9 | % | resultados/rodada05/simulacoes_v04.xlsx › A0 › A0_F2 |
 | `a0_f2_pct_rb` | emissões no RB, Fóssil balanceada (A0) | 19.68781028697114 | 19,7 | % | resultados/rodada05/simulacoes_v04.xlsx › A0 › A0_F2 |
 | `a0_f2_pct_s38` | participação do S38 (ou dos subsetores) nas emissões, Fóssil balanceada (A0) | 35.1014052462308 | 35,1 | % | resultados/rodada05/simulacoes_v04.xlsx › A0 › A0_F2 |
 | `a0_f3_co2e` | emissões totais, Fóssil energia-intensiva (A0) | 375427.2603331699 | 375.427,3 | t CO₂e | resultados/rodada05/simulacoes_v04.xlsx › A0 › A0_F3 |
-| `a0_f3_dx` | produção bruta induzida, Fóssil energia-intensiva (A0) | 2073.929471749065 | 2.073,9 | R$ milhões | resultados/rodada05/simulacoes_v04.xlsx › A0 › A0_F3 |
-| `a0_f3_ic` | intensidade carbônica, Fóssil energia-intensiva (A0) | 181.0221926286386 | 181,0 | t CO₂e/R$ milhão | resultados/rodada05/simulacoes_v04.xlsx › A0 › A0_F3 |
+| `a0_f3_dx` | produção bruta induzida, Fóssil energia-intensiva (A0) | 2073.929471749065 | 2.073,9 | R\$ milhões | resultados/rodada05/simulacoes_v04.xlsx › A0 › A0_F3 |
+| `a0_f3_ic` | intensidade carbônica, Fóssil energia-intensiva (A0) | 181.0221926286386 | 181,0 | t CO₂e/R\$ milhão | resultados/rodada05/simulacoes_v04.xlsx › A0 › A0_F3 |
 | `a0_f3_pct_ind` | emissões indiretas, Fóssil energia-intensiva (A0) | 34.96602915887432 | 35,0 | % | resultados/rodada05/simulacoes_v04.xlsx › A0 › A0_F3 |
 | `a0_f3_pct_rb` | emissões no RB, Fóssil energia-intensiva (A0) | 21.53139870458057 | 21,5 | % | resultados/rodada05/simulacoes_v04.xlsx › A0 › A0_F3 |
 | `a0_f3_pct_s38` | participação do S38 (ou dos subsetores) nas emissões, Fóssil energia-intensiva (A0) | 53.03521868344571 | 53,0 | % | resultados/rodada05/simulacoes_v04.xlsx › A0 › A0_F3 |
 | `a0_r1_co2e` | emissões totais, Renovável base (A0) | 216406.9710876753 | 216.407,0 | t CO₂e | resultados/rodada05/simulacoes_v04.xlsx › A0 › A0_R1 |
-| `a0_r1_dx` | produção bruta induzida, Renovável base (A0) | 1959.352995174775 | 1.959,4 | R$ milhões | resultados/rodada05/simulacoes_v04.xlsx › A0 › A0_R1 |
-| `a0_r1_ic` | intensidade carbônica, Renovável base (A0) | 110.4481793840174 | 110,4 | t CO₂e/R$ milhão | resultados/rodada05/simulacoes_v04.xlsx › A0 › A0_R1 |
+| `a0_r1_dx` | produção bruta induzida, Renovável base (A0) | 1959.352995174775 | 1.959,4 | R\$ milhões | resultados/rodada05/simulacoes_v04.xlsx › A0 › A0_R1 |
+| `a0_r1_ic` | intensidade carbônica, Renovável base (A0) | 110.4481793840174 | 110,4 | t CO₂e/R\$ milhão | resultados/rodada05/simulacoes_v04.xlsx › A0 › A0_R1 |
 | `a0_r1_pct_ind` | emissões indiretas, Renovável base (A0) | 51.54670887456342 | 51,5 | % | resultados/rodada05/simulacoes_v04.xlsx › A0 › A0_R1 |
 | `a0_r1_pct_rb` | emissões no RB, Renovável base (A0) | 34.20266242301224 | 34,2 | % | resultados/rodada05/simulacoes_v04.xlsx › A0 › A0_R1 |
 | `a0_r1_pct_s38` | participação do S38 (ou dos subsetores) nas emissões, Renovável base (A0) | 57.07523706194456 | 57,1 | % | resultados/rodada05/simulacoes_v04.xlsx › A0 › A0_R1 |
 | `a0_r2_co2e` | emissões totais, Renovável balanceada (A0) | 216987.1565901284 | 216.987,2 | t CO₂e | resultados/rodada05/simulacoes_v04.xlsx › A0 › A0_R2 |
-| `a0_r2_dx` | produção bruta induzida, Renovável balanceada (A0) | 1920.371028203399 | 1.920,4 | R$ milhões | resultados/rodada05/simulacoes_v04.xlsx › A0 › A0_R2 |
-| `a0_r2_ic` | intensidade carbônica, Renovável balanceada (A0) | 112.9923089878785 | 113,0 | t CO₂e/R$ milhão | resultados/rodada05/simulacoes_v04.xlsx › A0 › A0_R2 |
+| `a0_r2_dx` | produção bruta induzida, Renovável balanceada (A0) | 1920.371028203399 | 1.920,4 | R\$ milhões | resultados/rodada05/simulacoes_v04.xlsx › A0 › A0_R2 |
+| `a0_r2_ic` | intensidade carbônica, Renovável balanceada (A0) | 112.9923089878785 | 113,0 | t CO₂e/R\$ milhão | resultados/rodada05/simulacoes_v04.xlsx › A0 › A0_R2 |
 | `a0_r2_pct_ind` | emissões indiretas, Renovável balanceada (A0) | 46.10651242373578 | 46,1 | % | resultados/rodada05/simulacoes_v04.xlsx › A0 › A0_R2 |
 | `a0_r2_pct_rb` | emissões no RB, Renovável balanceada (A0) | 29.0592886287161 | 29,1 | % | resultados/rodada05/simulacoes_v04.xlsx › A0 › A0_R2 |
 | `a0_r2_pct_s38` | participação do S38 (ou dos subsetores) nas emissões, Renovável balanceada (A0) | 32.76658238409503 | 32,8 | % | resultados/rodada05/simulacoes_v04.xlsx › A0 › A0_R2 |
 | `a0_r3_co2e` | emissões totais, Renovável infraestrutura-intensiva (A0) | 169090.0151412379 | 169.090,0 | t CO₂e | resultados/rodada05/simulacoes_v04.xlsx › A0 › A0_R3 |
-| `a0_r3_dx` | produção bruta induzida, Renovável infraestrutura-intensiva (A0) | 1969.206216134805 | 1.969,2 | R$ milhões | resultados/rodada05/simulacoes_v04.xlsx › A0 › A0_R3 |
-| `a0_r3_ic` | intensidade carbônica, Renovável infraestrutura-intensiva (A0) | 85.86709393652586 | 85,9 | t CO₂e/R$ milhão | resultados/rodada05/simulacoes_v04.xlsx › A0 › A0_R3 |
+| `a0_r3_dx` | produção bruta induzida, Renovável infraestrutura-intensiva (A0) | 1969.206216134805 | 1.969,2 | R\$ milhões | resultados/rodada05/simulacoes_v04.xlsx › A0 › A0_R3 |
+| `a0_r3_ic` | intensidade carbônica, Renovável infraestrutura-intensiva (A0) | 85.86709393652586 | 85,9 | t CO₂e/R\$ milhão | resultados/rodada05/simulacoes_v04.xlsx › A0 › A0_R3 |
 | `a0_r3_pct_ind` | emissões indiretas, Renovável infraestrutura-intensiva (A0) | 62.70118854923339 | 62,7 | % | resultados/rodada05/simulacoes_v04.xlsx › A0 › A0_R3 |
 | `a0_r3_pct_rb` | emissões no RB, Renovável infraestrutura-intensiva (A0) | 43.46371140830907 | 43,5 | % | resultados/rodada05/simulacoes_v04.xlsx › A0 › A0_R3 |
 | `a0_r3_pct_s38` | participação do S38 (ou dos subsetores) nas emissões, Renovável infraestrutura-intensiva (A0) | 38.76883913522323 | 38,8 | % | resultados/rodada05/simulacoes_v04.xlsx › A0 › A0_R3 |
 | `a0_r4a_co2e` | emissões totais, Renovável energia/transporte-intensiva (A0) | 309794.8842831829 | 309.794,9 | t CO₂e | resultados/rodada05/simulacoes_v04.xlsx › A0 › A0_R4a |
-| `a0_r4a_dx` | produção bruta induzida, Renovável energia/transporte-intensiva (A0) | 1959.488267660658 | 1.959,5 | R$ milhões | resultados/rodada05/simulacoes_v04.xlsx › A0 › A0_R4a |
-| `a0_r4a_ic` | intensidade carbônica, Renovável energia/transporte-intensiva (A0) | 158.0998924035573 | 158,1 | t CO₂e/R$ milhão | resultados/rodada05/simulacoes_v04.xlsx › A0 › A0_R4a |
+| `a0_r4a_dx` | produção bruta induzida, Renovável energia/transporte-intensiva (A0) | 1959.488267660658 | 1.959,5 | R\$ milhões | resultados/rodada05/simulacoes_v04.xlsx › A0 › A0_R4a |
+| `a0_r4a_ic` | intensidade carbônica, Renovável energia/transporte-intensiva (A0) | 158.0998924035573 | 158,1 | t CO₂e/R\$ milhão | resultados/rodada05/simulacoes_v04.xlsx › A0 › A0_R4a |
 | `a0_r4a_pct_ind` | emissões indiretas, Renovável energia/transporte-intensiva (A0) | 39.04230813560093 | 39,0 | % | resultados/rodada05/simulacoes_v04.xlsx › A0 › A0_R4a |
 | `a0_r4a_pct_rb` | emissões no RB, Renovável energia/transporte-intensiva (A0) | 23.77736084389895 | 23,8 | % | resultados/rodada05/simulacoes_v04.xlsx › A0 › A0_R4a |
 | `a0_r4a_pct_s38` | participação do S38 (ou dos subsetores) nas emissões, Renovável energia/transporte-intensiva (A0) | 58.5234621880534 | 58,5 | % | resultados/rodada05/simulacoes_v04.xlsx › A0 › A0_R4a |
@@ -68,66 +68,66 @@ Gerado por `scripts/rodada05_artigo.py` a partir dos arquivos de resultado. Cada
 | `a1_r4a_co2e` | emissões totais, Renovável energia/transporte-intensiva (A1) | 289299.3149763778 | 289.299,3 | t CO₂e | resultados/rodada05/simulacoes_v04.xlsx › A1 › A1_R4a |
 | `a2_dif_fossil_renov` | diferença de emissões fóssil − renovável (A2) | 1930831.2022715602 | 1.930.831,2 | t CO₂e | resultados/rodada05/simulacoes_v04.xlsx › A2 › F1 − R1 |
 | `a2_e1_co2e` | emissões totais, Energia elétrica agregada (A2) | 383253.7117399096 | 383.253,7 | t CO₂e | resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_E1 (versão v04) |
-| `a2_e1_dx` | produção bruta induzida, Energia elétrica agregada (A2) | 1908.137081323806 | 1.908,1 | R$ milhões | resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_E1 (versão v04) |
-| `a2_e1_ic` | intensidade carbônica, Energia elétrica agregada (A2) | 200.8522948854493 | 200,9 | t CO₂e/R$ milhão | resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_E1 (versão v04) |
+| `a2_e1_dx` | produção bruta induzida, Energia elétrica agregada (A2) | 1908.137081323806 | 1.908,1 | R\$ milhões | resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_E1 (versão v04) |
+| `a2_e1_ic` | intensidade carbônica, Energia elétrica agregada (A2) | 200.8522948854493 | 200,9 | t CO₂e/R\$ milhão | resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_E1 (versão v04) |
 | `a2_e1_pct_ind` | emissões indiretas, Energia elétrica agregada (A2) | 65.95073304833994 | 66,0 | % | resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_E1 (versão v04) |
 | `a2_e1_pct_rb` | emissões no RB, Energia elétrica agregada (A2) | 25.99050326256677 | 26,0 | % | resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_E1 (versão v04) |
 | `a2_e1_pct_s38` | participação do S38 (ou dos subsetores) nas emissões, Energia elétrica agregada (A2) | 91.5561745389814 | 91,6 | % | resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_E1 (versão v04) |
 | `a2_f1_co2e` | emissões totais, Fóssil base (A2) | 2026202.216579384 | 2.026.202,2 | t CO₂e | resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_F1 (versão v04) |
-| `a2_f1_dx` | produção bruta induzida, Fóssil base (A2) | 1997.064364625063 | 1.997,1 | R$ milhões | resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_F1 (versão v04) |
-| `a2_f1_ic` | intensidade carbônica, Fóssil base (A2) | 1014.590341939125 | 1.014,6 | t CO₂e/R$ milhão | resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_F1 (versão v04) |
+| `a2_f1_dx` | produção bruta induzida, Fóssil base (A2) | 1997.064364625063 | 1.997,1 | R\$ milhões | resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_F1 (versão v04) |
+| `a2_f1_ic` | intensidade carbônica, Fóssil base (A2) | 1014.590341939125 | 1.014,6 | t CO₂e/R\$ milhão | resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_F1 (versão v04) |
 | `a2_f1_pct_ind` | emissões indiretas, Fóssil base (A2) | 4.172828418958093 | 4,2 | % | resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_F1 (versão v04) |
 | `a2_f1_pct_rb` | emissões no RB, Fóssil base (A2) | 2.695490800707633 | 2,7 | % | resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_F1 (versão v04) |
 | `a2_f1_pct_s38` | participação do S38 (ou dos subsetores) nas emissões, Fóssil base (A2) | 89.41345400741176 | 89,4 | % | resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_F1 (versão v04) |
 | `a2_f2_co2e` | emissões totais, Fóssil balanceada (A2) | 1972315.417116692 | 1.972.315,4 | t CO₂e | resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_F2 (versão v04) |
-| `a2_f2_dx` | produção bruta induzida, Fóssil balanceada (A2) | 1992.873774892974 | 1.992,9 | R$ milhões | resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_F2 (versão v04) |
-| `a2_f2_ic` | intensidade carbônica, Fóssil balanceada (A2) | 989.6840642717646 | 989,7 | t CO₂e/R$ milhão | resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_F2 (versão v04) |
+| `a2_f2_dx` | produção bruta induzida, Fóssil balanceada (A2) | 1992.873774892974 | 1.992,9 | R\$ milhões | resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_F2 (versão v04) |
+| `a2_f2_ic` | intensidade carbônica, Fóssil balanceada (A2) | 989.6840642717646 | 989,7 | t CO₂e/R\$ milhão | resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_F2 (versão v04) |
 | `a2_f2_pct_ind` | emissões indiretas, Fóssil balanceada (A2) | 4.367599817467513 | 4,4 | % | resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_F2 (versão v04) |
 | `a2_f2_pct_rb` | emissões no RB, Fóssil balanceada (A2) | 2.637643001730532 | 2,6 | % | resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_F2 (versão v04) |
 | `a2_f2_pct_s38` | participação do S38 (ou dos subsetores) nas emissões, Fóssil balanceada (A2) | 87.49632790374537 | 87,5 | % | resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_F2 (versão v04) |
 | `a2_f3_co2e` | emissões totais, Fóssil energia-intensiva (A2) | 2761423.730015889 | 2.761.423,7 | t CO₂e | resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_F3 (versão v04) |
-| `a2_f3_dx` | produção bruta induzida, Fóssil energia-intensiva (A2) | 1897.522849683228 | 1.897,5 | R$ milhões | resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_F3 (versão v04) |
-| `a2_f3_ic` | intensidade carbônica, Fóssil energia-intensiva (A2) | 1455.278248942763 | 1.455,3 | t CO₂e/R$ milhão | resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_F3 (versão v04) |
+| `a2_f3_dx` | produção bruta induzida, Fóssil energia-intensiva (A2) | 1897.522849683228 | 1.897,5 | R\$ milhões | resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_F3 (versão v04) |
+| `a2_f3_ic` | intensidade carbônica, Fóssil energia-intensiva (A2) | 1455.278248942763 | 1.455,3 | t CO₂e/R\$ milhão | resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_F3 (versão v04) |
 | `a2_f3_pct_ind` | emissões indiretas, Fóssil energia-intensiva (A2) | 2.621066374790292 | 2,6 | % | resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_F3 (versão v04) |
 | `a2_f3_pct_rb` | emissões no RB, Fóssil energia-intensiva (A2) | 1.671143202894352 | 1,7 | % | resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_F3 (versão v04) |
 | `a2_f3_pct_s38` | participação do S38 (ou dos subsetores) nas emissões, Fóssil energia-intensiva (A2) | 93.67523503653537 | 93,7 | % | resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_F3 (versão v04) |
 | `a2_r1_co2e` | emissões totais, Renovável base (A2) | 95371.01430782364 | 95.371,0 | t CO₂e | resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_R1 (versão v04) |
-| `a2_r1_dx` | produção bruta induzida, Renovável base (A2) | 1845.159650701164 | 1.845,2 | R$ milhões | resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_R1 (versão v04) |
-| `a2_r1_ic` | intensidade carbônica, Renovável base (A2) | 51.68713410331864 | 51,7 | t CO₂e/R$ milhão | resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_R1 (versão v04) |
+| `a2_r1_dx` | produção bruta induzida, Renovável base (A2) | 1845.159650701164 | 1.845,2 | R\$ milhões | resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_R1 (versão v04) |
+| `a2_r1_ic` | intensidade carbônica, Renovável base (A2) | 51.68713410331864 | 51,7 | t CO₂e/R\$ milhão | resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_R1 (versão v04) |
 | `a2_r1_pct_ind` | emissões indiretas, Renovável base (A2) | 77.74180256252723 | 77,7 | % | resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_R1 (versão v04) |
 | `a2_r1_pct_rb` | emissões no RB, Renovável base (A2) | 54.03876231984671 | 54,0 | % | resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_R1 (versão v04) |
 | `a2_r1_pct_s38` | participação do S38 (ou dos subsetores) nas emissões, Renovável base (A2) | 5.240342035950078 | 5,2 | % | resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_R1 (versão v04) |
 | `a2_r1_top1_pct` | participação do 1º emissor da cesta renovável no A2 (RS S43) | 37.13799241293293 | 37,1 | % | resultados/rodada05/simulacoes_v04.xlsx › top10_A2 › A2_R1 #1 |
 | `a2_r2_co2e` | emissões totais, Renovável balanceada (A2) | 149558.1102522495 | 149.558,1 | t CO₂e | resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_R2 (versão v04) |
-| `a2_r2_dx` | produção bruta induzida, Renovável balanceada (A2) | 1856.972951965483 | 1.857,0 | R$ milhões | resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_R2 (versão v04) |
-| `a2_r2_ic` | intensidade carbônica, Renovável balanceada (A2) | 80.53865840854176 | 80,5 | t CO₂e/R$ milhão | resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_R2 (versão v04) |
+| `a2_r2_dx` | produção bruta induzida, Renovável balanceada (A2) | 1856.972951965483 | 1.857,0 | R\$ milhões | resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_R2 (versão v04) |
+| `a2_r2_ic` | intensidade carbônica, Renovável balanceada (A2) | 80.53865840854176 | 80,5 | t CO₂e/R\$ milhão | resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_R2 (versão v04) |
 | `a2_r2_pct_ind` | emissões indiretas, Renovável balanceada (A2) | 52.87336361390497 | 52,9 | % | resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_R2 (versão v04) |
 | `a2_r2_pct_rb` | emissões no RB, Renovável balanceada (A2) | 33.78685684828569 | 33,8 | % | resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_R2 (versão v04) |
 | `a2_r2_pct_s38` | participação do S38 (ou dos subsetores) nas emissões, Renovável balanceada (A2) | 3.377435631868134 | 3,4 | % | resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_R2 (versão v04) |
 | `a2_r3_co2e` | emissões totais, Renovável infraestrutura-intensiva (A2) | 108198.5933940783 | 108.198,6 | t CO₂e | resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_R3 (versão v04) |
-| `a2_r3_dx` | produção bruta induzida, Renovável infraestrutura-intensiva (A2) | 1912.233926877654 | 1.912,2 | R$ milhões | resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_R3 (versão v04) |
-| `a2_r3_ic` | intensidade carbônica, Renovável infraestrutura-intensiva (A2) | 56.58229982915732 | 56,6 | t CO₂e/R$ milhão | resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_R3 (versão v04) |
+| `a2_r3_dx` | produção bruta induzida, Renovável infraestrutura-intensiva (A2) | 1912.233926877654 | 1.912,2 | R\$ milhões | resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_R3 (versão v04) |
+| `a2_r3_ic` | intensidade carbônica, Renovável infraestrutura-intensiva (A2) | 56.58229982915732 | 56,6 | t CO₂e/R\$ milhão | resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_R3 (versão v04) |
 | `a2_r3_pct_ind` | emissões indiretas, Renovável infraestrutura-intensiva (A2) | 80.35616754725865 | 80,4 | % | resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_R3 (versão v04) |
 | `a2_r3_pct_rb` | emissões no RB, Renovável infraestrutura-intensiva (A2) | 57.4235822083378 | 57,4 | % | resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_R3 (versão v04) |
 | `a2_r3_pct_s38` | participação do S38 (ou dos subsetores) nas emissões, Renovável infraestrutura-intensiva (A2) | 5.429089370879655 | 5,4 | % | resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_R3 (versão v04) |
 | `a2_r4a_co2e` | emissões totais, Renovável energia/transporte-intensiva (A2) | 128646.2709543628 | 128.646,3 | t CO₂e | resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_R4a (versão v04) |
-| `a2_r4a_dx` | produção bruta induzida, Renovável energia/transporte-intensiva (A2) | 1788.064386938778 | 1.788,1 | R$ milhões | resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_R4a (versão v04) |
-| `a2_r4a_ic` | intensidade carbônica, Renovável energia/transporte-intensiva (A2) | 71.94722510782132 | 71,9 | t CO₂e/R$ milhão | resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_R4a (versão v04) |
+| `a2_r4a_dx` | produção bruta induzida, Renovável energia/transporte-intensiva (A2) | 1788.064386938778 | 1.788,1 | R\$ milhões | resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_R4a (versão v04) |
+| `a2_r4a_ic` | intensidade carbônica, Renovável energia/transporte-intensiva (A2) | 71.94722510782132 | 71,9 | t CO₂e/R\$ milhão | resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_R4a (versão v04) |
 | `a2_r4a_pct_ind` | emissões indiretas, Renovável energia/transporte-intensiva (A2) | 50.71667144214111 | 50,7 | % | resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_R4a (versão v04) |
 | `a2_r4a_pct_rb` | emissões no RB, Renovável energia/transporte-intensiva (A2) | 31.16010335415815 | 31,2 | % | resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_R4a (versão v04) |
 | `a2_r4a_pct_s38` | participação do S38 (ou dos subsetores) nas emissões, Renovável energia/transporte-intensiva (A2) | 3.098847686339667 | 3,1 | % | resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_R4a (versão v04) |
 | `a2_reducao_ic` | redução da intensidade carbônica da cesta renovável em relação à fóssil (A2) | 94.9056154029091 | 94,9 | % | resultados/rodada05/simulacoes_v04.xlsx › A2 › F1 e R1 |
-| `bi_bio_t` | emissões por R$ 1 bilhão, Biomassa | 40583.46923057609 | 40.583,5 | t CO₂e | resultados/rodada05/simulacoes_v04.xlsx › B_RS1bi › B_BIO |
-| `bi_car_t` | emissões por R$ 1 bilhão, Carvão mineral | 5451530.487017048 | 5.451.530,5 | t CO₂e | resultados/rodada05/simulacoes_v04.xlsx › B_RS1bi › B_CAR |
-| `bi_dis_t` | emissões por R$ 1 bilhão, distribuição (mix de 2019) | 387680.1096022632 | 387.680,1 | t CO₂e | resultados/rodada05/simulacoes_v04.xlsx › B_RS1bi › B_DIS |
-| `bi_eol_t` | emissões por R$ 1 bilhão, Eólica | 26246.94724654291 | 26.246,9 | t CO₂e | resultados/rodada05/simulacoes_v04.xlsx › B_RS1bi › B_EOL |
-| `bi_gn_t` | emissões por R$ 1 bilhão, Gás natural | 1636355.71269228 | 1.636.355,7 | t CO₂e | resultados/rodada05/simulacoes_v04.xlsx › B_RS1bi › B_GN |
-| `bi_hid_t` | emissões por R$ 1 bilhão, Hidrelétrica | 26391.53752492741 | 26.391,5 | t CO₂e | resultados/rodada05/simulacoes_v04.xlsx › B_RS1bi › B_HID |
-| `bi_sol_t` | emissões por R$ 1 bilhão, Solar fotovoltaica | 24917.69053774675 | 24.917,7 | t CO₂e | resultados/rodada05/simulacoes_v04.xlsx › B_RS1bi › B_SOL |
-| `coef_tust_pet_antes` | coeficiente de TUST da coluna latente S38_PET-RS sem a D18 | 0.01054868176586614 | 0,0105 | R$/R$ | resultados/rodada05/quadro_subsetores_v04.xlsx › d18_latentes › S38_PET |
-| `coef_tust_pet_depois` | coeficiente de TUST da coluna latente S38_PET-RS com a D18 | 0.04123681363240332 | 0,0412 | R$/R$ | resultados/rodada05/quadro_subsetores_v04.xlsx › d18_latentes › S38_PET |
-| `coef_tust_sol_antes` | coeficiente de TUST da coluna latente S38_SOL-RS sem a D18 | 0.0953117068120729 | 0,0953 | R$/R$ | resultados/rodada05/quadro_subsetores_v04.xlsx › d18_latentes › S38_SOL |
-| `coef_tust_sol_depois` | coeficiente de TUST da coluna latente S38_SOL-RS com a D18 | 0.1614154616002224 | 0,1614 | R$/R$ | resultados/rodada05/quadro_subsetores_v04.xlsx › d18_latentes › S38_SOL |
+| `bi_bio_t` | emissões por R\$ 1 bilhão, Biomassa | 40583.46923057609 | 40.583,5 | t CO₂e | resultados/rodada05/simulacoes_v04.xlsx › B_RS1bi › B_BIO |
+| `bi_car_t` | emissões por R\$ 1 bilhão, Carvão mineral | 5451530.487017048 | 5.451.530,5 | t CO₂e | resultados/rodada05/simulacoes_v04.xlsx › B_RS1bi › B_CAR |
+| `bi_dis_t` | emissões por R\$ 1 bilhão, distribuição (mix de 2019) | 387680.1096022632 | 387.680,1 | t CO₂e | resultados/rodada05/simulacoes_v04.xlsx › B_RS1bi › B_DIS |
+| `bi_eol_t` | emissões por R\$ 1 bilhão, Eólica | 26246.94724654291 | 26.246,9 | t CO₂e | resultados/rodada05/simulacoes_v04.xlsx › B_RS1bi › B_EOL |
+| `bi_gn_t` | emissões por R\$ 1 bilhão, Gás natural | 1636355.71269228 | 1.636.355,7 | t CO₂e | resultados/rodada05/simulacoes_v04.xlsx › B_RS1bi › B_GN |
+| `bi_hid_t` | emissões por R\$ 1 bilhão, Hidrelétrica | 26391.53752492741 | 26.391,5 | t CO₂e | resultados/rodada05/simulacoes_v04.xlsx › B_RS1bi › B_HID |
+| `bi_sol_t` | emissões por R\$ 1 bilhão, Solar fotovoltaica | 24917.69053774675 | 24.917,7 | t CO₂e | resultados/rodada05/simulacoes_v04.xlsx › B_RS1bi › B_SOL |
+| `coef_tust_pet_antes` | coeficiente de TUST da coluna latente S38_PET-RS sem a D18 | 0.01054868176586614 | 0,0105 | R\$/R\$ | resultados/rodada05/quadro_subsetores_v04.xlsx › d18_latentes › S38_PET |
+| `coef_tust_pet_depois` | coeficiente de TUST da coluna latente S38_PET-RS com a D18 | 0.04123681363240332 | 0,0412 | R\$/R\$ | resultados/rodada05/quadro_subsetores_v04.xlsx › d18_latentes › S38_PET |
+| `coef_tust_sol_antes` | coeficiente de TUST da coluna latente S38_SOL-RS sem a D18 | 0.0953117068120729 | 0,0953 | R\$/R\$ | resultados/rodada05/quadro_subsetores_v04.xlsx › d18_latentes › S38_SOL |
+| `coef_tust_sol_depois` | coeficiente de TUST da coluna latente S38_SOL-RS com a D18 | 0.1614154616002224 | 0,1614 | R\$/R\$ | resultados/rodada05/quadro_subsetores_v04.xlsx › d18_latentes › S38_SOL |
 | `dev_e3_a2_e1` | desvio das emissões da v04_E3 em relação à principal, A2_E1 | -33.971164801096265 | −34,0 | % | resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_E1 |
 | `dev_e3_a2_f1` | desvio das emissões da v04_E3 em relação à principal, A2_F1 | -0.07195637772602348 | −0,1 | % | resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_F1 |
 | `dev_e3_a2_r1` | desvio das emissões da v04_E3 em relação à principal, A2_R1 | -2.93806565743282 | −2,9 | % | resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › A2_R1 |
@@ -175,13 +175,19 @@ Gerado por `scripts/rodada05_artigo.py` a partir dos arquivos de resultado. Cada
 | `dev_rap_media_b_twh_sol` | desvio das emissões da v04_rap_media em relação à principal, B_TWh_SOL | -1.2767534215700649 | −1,3 | % | resultados/rodada05/simulacoes_v04.xlsx › robustez_detalhe › B_TWh_SOL |
 | `diag_acaso` | combinações < 0,1% esperadas por acaso | 210.72 | 211 | combinações | resultados/rodada05/diagnostico_seeg_nereus.xlsx › resumo › Casamentos: \|dif\| < 0.1% esperados por acaso (ordem de grandeza) |
 | `diag_casamentos` | combinações com diferença < 0,1% | 224.0 | 224 | combinações | resultados/rodada05/diagnostico_seeg_nereus.xlsx › resumo › Casamentos: \|dif\| < 0.1% (todos) |
+| `diag_concorrente_dif` | diferença do casamento concorrente S19-RS ≈ refino + química | 0.0709071787122213 | 0,071 | % | resultados/rodada05/diagnostico_seeg_nereus.xlsx › resumo › Casamento concorrente: S19 = Produção de combustíveis › Produção de combustíveis › Refino de petróleo + Química › Industrial › Química |
+| `diag_discutivel` | combinações < 0,1% com sentido discutível (critério SCN) | 9.0 | 9 | combinações | resultados/rodada05/diagnostico_seeg_nereus.xlsx › resumo › Casamentos: \|dif\| < 0.1% 'discutível' (critério SCN) |
 | `diag_nao_alocado` | 'Não alocado' das duas atividades | 18699.95597566485 | 18.700,0 | mil t CO₂e | resultados/rodada05/diagnostico_seeg_nereus.xlsx › resumo › Não alocado (GE + PC) |
+| `diag_nucleos` | núcleos distintos entre as combinações < 0,1% (sem unidades desprezíveis) | 126.0 | 126 | combinações | resultados/rodada05/diagnostico_seeg_nereus.xlsx › resumo › Casamentos: \|dif\| < 0.1%, núcleos distintos (sem unidades desprezíveis) |
+| `diag_s19_rs_e4` | S19-RS na E4 (base NEREUS + refino do SEEG do RS) | 4505.982774093187 | 4.506,0 | mil t CO₂e | resultados/rodada05/diagnostico_seeg_nereus.xlsx › resumo › S19-RS: NEREUS + E4 RS → S19 (risco de dupla contagem do refino) |
+| `diag_s19_rs_nereus` | S19-RS na base NEREUS | 2693.926278882722 | 2.693,9 | mil t CO₂e | resultados/rodada05/diagnostico_seeg_nereus.xlsx › resumo › S19-RS: NEREUS |
 | `diag_s38_rb_dif` | diferença SEEG − NEREUS no S38-RB | -6.506752684567207 | −6,51 | % | resultados/rodada05/diagnostico_seeg_nereus.xlsx › resumo › S38-RB: diferença |
 | `diag_s38_rb_nereus` | S38-RB na base NEREUS | 84518.34905662797 | 84.518,3 | mil t CO₂e | resultados/rodada05/diagnostico_seeg_nereus.xlsx › resumo › S38-RB: NEREUS |
 | `diag_s38_rb_seeg` | S38-RB pelo SEEG (estados) | 79018.94911043394 | 79.018,9 | mil t CO₂e | resultados/rodada05/diagnostico_seeg_nereus.xlsx › resumo › S38-RB: SEEG GE + PC, estados (GWP-AR5, bruta) |
 | `diag_s38_rs_dif` | diferença SEEG − NEREUS no S38-RS | 0.0207302882466799 | 0,02 | % | resultados/rodada05/diagnostico_seeg_nereus.xlsx › resumo › S38-RS: diferença |
 | `diag_s38_rs_nereus` | S38-RS na base NEREUS | 5838.005554368286 | 5.838,0 | mil t CO₂e | resultados/rodada05/diagnostico_seeg_nereus.xlsx › resumo › S38-RS: NEREUS |
 | `diag_s38_rs_seeg` | S38-RS pelo SEEG (geração de eletricidade + produção de combustíveis) | 5839.215789747564 | 5.839,2 | mil t CO₂e | resultados/rodada05/diagnostico_seeg_nereus.xlsx › resumo › S38-RS: SEEG GE + PC (GWP-AR5, bruta) |
+| `diag_sentido_sim` | combinações < 0,1% com sentido econômico (critério SCN) | 0.0 | 0 | combinações | resultados/rodada05/diagnostico_seeg_nereus.xlsx › resumo › Casamentos: \|dif\| < 0.1% com sentido 'sim' (critério SCN) |
 | `diag_testes` | combinações testadas no casamento de setores | 679856.0 | 679.856 | combinações | resultados/rodada05/diagnostico_seeg_nereus.xlsx › resumo › Casamentos: total de testes |
 | `diag_total_br_bruta` | total Brasil, SEEG AR5 bruta − NEREUS | 36.48259684978039 | 36,5 | % | resultados/rodada05/diagnostico_seeg_nereus.xlsx › resumo › Total Brasil: SEEG GWP-AR5 bruta (SEEG: Emissão; 26 UF + RS + Não Alocado) − NEREUS |
 | `diag_total_br_liq` | total Brasil, SEEG AR5 líquida − NEREUS | 0.9938371251375626 | 1,0 | % | resultados/rodada05/diagnostico_seeg_nereus.xlsx › resumo › Total Brasil: SEEG GWP-AR5 líquida (SEEG: Emissão + Remoção; 26 UF + RS + Não Alocado) − NEREUS |
@@ -189,6 +195,10 @@ Gerado por `scripts/rodada05_artigo.py` a partir dos arquivos de resultado. Cada
 | `e4_movido_rs` | emissões movidas do S38 na E4, RS | 1900181.996674465 | 1.900.182,0 | t CO₂e | resultados/rodada05/quadro_subsetores_v04.xlsx › realocacao_E4 › RS |
 | `e4_sobra_rb` | resíduo de emissões que fica em DIS e GAS na E4, RB | 6946267.899657965 | 6.946.267,9 | t CO₂e | resultados/rodada05/quadro_subsetores_v04.xlsx › niveis_emissoes e realocacao_E4 › RB |
 | `e4_sobra_rs` | resíduo de emissões que fica em DIS e GAS na E4, RS | 75675.72868064791 | 75.675,7 | t CO₂e | resultados/rodada05/quadro_subsetores_v04.xlsx › niveis_emissoes e realocacao_E4 › RS |
+| `eob_espelho_pet_rb` | EOB/VBP do espelho S38_PET-RB | 10.0 | 10,0 | % do VBP | resultados/rodada05/quadro_subsetores_v04.xlsx › d18_latentes › S38_PET |
+| `eob_espelho_sol_rb` | EOB/VBP do espelho S38_SOL-RB | 55.18306678299485 | 55,2 | % do VBP | resultados/rodada05/quadro_subsetores_v04.xlsx › d18_latentes › S38_SOL |
+| `eob_impl_pet_rs` | EOB/VBP implícito da coluna latente S38_PET-RS com a D18 (espelho − Δ TUST) | 6.931186813346285 | 6,9 | % do VBP | resultados/rodada05/quadro_subsetores_v04.xlsx › d18_latentes › S38_PET |
+| `eob_impl_sol_rs` | EOB/VBP implícito da coluna latente S38_SOL-RS com a D18 (espelho − Δ TUST) | 48.5726913041799 | 48,6 | % do VBP | resultados/rodada05/quadro_subsetores_v04.xlsx › d18_latentes › S38_SOL |
 | `fator_e1_rb_bio` | fator de emissão E1 RB S38_BIO | 0.006883556534375941 | 0,007 | t CO₂e/MWh | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RB S38_BIO |
 | `fator_e1_rb_car` | fator de emissão E1 RB S38_CAR | 0.8669797164970893 | 0,867 | t CO₂e/MWh | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RB S38_CAR |
 | `fator_e1_rb_eol` | fator de emissão E1 RB S38_EOL | 0.0 | 0,000 | t CO₂e/MWh | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RB S38_EOL |
@@ -204,30 +214,30 @@ Gerado por `scripts/rodada05_artigo.py` a partir dos arquivos de resultado. Cada
 | `fator_e1_rs_hid` | fator de emissão E1 RS S38_HID | 0.0 | 0,000 | t CO₂e/MWh | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RS S38_HID |
 | `gwh_ger_rb` | GWh de 2019, RB | 501267.511191 | 501.267,5 | GWh | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RB geração |
 | `gwh_ger_rs` | GWh de 2019, RS | 22677.488809000002 | 22.677,5 | GWh | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RS geração |
-| `mult_em_rb_bio` | multiplicador de emissões RB S38_BIO | 81.57672862286299 | 81,6 | t CO₂e/R$ milhão | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RB S38_BIO |
-| `mult_em_rb_car` | multiplicador de emissões RB S38_CAR | 4520.868380526529 | 4.520,9 | t CO₂e/R$ milhão | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RB S38_CAR |
-| `mult_em_rb_dis` | multiplicador de emissões RB S38_DIS | 422.6125128330976 | 422,6 | t CO₂e/R$ milhão | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RB S38_DIS |
-| `mult_em_rb_eol` | multiplicador de emissões RB S38_EOL | 25.78164136652243 | 25,8 | t CO₂e/R$ milhão | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RB S38_EOL |
-| `mult_em_rb_gas` | multiplicador de emissões RB S38_GAS | 269.7965944628818 | 269,8 | t CO₂e/R$ milhão | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RB S38_GAS |
-| `mult_em_rb_gn` | multiplicador de emissões RB S38_GN | 1916.120388670084 | 1.916,1 | t CO₂e/R$ milhão | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RB S38_GN |
-| `mult_em_rb_hid` | multiplicador de emissões RB S38_HID | 26.0520084373274 | 26,1 | t CO₂e/R$ milhão | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RB S38_HID |
-| `mult_em_rb_nuc` | multiplicador de emissões RB S38_NUC | 25.04981628574196 | 25,0 | t CO₂e/R$ milhão | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RB S38_NUC |
-| `mult_em_rb_pet` | multiplicador de emissões RB S38_PET | 1184.180633082289 | 1.184,2 | t CO₂e/R$ milhão | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RB S38_PET |
-| `mult_em_rb_sol` | multiplicador de emissões RB S38_SOL | 24.71929973316731 | 24,7 | t CO₂e/R$ milhão | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RB S38_SOL |
-| `mult_em_rb_tra` | multiplicador de emissões RB S38_TRA | 24.44447589970749 | 24,4 | t CO₂e/R$ milhão | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RB S38_TRA |
-| `mult_em_rs_bio` | multiplicador de emissões RS S38_BIO | 40.58346923057609 | 40,6 | t CO₂e/R$ milhão | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RS S38_BIO |
-| `mult_em_rs_car` | multiplicador de emissões RS S38_CAR | 5451.530487017047 | 5.451,5 | t CO₂e/R$ milhão | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RS S38_CAR |
-| `mult_em_rs_dis` | multiplicador de emissões RS S38_DIS | 387.6801096022632 | 387,7 | t CO₂e/R$ milhão | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RS S38_DIS |
-| `mult_em_rs_eol` | multiplicador de emissões RS S38_EOL | 26.24694724654291 | 26,2 | t CO₂e/R$ milhão | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RS S38_EOL |
-| `mult_em_rs_gas` | multiplicador de emissões RS S38_GAS | 213.8678836555717 | 213,9 | t CO₂e/R$ milhão | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RS S38_GAS |
-| `mult_em_rs_gn` | multiplicador de emissões RS S38_GN | 1636.35571269228 | 1.636,4 | t CO₂e/R$ milhão | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RS S38_GN |
-| `mult_em_rs_hid` | multiplicador de emissões RS S38_HID | 26.39153752492741 | 26,4 | t CO₂e/R$ milhão | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RS S38_HID |
-| `mult_em_rs_pet` | multiplicador de emissões RS S38_PET | 1187.596798429766 | 1.187,6 | t CO₂e/R$ milhão | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RS S38_PET |
-| `mult_em_rs_sol` | multiplicador de emissões RS S38_SOL | 24.91769053774674 | 24,9 | t CO₂e/R$ milhão | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RS S38_SOL |
-| `mult_em_rs_sol_sem_d18` | multiplicador de emissões do SOL-RS latente sem a D18 | 23.31817874856202 | 23,3 | t CO₂e/R$ milhão | resultados/rodada05/quadro_subsetores_v04.xlsx › d18_latentes › S38_SOL |
-| `mult_em_rs_tra` | multiplicador de emissões RS S38_TRA | 23.93629521218996 | 23,9 | t CO₂e/R$ milhão | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RS S38_TRA |
-| `mult_em_s38_rb` | multiplicador de emissões do S38 na MIP original, RB | 406.2507036184068 | 406,3 | t CO₂e/R$ milhão | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › original RB |
-| `mult_em_s38_rs` | multiplicador de emissões do S38 na MIP original, RS | 428.1135341067809 | 428,1 | t CO₂e/R$ milhão | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › original RS |
+| `mult_em_rb_bio` | multiplicador de emissões RB S38_BIO | 81.57672862286299 | 81,6 | t CO₂e/R\$ milhão | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RB S38_BIO |
+| `mult_em_rb_car` | multiplicador de emissões RB S38_CAR | 4520.868380526529 | 4.520,9 | t CO₂e/R\$ milhão | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RB S38_CAR |
+| `mult_em_rb_dis` | multiplicador de emissões RB S38_DIS | 422.6125128330976 | 422,6 | t CO₂e/R\$ milhão | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RB S38_DIS |
+| `mult_em_rb_eol` | multiplicador de emissões RB S38_EOL | 25.78164136652243 | 25,8 | t CO₂e/R\$ milhão | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RB S38_EOL |
+| `mult_em_rb_gas` | multiplicador de emissões RB S38_GAS | 269.7965944628818 | 269,8 | t CO₂e/R\$ milhão | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RB S38_GAS |
+| `mult_em_rb_gn` | multiplicador de emissões RB S38_GN | 1916.120388670084 | 1.916,1 | t CO₂e/R\$ milhão | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RB S38_GN |
+| `mult_em_rb_hid` | multiplicador de emissões RB S38_HID | 26.0520084373274 | 26,1 | t CO₂e/R\$ milhão | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RB S38_HID |
+| `mult_em_rb_nuc` | multiplicador de emissões RB S38_NUC | 25.04981628574196 | 25,0 | t CO₂e/R\$ milhão | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RB S38_NUC |
+| `mult_em_rb_pet` | multiplicador de emissões RB S38_PET | 1184.180633082289 | 1.184,2 | t CO₂e/R\$ milhão | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RB S38_PET |
+| `mult_em_rb_sol` | multiplicador de emissões RB S38_SOL | 24.71929973316731 | 24,7 | t CO₂e/R\$ milhão | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RB S38_SOL |
+| `mult_em_rb_tra` | multiplicador de emissões RB S38_TRA | 24.44447589970749 | 24,4 | t CO₂e/R\$ milhão | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RB S38_TRA |
+| `mult_em_rs_bio` | multiplicador de emissões RS S38_BIO | 40.58346923057609 | 40,6 | t CO₂e/R\$ milhão | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RS S38_BIO |
+| `mult_em_rs_car` | multiplicador de emissões RS S38_CAR | 5451.530487017047 | 5.451,5 | t CO₂e/R\$ milhão | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RS S38_CAR |
+| `mult_em_rs_dis` | multiplicador de emissões RS S38_DIS | 387.6801096022632 | 387,7 | t CO₂e/R\$ milhão | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RS S38_DIS |
+| `mult_em_rs_eol` | multiplicador de emissões RS S38_EOL | 26.24694724654291 | 26,2 | t CO₂e/R\$ milhão | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RS S38_EOL |
+| `mult_em_rs_gas` | multiplicador de emissões RS S38_GAS | 213.8678836555717 | 213,9 | t CO₂e/R\$ milhão | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RS S38_GAS |
+| `mult_em_rs_gn` | multiplicador de emissões RS S38_GN | 1636.35571269228 | 1.636,4 | t CO₂e/R\$ milhão | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RS S38_GN |
+| `mult_em_rs_hid` | multiplicador de emissões RS S38_HID | 26.39153752492741 | 26,4 | t CO₂e/R\$ milhão | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RS S38_HID |
+| `mult_em_rs_pet` | multiplicador de emissões RS S38_PET | 1187.596798429766 | 1.187,6 | t CO₂e/R\$ milhão | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RS S38_PET |
+| `mult_em_rs_sol` | multiplicador de emissões RS S38_SOL | 24.91769053774674 | 24,9 | t CO₂e/R\$ milhão | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RS S38_SOL |
+| `mult_em_rs_sol_sem_d18` | multiplicador de emissões do SOL-RS latente sem a D18 | 23.31817874856202 | 23,3 | t CO₂e/R\$ milhão | resultados/rodada05/quadro_subsetores_v04.xlsx › d18_latentes › S38_SOL |
+| `mult_em_rs_tra` | multiplicador de emissões RS S38_TRA | 23.93629521218996 | 23,9 | t CO₂e/R\$ milhão | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RS S38_TRA |
+| `mult_em_s38_rb` | multiplicador de emissões do S38 na MIP original, RB | 406.2507036184068 | 406,3 | t CO₂e/R\$ milhão | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › original RB |
+| `mult_em_s38_rs` | multiplicador de emissões do S38 na MIP original, RS | 428.1135341067809 | 428,1 | t CO₂e/R\$ milhão | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › original RS |
 | `mult_prod_rb_bio` | multiplicador de produção RB S38_BIO | 1.516989283291159 | 1,517 |  | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RB S38_BIO |
 | `mult_prod_rb_car` | multiplicador de produção RB S38_CAR | 1.630804233151826 | 1,631 |  | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RB S38_CAR |
 | `mult_prod_rb_dis` | multiplicador de produção RB S38_DIS | 1.921852379490097 | 1,922 |  | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RB S38_DIS |
@@ -250,15 +260,18 @@ Gerado por `scripts/rodada05_artigo.py` a partir dos arquivos de resultado. Cada
 | `mult_prod_rs_sol` | multiplicador de produção RS S38_SOL | 1.508255449942891 | 1,508 |  | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RS S38_SOL |
 | `mult_prod_rs_sol_sem_d18` | multiplicador de produção do SOL-RS latente sem a D18 | 1.421480282999841 | 1,421 |  | resultados/rodada05/quadro_subsetores_v04.xlsx › d18_latentes › S38_SOL |
 | `mult_prod_rs_tra` | multiplicador de produção RS S38_TRA | 1.321166321733432 | 1,321 |  | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RS S38_TRA |
-| `p_pet_rb` | R$/MWh do espelho S38_PET-RB | 785.9676713530407 | 786,0 | R$/MWh | resultados/rodada05/quadro_subsetores_v04.xlsx › d18_latentes › S38_PET |
-| `p_sol_rb` | R$/MWh do espelho S38_SOL-RB | 200.7911885476695 | 200,8 | R$/MWh | resultados/rodada05/quadro_subsetores_v04.xlsx › d18_latentes › S38_SOL |
+| `p_pet_rb` | R\$/MWh do espelho S38_PET-RB | 785.9676713530407 | 786,0 | R\$/MWh | resultados/rodada05/quadro_subsetores_v04.xlsx › d18_latentes › S38_PET |
+| `p_sol_rb` | R\$/MWh do espelho S38_SOL-RB | 200.7911885476695 | 200,8 | R\$/MWh | resultados/rodada05/quadro_subsetores_v04.xlsx › d18_latentes › S38_SOL |
+| `param_alerta_mult` | limiar do alerta do multiplicador de produção | 2.2 | 2,2 |  | parametros/especificacao_v04.yaml › alerta_multiplicador_producao |
+| `param_alerta_ne` | limiar do ALERTA do T12 (insumos não energéticos ÷ VBP) | 0.05 | 0,05 |  | parametros/especificacao_v04.yaml › alerta_insumos_nao_energeticos |
 | `param_alfa` | parcela da transmissão paga pela distribuição (α) | 0.5 | 0,5 |  | parametros/componentes_v04.csv › fracao_transmissao_distribuicao |
+| `param_consumo_gas_rs` | consumo específico de gás das térmicas usado no θ_RS (HIPÓTESE) | 0.2 | 0,20 | m³/kWh | dados/externos/valores_documentais_v03.csv › theta_RS |
 | `param_eta` | η (EOB mínimo) | 0.1 | 0,10 |  | parametros/especificacao_v04.yaml › reequilibrio.eta |
 | `param_eta_sens` | eta na variante _eta005 | 0.05 | 0,05 |  | parametros/especificacao_v04_eta005.yaml › reequilibrio.eta |
 | `param_kappa` | κ (piso do VBP das térmicas) | 0.7 | 0,70 |  | parametros/especificacao_v04.yaml › piso_vbp.kappa |
 | `param_kappa_sens` | kappa na variante _k060 | 0.6 | 0,60 |  | parametros/especificacao_v04_k060.yaml › piso_vbp.kappa |
 | `param_teto_gas` | participação máxima do gás canalizado nas compras de S38 de um comprador (teto) | 0.9000000000000001 | 0,90 |  | parametros/regras_linha_v04.csv › S38_GAS (máximo) |
-| `reag_max` | maior diferença da re-agregação | 1.425632945029065e-09 | 0,000000001 | R$ milhões | resultados/rodada05/checagens_v04.csv › reagregacao_* |
+| `reag_max` | maior diferença da re-agregação | 1.425632945029065e-09 | 0,000000001 | R\$ milhões | resultados/rodada05/checagens_v04.csv › reagregacao_* |
 | `residuo_rb` | resíduo de emissões do S38 (E1), RB | 49689733.89448699 | 49.689.733,9 | t CO₂e | resultados/rodada05/quadro_subsetores_v04.xlsx › niveis_emissoes › v04 RB |
 | `residuo_rb_pct` | resíduo de emissões em % do CO₂e do S38, RB | 58.7916522851085 | 58,8 | % | resultados/rodada05/quadro_subsetores_v04.xlsx › niveis_emissoes › v04 RB |
 | `residuo_rs` | resíduo de emissões do S38 (E1), RS | 1975857.725355113 | 1.975.857,7 | t CO₂e | resultados/rodada05/quadro_subsetores_v04.xlsx › niveis_emissoes › v04 RS |
@@ -286,42 +299,42 @@ Gerado por `scripts/rodada05_artigo.py` a partir dos arquivos de resultado. Cada
 | `t12_gn_rb` | insumos não energéticos ÷ VBP da geração a gás, RB (T12) | 0.0315483416099439 | 0,032 | fração do VBP | resultados/rodada05/quadro_subsetores_v04.xlsx › insumos_nao_energeticos › v04 RB S38_GN |
 | `t12_gn_rs` | insumos não energéticos ÷ VBP da geração a gás, RS (T12) | 0.02567660099411299 | 0,026 | fração do VBP | resultados/rodada05/quadro_subsetores_v04.xlsx › insumos_nao_energeticos › v04 RS S38_GN |
 | `t12_min_k060` | menor razão insumos não energéticos ÷ VBP com κ = 0,60 | 0.07680941610745359 | 0,077 | fração do VBP | resultados/rodada05/quadro_subsetores_v04.xlsx › variantes_resumo › v04_k060 |
-| `tau_rs` | TUST por MWh das fontes do RS (τ_RS) | 32.41080238467936 | 32,41 | R$/MWh | resultados/rodada05/quadro_subsetores_v04.xlsx › d18_latentes |
+| `tau_rs` | TUST por MWh das fontes do RS (τ_RS) | 32.41080238467936 | 32,41 | R\$/MWh | resultados/rodada05/quadro_subsetores_v04.xlsx › d18_latentes |
 | `twh_bio_evit_car` | emissões evitadas por TWh em relação ao carvão, Biomassa | 1433351.506450309 | 1.433.351,5 | t CO₂e/TWh | resultados/rodada05/simulacoes_v04.xlsx › B_TWh › S38_BIO (v04) |
 | `twh_bio_evit_gn` | emissões evitadas por TWh em relação ao gás natural, Biomassa | 450209.5726140406 | 450.209,6 | t CO₂e/TWh | resultados/rodada05/simulacoes_v04.xlsx › B_TWh › S38_BIO (v04) |
 | `twh_bio_gkwh` | g CO₂e/kWh, Biomassa | 8.809024026403092 | 8,8 | g CO₂e/kWh | resultados/rodada05/simulacoes_v04.xlsx › B_TWh › S38_BIO (v04) |
 | `twh_bio_pct_rb` | emissões no RB por TWh, Biomassa | 68.86003531748143 | 68,9 | % | resultados/rodada05/simulacoes_v04.xlsx › B_TWh › S38_BIO (v04) |
-| `twh_bio_preco` | preço médio, Biomassa | 217.0594134364014 | 217,1 | R$/MWh | resultados/rodada05/simulacoes_v04.xlsx › B_TWh › S38_BIO (v04) |
+| `twh_bio_preco` | preço médio, Biomassa | 217.0594134364014 | 217,1 | R\$/MWh | resultados/rodada05/simulacoes_v04.xlsx › B_TWh › S38_BIO (v04) |
 | `twh_bio_t` | emissões por TWh, Biomassa | 8809.024026403093 | 8.809,0 | t CO₂e/TWh | resultados/rodada05/simulacoes_v04.xlsx › B_TWh › S38_BIO (v04) |
 | `twh_car_evit_car` | emissões evitadas por TWh em relação ao carvão, Carvão mineral | 0.0 | 0,0 | t CO₂e/TWh | resultados/rodada05/simulacoes_v04.xlsx › B_TWh › S38_CAR (v04) |
 | `twh_car_evit_gn` | emissões evitadas por TWh em relação ao gás natural, Carvão mineral | -983141.9338362685 | −983.141,9 | t CO₂e/TWh | resultados/rodada05/simulacoes_v04.xlsx › B_TWh › S38_CAR (v04) |
 | `twh_car_gkwh` | g CO₂e/kWh, Carvão mineral | 1442.160530476712 | 1.442,2 | g CO₂e/kWh | resultados/rodada05/simulacoes_v04.xlsx › B_TWh › S38_CAR (v04) |
 | `twh_car_pct_rb` | emissões no RB por TWh, Carvão mineral | 0.2822595977346183 | 0,3 | % | resultados/rodada05/simulacoes_v04.xlsx › B_TWh › S38_CAR (v04) |
-| `twh_car_preco` | preço médio, Carvão mineral | 264.5423214473903 | 264,5 | R$/MWh | resultados/rodada05/simulacoes_v04.xlsx › B_TWh › S38_CAR (v04) |
+| `twh_car_preco` | preço médio, Carvão mineral | 264.5423214473903 | 264,5 | R\$/MWh | resultados/rodada05/simulacoes_v04.xlsx › B_TWh › S38_CAR (v04) |
 | `twh_car_t` | emissões por TWh, Carvão mineral | 1442160.530476712 | 1.442.160,5 | t CO₂e/TWh | resultados/rodada05/simulacoes_v04.xlsx › B_TWh › S38_CAR (v04) |
 | `twh_eol_evit_car` | emissões evitadas por TWh em relação ao carvão, Eólica | 1437372.719666955 | 1.437.372,7 | t CO₂e/TWh | resultados/rodada05/simulacoes_v04.xlsx › B_TWh › S38_EOL (v04) |
 | `twh_eol_evit_gn` | emissões evitadas por TWh em relação ao gás natural, Eólica | 454230.7858306867 | 454.230,8 | t CO₂e/TWh | resultados/rodada05/simulacoes_v04.xlsx › B_TWh › S38_EOL (v04) |
 | `twh_eol_gkwh` | g CO₂e/kWh, Eólica | 4.787810809757032 | 4,8 | g CO₂e/kWh | resultados/rodada05/simulacoes_v04.xlsx › B_TWh › S38_EOL (v04) |
 | `twh_eol_pct_rb` | emissões no RB por TWh, Eólica | 54.72019630973455 | 54,7 | % | resultados/rodada05/simulacoes_v04.xlsx › B_TWh › S38_EOL (v04) |
-| `twh_eol_preco` | preço médio, Eólica | 182.4140066570086 | 182,4 | R$/MWh | resultados/rodada05/simulacoes_v04.xlsx › B_TWh › S38_EOL (v04) |
+| `twh_eol_preco` | preço médio, Eólica | 182.4140066570086 | 182,4 | R\$/MWh | resultados/rodada05/simulacoes_v04.xlsx › B_TWh › S38_EOL (v04) |
 | `twh_eol_t` | emissões por TWh, Eólica | 4787.810809757031 | 4.787,8 | t CO₂e/TWh | resultados/rodada05/simulacoes_v04.xlsx › B_TWh › S38_EOL (v04) |
 | `twh_gn_evit_car` | emissões evitadas por TWh em relação ao carvão, Gás natural | 983141.9338362685 | 983.141,9 | t CO₂e/TWh | resultados/rodada05/simulacoes_v04.xlsx › B_TWh › S38_GN (v04) |
 | `twh_gn_evit_gn` | emissões evitadas por TWh em relação ao gás natural, Gás natural | 0.0 | 0,0 | t CO₂e/TWh | resultados/rodada05/simulacoes_v04.xlsx › B_TWh › S38_GN (v04) |
 | `twh_gn_gkwh` | g CO₂e/kWh, Gás natural | 459.0185966404437 | 459,0 | g CO₂e/kWh | resultados/rodada05/simulacoes_v04.xlsx › B_TWh › S38_GN (v04) |
 | `twh_gn_pct_rb` | emissões no RB por TWh, Gás natural | 4.693876508084952 | 4,7 | % | resultados/rodada05/simulacoes_v04.xlsx › B_TWh › S38_GN (v04) |
-| `twh_gn_preco` | preço médio, Gás natural | 280.5127229245437 | 280,5 | R$/MWh | resultados/rodada05/simulacoes_v04.xlsx › B_TWh › S38_GN (v04) |
+| `twh_gn_preco` | preço médio, Gás natural | 280.5127229245437 | 280,5 | R\$/MWh | resultados/rodada05/simulacoes_v04.xlsx › B_TWh › S38_GN (v04) |
 | `twh_gn_t` | emissões por TWh, Gás natural | 459018.5966404437 | 459.018,6 | t CO₂e/TWh | resultados/rodada05/simulacoes_v04.xlsx › B_TWh › S38_GN (v04) |
 | `twh_hid_evit_car` | emissões evitadas por TWh em relação ao carvão, Hidrelétrica | 1437533.396526098 | 1.437.533,4 | t CO₂e/TWh | resultados/rodada05/simulacoes_v04.xlsx › B_TWh › S38_HID (v04) |
 | `twh_hid_evit_gn` | emissões evitadas por TWh em relação ao gás natural, Hidrelétrica | 454391.4626898296 | 454.391,5 | t CO₂e/TWh | resultados/rodada05/simulacoes_v04.xlsx › B_TWh › S38_HID (v04) |
 | `twh_hid_gkwh` | g CO₂e/kWh, Hidrelétrica | 4.627133950614104 | 4,6 | g CO₂e/kWh | resultados/rodada05/simulacoes_v04.xlsx › B_TWh › S38_HID (v04) |
 | `twh_hid_pct_rb` | emissões no RB por TWh, Hidrelétrica | 54.8448327510414 | 54,8 | % | resultados/rodada05/simulacoes_v04.xlsx › B_TWh › S38_HID (v04) |
-| `twh_hid_preco` | preço médio, Hidrelétrica | 175.3264259895306 | 175,3 | R$/MWh | resultados/rodada05/simulacoes_v04.xlsx › B_TWh › S38_HID (v04) |
+| `twh_hid_preco` | preço médio, Hidrelétrica | 175.3264259895306 | 175,3 | R\$/MWh | resultados/rodada05/simulacoes_v04.xlsx › B_TWh › S38_HID (v04) |
 | `twh_hid_t` | emissões por TWh, Hidrelétrica | 4627.133950614105 | 4.627,1 | t CO₂e/TWh | resultados/rodada05/simulacoes_v04.xlsx › B_TWh › S38_HID (v04) |
 | `twh_sol_evit_car` | emissões evitadas por TWh em relação ao carvão, Solar fotovoltaica | 1437157.277777775 | 1.437.157,3 | t CO₂e/TWh | resultados/rodada05/simulacoes_v04.xlsx › B_TWh › S38_SOL (v04) |
 | `twh_sol_evit_gn` | emissões evitadas por TWh em relação ao gás natural, Solar fotovoltaica | 454015.3439415065 | 454.015,3 | t CO₂e/TWh | resultados/rodada05/simulacoes_v04.xlsx › B_TWh › S38_SOL (v04) |
 | `twh_sol_gkwh` | g CO₂e/kWh, Solar fotovoltaica | 5.003252698937188 | 5,0 | g CO₂e/kWh | resultados/rodada05/simulacoes_v04.xlsx › B_TWh › S38_SOL (v04) |
 | `twh_sol_pct_rb` | emissões no RB por TWh, Solar fotovoltaica | 52.9998799209711 | 53,0 | % | resultados/rodada05/simulacoes_v04.xlsx › B_TWh › S38_SOL (v04) |
-| `twh_sol_preco` | preço médio, Solar fotovoltaica | 200.7911885476695 | 200,8 | R$/MWh | resultados/rodada05/simulacoes_v04.xlsx › B_TWh › S38_SOL (v04) |
+| `twh_sol_preco` | preço médio, Solar fotovoltaica | 200.7911885476695 | 200,8 | R\$/MWh | resultados/rodada05/simulacoes_v04.xlsx › B_TWh › S38_SOL (v04) |
 | `twh_sol_sem_d18` | emissões por TWh da solar sem a D18 (TUST por real do espelho) | 4682.084825690778 | 4.682,1 | t CO₂e/TWh | resultados/rodada05/simulacoes_v04.xlsx › d18_SOL |
 | `twh_sol_t` | emissões por TWh, Solar fotovoltaica | 5003.252698937188 | 5.003,3 | t CO₂e/TWh | resultados/rodada05/simulacoes_v04.xlsx › B_TWh › S38_SOL (v04) |
 | `var_a1_a0_e1` | variação das emissões A1/A0, Energia elétrica agregada | -10.478487315395679 | −10,5 | % | resultados/rodada05/simulacoes_v04.xlsx › A1 e A0 › E1 |
@@ -340,33 +353,33 @@ Gerado por `scripts/rodada05_artigo.py` a partir dos arquivos de resultado. Cada
 | `var_a2_a0_r2` | variação das emissões A2/A0, Renovável balanceada | -31.075132462907497 | −31,1 | % | resultados/rodada05/simulacoes_v04.xlsx › A2 e A0 › R2 |
 | `var_a2_a0_r3` | variação das emissões A2/A0, Renovável infraestrutura-intensiva | -36.01124625620151 | −36,0 | % | resultados/rodada05/simulacoes_v04.xlsx › A2 e A0 › R3 |
 | `var_a2_a0_r4a` | variação das emissões A2/A0, Renovável energia/transporte-intensiva | -58.473726494215605 | −58,5 | % | resultados/rodada05/simulacoes_v04.xlsx › A2 e A0 › R4a |
-| `vbp_gas_rb` | VBP do gás canalizado, RB | 19421.04544377357 | 19.421,0 | R$ milhões | resultados/rodada05/quadro_subsetores_v04.xlsx › variantes_resumo › v04 |
-| `vbp_ger_rb` | VBP da geração (8 subsetores), RB | 74993.73746916429 | 74.993,7 | R$ milhões | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RB geração |
-| `vbp_ger_rs` | VBP da geração (8 subsetores), RS | 4268.713587728492 | 4.268,7 | R$ milhões | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RS geração |
-| `vbp_rb_bio` | VBP RB S38_BIO | 281.255334907724 | 281,3 | R$ milhões | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RB S38_BIO |
-| `vbp_rb_car` | VBP RB S38_CAR | 2166.419696778494 | 2.166,4 | R$ milhões | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RB S38_CAR |
-| `vbp_rb_dis` | VBP RB S38_DIS | 208427.8922088759 | 208.427,9 | R$ milhões | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RB S38_DIS |
-| `vbp_rb_eol` | VBP RB S38_EOL | 6761.937014537989 | 6.761,9 | R$ milhões | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RB S38_EOL |
-| `vbp_rb_gas` | VBP RB S38_GAS | 19421.04544377357 | 19.421,0 | R$ milhões | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RB S38_GAS |
-| `vbp_rb_gn` | VBP RB S38_GN | 10981.93425757629 | 10.981,9 | R$ milhões | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RB S38_GN |
-| `vbp_rb_hid` | VBP RB S38_HID | 46660.99212599756 | 46.661,0 | R$ milhões | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RB S38_HID |
-| `vbp_rb_nuc` | VBP RB S38_NUC | 3075.0637711953 | 3.075,1 | R$ milhões | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RB S38_NUC |
-| `vbp_rb_pet` | VBP RB S38_PET | 4066.596731580632 | 4.066,6 | R$ milhões | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RB S38_PET |
-| `vbp_rb_sol` | VBP RB S38_SOL | 999.538536590299 | 999,5 | R$ milhões | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RB S38_SOL |
-| `vbp_rb_tra` | VBP RB S38_TRA | 21544.66645168056 | 21.544,7 | R$ milhões | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RB S38_TRA |
-| `vbp_rs_bio` | VBP RS S38_BIO | 14.81071154844496 | 14,8 | R$ milhões | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RS S38_BIO |
-| `vbp_rs_car` | VBP RS S38_CAR | 694.4827481078984 | 694,5 | R$ milhões | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RS S38_CAR |
-| `vbp_rs_dis` | VBP RS S38_DIS | 14384.2967767677 | 14.384,3 | R$ milhões | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RS S38_DIS |
-| `vbp_rs_eol` | VBP RS S38_EOL | 960.7595306562334 | 960,8 | R$ milhões | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RS S38_EOL |
-| `vbp_rs_gas` | VBP RS S38_GAS | 898.71033854 | 898,7 | R$ milhões | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RS S38_GAS |
-| `vbp_rs_gn` | VBP RS S38_GN | 48.96694328784385 | 49,0 | R$ milhões | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RS S38_GN |
-| `vbp_rs_hid` | VBP RS S38_HID | 2549.693654128071 | 2.549,7 | R$ milhões | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RS S38_HID |
-| `vbp_rs_nuc` | VBP RS S38_NUC | 0.0 | 0,0 | R$ milhões | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RS S38_NUC |
-| `vbp_rs_pet` | VBP RS S38_PET | 0.0 | 0,0 | R$ milhões | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RS S38_PET |
-| `vbp_rs_sol` | VBP RS S38_SOL | 0.0 | 0,0 | R$ milhões | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RS S38_SOL |
-| `vbp_rs_tra` | VBP RS S38_TRA | 1390.937723469444 | 1.390,9 | R$ milhões | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RS S38_TRA |
-| `vbp_s38_rb` | VBP do S38 na MIP original, RB | 324387.3415734943 | 324.387,3 | R$ milhões | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › original RB |
-| `vbp_s38_rs` | VBP do S38 na MIP original, RS | 20942.65842650564 | 20.942,7 | R$ milhões | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › original RS |
-| `vbp_tra_media` | VBP da transmissão na variante _rap_media | 24883.427435680005 | 24.883,4 | R$ milhões | resultados/rodada05/quadro_subsetores_v04.xlsx › variantes_resumo › v04_rap_media |
-| `vbp_tra_rs` | VBP da transmissão, RS | 1390.937723469444 | 1.390,9 | R$ milhões | resultados/rodada05/quadro_subsetores_v04.xlsx › variantes_resumo › v04 |
-| `vbp_tra_total` | VBP da transmissão (Brasil, D17) | 22935.604175150005 | 22.935,6 | R$ milhões | resultados/rodada05/quadro_subsetores_v04.xlsx › variantes_resumo › v04 |
+| `vbp_gas_rb` | VBP do gás canalizado, RB | 19421.04544377357 | 19.421,0 | R\$ milhões | resultados/rodada05/quadro_subsetores_v04.xlsx › variantes_resumo › v04 |
+| `vbp_ger_rb` | VBP da geração (8 subsetores), RB | 74993.73746916429 | 74.993,7 | R\$ milhões | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RB geração |
+| `vbp_ger_rs` | VBP da geração (8 subsetores), RS | 4268.713587728492 | 4.268,7 | R\$ milhões | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RS geração |
+| `vbp_rb_bio` | VBP RB S38_BIO | 281.255334907724 | 281,3 | R\$ milhões | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RB S38_BIO |
+| `vbp_rb_car` | VBP RB S38_CAR | 2166.419696778494 | 2.166,4 | R\$ milhões | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RB S38_CAR |
+| `vbp_rb_dis` | VBP RB S38_DIS | 208427.8922088759 | 208.427,9 | R\$ milhões | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RB S38_DIS |
+| `vbp_rb_eol` | VBP RB S38_EOL | 6761.937014537989 | 6.761,9 | R\$ milhões | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RB S38_EOL |
+| `vbp_rb_gas` | VBP RB S38_GAS | 19421.04544377357 | 19.421,0 | R\$ milhões | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RB S38_GAS |
+| `vbp_rb_gn` | VBP RB S38_GN | 10981.93425757629 | 10.981,9 | R\$ milhões | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RB S38_GN |
+| `vbp_rb_hid` | VBP RB S38_HID | 46660.99212599756 | 46.661,0 | R\$ milhões | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RB S38_HID |
+| `vbp_rb_nuc` | VBP RB S38_NUC | 3075.0637711953 | 3.075,1 | R\$ milhões | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RB S38_NUC |
+| `vbp_rb_pet` | VBP RB S38_PET | 4066.596731580632 | 4.066,6 | R\$ milhões | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RB S38_PET |
+| `vbp_rb_sol` | VBP RB S38_SOL | 999.538536590299 | 999,5 | R\$ milhões | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RB S38_SOL |
+| `vbp_rb_tra` | VBP RB S38_TRA | 21544.66645168056 | 21.544,7 | R\$ milhões | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RB S38_TRA |
+| `vbp_rs_bio` | VBP RS S38_BIO | 14.81071154844496 | 14,8 | R\$ milhões | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RS S38_BIO |
+| `vbp_rs_car` | VBP RS S38_CAR | 694.4827481078984 | 694,5 | R\$ milhões | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RS S38_CAR |
+| `vbp_rs_dis` | VBP RS S38_DIS | 14384.2967767677 | 14.384,3 | R\$ milhões | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RS S38_DIS |
+| `vbp_rs_eol` | VBP RS S38_EOL | 960.7595306562334 | 960,8 | R\$ milhões | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RS S38_EOL |
+| `vbp_rs_gas` | VBP RS S38_GAS | 898.71033854 | 898,7 | R\$ milhões | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RS S38_GAS |
+| `vbp_rs_gn` | VBP RS S38_GN | 48.96694328784385 | 49,0 | R\$ milhões | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RS S38_GN |
+| `vbp_rs_hid` | VBP RS S38_HID | 2549.693654128071 | 2.549,7 | R\$ milhões | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RS S38_HID |
+| `vbp_rs_nuc` | VBP RS S38_NUC | 0.0 | 0,0 | R\$ milhões | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RS S38_NUC |
+| `vbp_rs_pet` | VBP RS S38_PET | 0.0 | 0,0 | R\$ milhões | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RS S38_PET |
+| `vbp_rs_sol` | VBP RS S38_SOL | 0.0 | 0,0 | R\$ milhões | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RS S38_SOL |
+| `vbp_rs_tra` | VBP RS S38_TRA | 1390.937723469444 | 1.390,9 | R\$ milhões | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › v04 RS S38_TRA |
+| `vbp_s38_rb` | VBP do S38 na MIP original, RB | 324387.3415734943 | 324.387,3 | R\$ milhões | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › original RB |
+| `vbp_s38_rs` | VBP do S38 na MIP original, RS | 20942.65842650564 | 20.942,7 | R\$ milhões | resultados/rodada05/quadro_subsetores_v04.xlsx › quadro › original RS |
+| `vbp_tra_media` | VBP da transmissão na variante _rap_media | 24883.427435680005 | 24.883,4 | R\$ milhões | resultados/rodada05/quadro_subsetores_v04.xlsx › variantes_resumo › v04_rap_media |
+| `vbp_tra_rs` | VBP da transmissão, RS | 1390.937723469444 | 1.390,9 | R\$ milhões | resultados/rodada05/quadro_subsetores_v04.xlsx › variantes_resumo › v04 |
+| `vbp_tra_total` | VBP da transmissão (Brasil, D17) | 22935.604175150005 | 22.935,6 | R\$ milhões | resultados/rodada05/quadro_subsetores_v04.xlsx › variantes_resumo › v04 |
