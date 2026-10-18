@@ -447,9 +447,9 @@ Gerado por `scripts/rodada05_artigo.py`.
 | Não negatividade | Nenhum fluxo, valor adicionado ou emissão negativo novo | 0.000000 | número de células |
 | Excedente operacional | EOB ≥ 10% do VBP em todos os subsetores com produção | 0.100000 | fração do VBP |
 | Modelo | A inversa de Leontief é não negativa, com diagonal ≥ 1, também com as colunas latentes | 0.000000 | menor elemento de L |
-| Reprodução do artigo | Os nove cenários do artigo, rodados na MIP original, reproduzem os valores de referência; arredondados a uma casa, os Painéis B das Tabelas 1, 3 e 4 (exceto a linha R4a da Tabela 4) e a Tabela A2 são idênticos aos publicados | 0.004859 | t CO₂e (maior diferença nas emissões totais) |
-| Variantes | As 9 especificações (principal e 8 variantes) passam nas mesmas checagens; nas variantes E3 e E4 as emissões preservam só o total | 9.000000 | especificações |
-| Alertas | Sem falhas. Alertas registrados: multiplicador de produção acima de 2,2 em 9 das 9 especificações (na principal: geração a gás natural do RS; geração a derivados de petróleo do RS, latente; gás canalizado e outras utilidades do RS; geração a derivados de petróleo do RB); insumos não energéticos da geração a gás natural abaixo de 5% do VBP em 7 (todas, exceto κ = 0,60 e η = 0,05) | 0.000000 | falhas |
+| Reprodução do artigo | Os nove cenários do artigo, rodados na MIP original, reproduzem os valores de referência, com duas casas decimais; arredondados a uma casa, os Painéis B das Tabelas 1, 3 e 4 e a Tabela A2 são idênticos aos publicados, exceto a linha da Tabela 4 calculada com o vetor da Tabela A1 | 0.004859 | t CO₂e (maior diferença nas emissões totais) |
+| Variantes | As 9 especificações (principal e 8 variantes) passam nas mesmas checagens; na E3, as emissões do S38 deixam de reproduzir a base (diferem pelo resíduo), e na E4 só o total da economia é preservado (alerta) | 9.000000 | especificações |
+| Alertas | Sem falhas. Alertas registrados: multiplicador de produção acima de 2,2 em 9 das 9 especificações (na principal: geração a gás natural do RS; geração a derivados de petróleo do RS, latente; gás canalizado e outras utilidades do RS; geração a derivados de petróleo do RB); insumos não energéticos da geração a gás natural abaixo de 5% do VBP em 7 (todas, exceto κ = 0,60 e η = 0,05); preservação das emissões na E3 e na E4 (linha anterior) | 0.000000 | falhas |
 
-*Nota: 'Valor' é a maior diferença absoluta encontrada (ou a contagem indicada); tolerância de 10⁻⁶ nas igualdades.*
+*Nota: 'Valor' é a maior diferença absoluta encontrada (ou a contagem indicada); tolerância de 10⁻⁶ nas igualdades, salvo na reprodução do artigo, comparada com valores de referência de duas casas decimais (tolerância de 1 t CO₂e).*
 *Fonte: Elaboração própria.*

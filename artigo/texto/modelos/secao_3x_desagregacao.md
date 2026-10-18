@@ -68,7 +68,7 @@ O resíduo é {{residuo_rs_pct}}% do CO₂e do S38 no RS e {{residuo_rb_pct}}% n
 
 $$a_{\mathrm{TRA},(\mathrm{RS},k)} = \frac{\tau_{\mathrm{RS}}}{p_{\mathrm{RB},k}}, \qquad k \in \{\mathrm{SOL}, \mathrm{PET}\} \qquad (27)$$
 
-**Verificação.** A soma dos subsetores reproduz a matriz original e as contas-satélite, com diferença máxima de {{reag_max}} R\$ milhões; verificaram-se o balanço, a não negatividade, o EOB mínimo e a inversa de Leontief, $L = (I - A)^{-1}$, não negativa e com diagonal maior ou igual a 1 (Tabela A8). Os cenários do artigo, rodados na matriz original, reproduzem os valores publicados: arredondados a uma casa decimal, são idênticos nos Painéis B das Tabelas 1, 3 e 4 (exceto a linha R4a da Tabela 4) e na Tabela A2.
+**Verificação.** A soma dos subsetores reproduz a matriz original e as contas-satélite, com diferença máxima de {{reag_max}} R\$ milhões; verificaram-se o balanço, a não negatividade, o EOB mínimo e a inversa de Leontief, $L = (I - A)^{-1}$, não negativa e com diagonal maior ou igual a 1 (Tabela A8). Os cenários do artigo, rodados na matriz original, reproduzem os valores publicados: arredondados a uma casa decimal, são idênticos nos Painéis B das Tabelas 1, 3 e 4 e na Tabela A2, exceto a linha da cesta renovável energia/transporte-intensiva da Tabela 4 calculada com o vetor da Tabela A1.
 
 **Atribuição dos choques.** Mantiveram-se os vetores de R\$ 1 bilhão (R\$ 1.000 milhões) na demanda final do RS (Quadro 1; Tabela A1) e o modelo (Miller e Blair, 2022). No bloco A1, o choque no S38 foi repartido entre os subsetores do RS na proporção das vendas de cada um à demanda final, $y_{\mathrm{RS},k}$, o que o leva à distribuição e ao gás canalizado:
 

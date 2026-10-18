@@ -47,7 +47,7 @@ Decisões aplicadas: as anteriores (D1 = C; D2, D3, D4, D6, D7 e D8 = A; D5 = E1
 | Figuras 1–4 e A1 | concluído | PNG 300 dpi e PDF |
 | Textos (a)–(e) | concluído; 3 referências [CONFERIR] | Seção 20 |
 | Testes T1–T16 | concluído (417 passaram, 0 falharam) | Seção 7 |
-| Revisão adversarial | concluído, com limitação: 9 achados no código, 2 verificados por agente e 7 por mim (os verificadores pararam no limite de uso); 8 corrigidos e 1 registrado como limitação; os textos foram conferidos por mim e por um revisor | Seção 7 |
+| Revisão adversarial | concluído, com limitação: 9 achados no código, 2 verificados por agente e 7 por mim (os verificadores pararam no limite de uso); 8 corrigidos e 1 registrado como limitação; os textos foram conferidos por mim, por um revisor e por uma verificação final (Seção 7) | Seção 7 |
 | Relatório, HISTORICO, README | concluído | Este arquivo |
 
 ## 3. Arquivos criados, movidos ou alterados
@@ -77,7 +77,7 @@ Sem mudança: o T1 (SHA-256 da planilha original) e as identidades da Rodada 01 
 
 ## 5. Reprodução dos resultados
 
-O A0 roda os 9 cenários do artigo na MIP original e reproduz a Rodada 01. O T13 confere, arredondados a uma casa, os valores publicados nos Painéis B das Tabelas 1, 3 e 4 e na Tabela A2: são idênticos. A maior diferença de CO₂e entre o A0 e os valores de referência é 0.0049 t.
+O A0 roda os 9 cenários do artigo na MIP original e reproduz a Rodada 01. O T13 confere, arredondados a uma casa, os valores publicados nos Painéis B das Tabelas 1, 3 e 4 e na Tabela A2: são idênticos. A exceção é a linha R4a da Tabela 4, que segue a D11 e por isso não é valor publicado. A maior diferença de CO₂e entre o A0 e os valores de referência da Rodada 01 (duas casas) é 0.0049 t.
 
 ## 6. Diagnóstico do S38 (v04)
 
@@ -128,15 +128,7 @@ Ficam com ALERTA de multiplicador de produção acima de 2.2: GN-RS (2.397), GAS
 | T14 | Checagens `realocacao_co2e_valores_movidos`, `_setor_alvo`, `_total_economia`, `_sem_negativos` e `_proporcao_residuo` (a retirada de DIS e GAS segue o resíduo de cada um). A `satelite_co2e_preservado` vira ALERTA, porque na E4 só o total da economia é preservado, como na E3 |
 | A0_E4 | `realocar_emissoes_original(mip, tabela, "S38")`: cópia da MIP original com os mesmos valores tirados do S38 de cada região |
 
-**Revisão adversarial.** Rodei revisores independentes para o motor (D18 e E4) e para os scripts e resultados da v04, com um verificador cético por achado. Os agentes pararam várias vezes no limite de uso. Dois achados foram verificados por agente; os outros, **conferi eu mesmo**, reproduzindo cada um com scripts próprios antes de corrigir. O diagnóstico NEREUS × SEEG e as referências tiveram construtor e verificador independentes (Seções 19 e 20). O revisor do material do artigo e os verificadores dos textos também pararam no limite. Por isso, conferi eu mesmo a seção 3.x e o Apêndice B contra o código e as saídas, e escrevi as limitações. Depois, um revisor independente conferiu os três textos contra o código, os parâmetros e as planilhas. Ele achou 7 problemas, todos de redação, nenhum de método ou de número. Conferi e corrigi os 7:
-- **Quadro 2:** faltava o piso na geração a derivados de petróleo; o critério da nuclear parecia "GWh × tarifa", quando é a parcela de E_r ponderada por GWh × tarifa.
-- **Reprodução do artigo** (seção 3.x, B.12 e Tabela A8): "diferença máxima de 0.005 t em relação aos valores publicados" misturava duas coisas. A comparação é com a referência de duas casas; contra os valores publicados, os números são idênticos após o arredondamento a uma casa, exceto a linha R4a da Tabela 4.
-- **Limitação 1:** a diferença da solar por TWh vem também da coluna latente do RB, que não compra derivados de petróleo.
-- **B.12 e Tabela A8:** faltava declarar o alerta de multiplicador acima de 2.2. Ele aparece nas 9 especificações; o do T12, em 7, porque a `_k060` e a `_eta005` passam. A Tabela A8 ganhou a linha "Alertas".
-- **Seção 3.x:** dizia "duas sensibilidades" de emissões, mas a E2 também foi calculada.
-- **Limitação 6:** "a maior variação" com κ = 0.60 vale só entre as emissões da Tabela A6.
-
-Dois ajustes menores: a Eq. (28) ganhou o max(·, 0) da (B.35); as citações cujo ano está entre colchetes na referência passaram a usar o colchete ("ONS, [2026]").
+**Revisão adversarial.** Rodei revisores independentes para o motor (D18 e E4) e para os scripts e resultados da v04, com um verificador cético por achado. Os agentes pararam várias vezes no limite de uso. Dois achados foram verificados por agente; os outros, **conferi eu mesmo**, reproduzindo cada um com scripts próprios antes de corrigir. O diagnóstico NEREUS × SEEG e as referências tiveram construtor e verificador independentes (Seções 19 e 20). O revisor do material do artigo e os verificadores dos textos também pararam no limite. Por isso, conferi eu mesmo a seção 3.x e o Apêndice B contra o código e as saídas, e escrevi as limitações.
 
 | # | Achado | Gravidade | Conferência | Correção |
 |---|---|---|---|---|
@@ -146,20 +138,43 @@ Dois ajustes menores: a Eq. (28) ganhou o max(·, 0) da (B.35); as citações cu
 | 4 | O T16 só testava a D18 na versão principal | baixa | reproduzido | T16 parametrizado nas 9 especificações |
 | 5 | Com a D18, o EOB/VBP implícito do PET-RS latente (6.9%) fica abaixo de η (10%), e nenhuma saída registrava isso | média | reproduzido: espelho 10.0% − Δ TUST 3.07 p.p.; o SOL-RS fica em 48.6% | Registrado nas abas `d18_latentes` e `d18_eob_implicito_versoes` (9 versões) e na limitação 2. A coluna não entra nos cenários do artigo. Mantido, porque a D18 é decisão sua (Seção 10) |
 | 6 | A aba `robustez` de `simulacoes_v04.xlsx` não trazia o A0_E4 | baixa | reproduzido | Bloco A0 × A0_E4 acrescentado à aba |
-| 7 | A sobra do resíduo depois da E4 (75.7 e 6946.3 mil t) diferia da referência das instruções (cerca de 93 e 7220), sem explicação nas saídas | baixa | reproduzido: a diferença é o SF₆ do DIS, que na E1 é nível identificado | Explicado no LEIAME do quadro, no Apêndice B e nas Seções 14 e 19 |
+| 7 | A sobra do resíduo depois da E4 (75.7 e 6946.3 mil t) diferia da referência das instruções (cerca de 93 e 7220), sem explicação nas saídas | baixa | reproduzido: somado o SF₆ da distribuição (nível identificado na E1, que a E4 não move), ficam em DIS e GAS 93.5 e 7221.3 mil t, como na referência | Explicado no LEIAME do quadro e nas Seções 14 e 19 |
 | 8 | A fonte da D17 nos CSVs terminava em "nan" e remetia a "SEAMSE acima", que não existe no arquivo | baixa | reproduzido | A fonte cita os três SEAMSE (documento, localização, endereço e SHA-256) |
 | 9 | Apêndice B entregue pelo agente com 8 números marcados "FALTA" (consumo específico do θ_RS, limiares de alerta e 5 números do diagnóstico) | baixa | conferido por mim | Números-chave novos no script, lidos dos arquivos; nenhum digitado à mão |
 
 O revisor do motor conferiu, com mutações, τ_RS, p_k, a repartição entre TRA-RS e TRA-RB, a E4 na proporção do resíduo, o A0_E4 e as validações novas. O dos scripts recalculou a v04, a `_E4`, a `_rap_media` e a `_P2` em memória (diferença ≤ 1.5e-11) e refez o A2 e o B por TWh com um Leontief independente: tudo bate com as planilhas.
+
+**Revisão dos textos.** Um revisor independente conferiu os três textos contra o código, os parâmetros e as planilhas. Ele achou 7 problemas, todos de redação, nenhum de método ou de número. Conferi e corrigi os 7:
+- **Quadro 2:** faltava o piso na geração a derivados de petróleo; o critério da nuclear parecia "GWh × tarifa", quando é a parcela de E_r ponderada por GWh × tarifa.
+- **Reprodução do artigo** (seção 3.x, B.12 e Tabela A8): "diferença máxima de 0.005 t em relação aos valores publicados" misturava duas coisas. A comparação é com a referência de duas casas; contra os valores publicados, os números são idênticos após o arredondamento a uma casa, exceto a linha R4a da Tabela 4.
+- **Limitação 1:** a diferença da solar por TWh vem também da coluna latente do RB, que não compra derivados de petróleo.
+- **B.12 e Tabela A8:** faltava declarar o alerta de multiplicador acima de 2.2. Ele aparece nas 9 especificações; o do T12, em 7, porque a `_k060` e a `_eta005` passam. A Tabela A8 ganhou a linha "Alertas".
+- **Seção 3.x:** dizia "duas sensibilidades" de emissões, mas a E2 também foi calculada.
+- **Limitação 6:** "a maior variação" com κ = 0.60 vale só entre as emissões da Tabela A6.
+
+Dois ajustes menores: a Eq. (28) ganhou o max(·, 0) da (B.35); as citações cujo ano está entre colchetes na referência passaram a usar o colchete ("ONS, [2026]").
+
+**Verificação final.** Dois agentes conferiram as correções dos textos e a completude das entregas contra as instruções, com uma amostra de mais de 30 números do relatório. Acharam 10 pontos. Conferi um a um e corrigi 9:
+- **E3:** a E3 não preserva total nenhum, mas a B.1, a B.12 e a Tabela A8 diziam que E3 e E4 preservam o total.
+- **Alertas:** a B.12 e a Tabela A8 contavam 2 tipos; são 3, com o de preservação das emissões na E3 e na E4.
+- **B.12:** "latente no RS e no RB" era ambíguo.
+- **"R4a":** o código não aparece no artigo. Os textos passaram a falar na linha da Tabela 4 calculada com o vetor da Tabela A1.
+- **Tabela A8:** a nota de tolerância de 10⁻⁶ não valia para a linha da reprodução, comparada com valores de duas casas.
+- **Seção 10:** a P2 era chamada de "maior sensibilidade"; a E2 dá mais.
+- **R4a no relatório:** faltava a exceção da linha R4a (Seções 5, 7 e 14) e na descrição da chave `a0_dif_artigo`.
+- **Figuras:** saíam com 6.94 × 4.34 a 4.50 pol, recortadas pelo `bbox_inches="tight"`. Agora têm 7 × 4.4 exatas, conferidas sem cortes.
+- **Seção 19:** a lista de abas omitia `componentes_S38_detalhe`.
+
+O ponto que não se confirmou foi a sobra da E4. O agente somou o SF₆ total. Com o SF₆ da distribuição, a conta fecha com a referência (93.5 e 7221.3 mil t). Mesmo assim, corrigi a redação do relatório, que citava o SF₆ total.
 
 **Testes** (417 passaram, 0 falharam):
 
 | Teste | Resultado | O que verifica |
 |---|---|---|
 | T1–T12 e os das rodadas anteriores | passaram | Como antes (T12 com o ALERTA aceito pela D19) |
-| T2 v04 | passou (9 especificações) | Re-agregação exata; na E3 e na E4, o CO₂e só pelo total |
+| T2 v04 | passou (9 especificações) | Re-agregação exata; o CO₂e fica de fora na E3 (só níveis) e vale só pelo total da economia na E4 |
 | D17 | passou | Transmissão RS + RB = 22935.6, ∝ VBP do S38; `_rap_media` = 24883.4; fonte "D17: …" |
-| **T13** | passou | Painéis B das Tabelas 1, 3 e 4 e Tabela A2 = valores publicados |
+| **T13** | passou | Painéis B das Tabelas 1, 3 e 4 e Tabela A2 = valores publicados, arredondados a uma casa (exceto a linha R4a, D11) |
 | **T14** | passou | E4 e A0_E4: valores movidos exatos, total inalterado, S38 reduzido no valor movido, nada negativo |
 | **T15** | passou | Gerar o material duas vezes dá os mesmos números em todas as tabelas e nos números-chave |
 | **T16** | passou | TUST por MWh das latentes, ao p_k, = τ_RS; repartição entre as origens mantida; demais coeficientes iguais |
@@ -200,7 +215,7 @@ O revisor do motor conferiu, com mutações, τ_RS, p_k, a repartição entre TR
 3. **Diagnóstico NEREUS × SEEG:** o resultado é um indício fraco, não prova (Seção 19). Só a documentação da conta-satélite resolve a questão. Se puder pedi-la à NEREUS, a E3/E4 deixa de ser uma faixa.
 4. **E4 e dupla contagem:** na E4, o S19-RS passa de 2693.9 para 4506.0 mil t. Se a base já tiver o refino no S19, a E4 o conta duas vezes. Mantive a E4 só como sensibilidade (D21).
 5. **PET-RS latente sob a D18:** o EOB/VBP implícito fica em 6.9%, abaixo de η = 10% (achado 5 da Seção 7). A coluna não entra em nenhum cenário do artigo e está na limitação 2. Se preferir, posso limitar o ajuste da TUST para manter o EOB implícito ≥ η.
-6. **P2 na cesta fóssil:** com preços iguais, as emissões do A2 fóssil sobem 36.0%. É a maior sensibilidade da robustez (Tabela A6). Ela vem do preço do carvão nos leilões (251 R$/MWh contra cerca de 170 da hidrelétrica e da eólica no RS). Está na limitação 5; avalie se merece menção no corpo do texto.
+6. **P2 na cesta fóssil:** com preços iguais, as emissões do A2 fóssil sobem 36.0%. É a maior sensibilidade entre as variantes que mudam a MIP monetária (Tabela A6); entre as de emissões, a E2 dá +45.7%. A da P2 vem do preço do carvão nos leilões (251 R$/MWh contra cerca de 170 da hidrelétrica e da eólica no RS). Está na limitação 5; avalie se merece menção no corpo do texto.
 7. **Alertas mantidos:**
    - T12 (D19): insumos não energéticos ÷ VBP = 0.026 no GN-RS e 0.032 no GN-RB.
    - Multiplicador de produção acima de 2.2: GN-RS (2.397), GAS-RS (2.344), PET-RB (2.760) e PET-RS latente (2.801).
@@ -242,10 +257,10 @@ As demais fontes são as das rodadas anteriores (`dados/externos/FONTES.md`; Tab
 | Tabela da Seção 3 (SEEG, mil t) | 9 componentes × 3 regiões | todas as células a menos de 0.05 mil t | sim |
 | S38 NEREUS: RS e RB | 5838.0 e 84518.3 | 5838.0 e 84518.3 | sim |
 | E4: valores movidos (mil t) | 1812.1; 88.1; 18088.8; 23499.2; 1155.4 | 1812.1; 88.1; 18088.9; 23499.2; 1155.4 | sim; 18088.8 é a soma de parcelas já arredondadas (17329.1 + 759.7) |
-| E4: o que sobra do resíduo | cerca de 93 (RS) e 7220 (RB) | 75.7 e 6946.3 | a diferença é o SF₆ (19.6 no RS e 303.5 no RB): na E1 ele é nível identificado, não resíduo |
+| E4: o que fica em DIS e GAS | cerca de 93 (RS) e 7220 (RB) | 93.5 e 7221.3 (resíduo não movido, 75.7 e 6946.3, mais o SF₆ da distribuição, 17.9 e 275.1) | sim: o SF₆ da distribuição é nível identificado na E1 e a E4 não o move |
 | E4 × E1 (A2) | E1 −31.2%; R1 +1.8%; F1 +2.1%; outras de +1.2% a +2.9%; F1 100% GN +8.5%; TWh EOL, HID, GN +4.2%; CAR 0.0% | E1 −31.2%; R1 +1.8%; F1 +2.2%; outras de +1.3% a +2.9%; F1 100% GN +8.5%; TWh EOL, HID, GN +4.2%; CAR 0.0% | sim (a referência foi feita sobre a v03) |
 | SOL por TWh com a TUST do RS | 4939.4 (sobre a v03) | 5003.3 (v04) | sobre a v03, a conta da Rodada 04 dava 4939.4; na v04, τ_RS e p_SOL mudam com a D17 |
-| Painel B das Tabelas 1, 3, 4 e A2 | valores publicados | idênticos a uma casa | sim (T13) |
+| Painel B das Tabelas 1, 3, 4 e A2 | valores publicados (exceto a linha R4a, D11) | idênticos a uma casa | sim (T13) |
 | Transmissão (D17) | 22935.6 | 22935.60 | sim |
 
 ## 15. Parâmetros
@@ -523,7 +538,7 @@ As Tabelas do artigo, em ponto decimal. As versões no padrão brasileiro estão
 ## 19. Diagnóstico NEREUS × SEEG e variante E4
 
 Script: `scripts/rodada05_diagnostico_seeg.py`. Saídas:
-- `resultados/rodada05/diagnostico_seeg_nereus.xlsx`, com as abas LEIAME, componentes_S38, metricas, casamentos_RS, unidades_RS e resumo;
+- `resultados/rodada05/diagnostico_seeg_nereus.xlsx`, com as abas LEIAME, componentes_S38, componentes_S38_detalhe, metricas, casamentos_RS, unidades_RS e resumo;
 - o recorte `dados/externos/seeg/seeg13_2019_recorte_energia_v04.csv`;
 - os valores da E4 em `dados/externos/seeg/seeg13_2019_componentes_e4_v04.csv`.
 
@@ -595,14 +610,14 @@ A combinação do S38 ganha peso só por ter sido formulada antes da busca. Nada
 
 **Valores movidos** (mil t CO₂e; `parametros/realocacao_emissoes_v04_E4.csv`):
 
-| Região | Para S19 (refino) | Para S04 (carvão mineral) | Para S05 (petróleo e gás) | Total | Resíduo E1 | Sobra em DIS e GAS |
+| Região | Para S19 (refino) | Para S04 (carvão mineral) | Para S05 (petróleo e gás) | Total | Resíduo E1 | Resíduo que fica em DIS e GAS |
 |---|---|---|---|---|---|---|
 | RS | 1812.1 | 88.1 | — | 1900.2 | 1975.9 | 75.7 |
 | RB | 18088.9 | 1155.4 | 23499.2 | 42743.5 | 49689.7 | 6946.3 |
 
-Os valores saem de DIS e GAS na proporção do resíduo de cada um, sem mexer no SF₆. As instruções falavam em "cerca de 93 e 7220" de sobra; a diferença é o SF₆, que na E1 é nível identificado (19.6 mil t no RS e 303.5 no RB).
+Os valores saem de DIS e GAS na proporção do resíduo de cada um, sem mexer no SF₆, que na E1 é nível identificado. Somado o SF₆ da distribuição (17.9 mil t no RS e 275.1 no RB), ficam em DIS e GAS 93.5 mil t no RS e 7221.3 no RB, como o "cerca de 93 e 7220" das instruções.
 
-O T14 passa: valores movidos exatos, total da economia inalterado, S38 reduzido no valor movido e nenhuma emissão negativa. O T2 da E4 vale só pelo total, como o da E3.
+O T14 passa: valores movidos exatos, total da economia inalterado, S38 reduzido no valor movido e nenhuma emissão negativa. O T2 da E4 vale só pelo total da economia; o da E3 deixa o CO₂e de fora, porque a E3 não preserva total nenhum.
 
 **Efeito da E4 em relação à E1 (A2, v04):**
 - Energia elétrica agregada: −31.2%.

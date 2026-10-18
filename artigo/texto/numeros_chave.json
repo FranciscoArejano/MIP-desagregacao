@@ -1,7 +1,7 @@
 {
  "a0_dif_artigo": {
   "casas": 2,
-  "descricao": "maior diferença entre o A0 e os valores publicados",
+  "descricao": "maior diferença entre as emissões totais do A0 e os valores de referência (duas casas, Rodada 01)",
   "origem": "resultados/rodada05/simulacoes_v04.xlsx › A0 × src/mip/referencia.py",
   "unidade": "t CO₂e",
   "valor": 0.004858762084040791

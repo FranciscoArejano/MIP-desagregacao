@@ -638,20 +638,24 @@ def tabelaA8(d) -> Tabela:
         ("Modelo", "A inversa de Leontief é não negativa, com diagonal ≥ 1, também com as colunas latentes",
          float(p.loc["L_nao_negativa", "valor"]), "menor elemento de L"),
         ("Reprodução do artigo", "Os nove cenários do artigo, rodados na MIP original, reproduzem os valores de "
-         "referência; arredondados a uma casa, os Painéis B das Tabelas 1, 3 e 4 (exceto a linha R4a da Tabela 4) e a "
-         "Tabela A2 são idênticos aos publicados", dif_a0, "t CO₂e (maior diferença nas emissões totais)"),
-        ("Variantes", "As 9 especificações (principal e 8 variantes) passam nas mesmas checagens; nas variantes E3 e E4 "
-         "as emissões preservam só o total", float(len(vr)), "especificações"),
+         "referência, com duas casas decimais; arredondados a uma casa, os Painéis B das Tabelas 1, 3 e 4 e a Tabela A2 "
+         "são idênticos aos publicados, exceto a linha da Tabela 4 calculada com o vetor da Tabela A1", dif_a0,
+         "t CO₂e (maior diferença nas emissões totais)"),
+        ("Variantes", "As 9 especificações (principal e 8 variantes) passam nas mesmas checagens; na E3, as emissões do "
+         "S38 deixam de reproduzir a base (diferem pelo resíduo), e na E4 só o total da economia é preservado (alerta)",
+         float(len(vr)), "especificações"),
         ("Alertas", f"Sem falhas. Alertas registrados: multiplicador de produção acima de {br(e['alerta_multiplicador_producao'], 1)} "
          f"em {n_mult} das 9 especificações (na principal: {'; '.join(mult)}); insumos não energéticos da geração a gás natural abaixo de "
          f"{br(100 * e['alerta_insumos_nao_energeticos'], 0)}% do VBP em {n_ne} (todas, exceto κ = {br(kappa_sens, 2)} e "
-         f"η = {br(eta_sens, 2)})", float((c["status"] == "FALHA").sum()), "falhas"),
+         f"η = {br(eta_sens, 2)}); preservação das emissões na E3 e na E4 (linha anterior)",
+         float((c["status"] == "FALHA").sum()), "falhas"),
     ]
     return Tabela("Tabela A8", "Testes de consistência da desagregação",
                   [(None, pd.DataFrame(linhas, columns=["Teste", "Resultado", "Valor", "Unidade"]))],
                   casas={"Valor": 6}, fonte="Fonte: Elaboração própria.", aba="TabelaA8",
                   notas=["Nota: 'Valor' é a maior diferença absoluta encontrada (ou a contagem indicada); tolerância de "
-                         "10⁻⁶ nas igualdades."])
+                         "10⁻⁶ nas igualdades, salvo na reprodução do artigo, comparada com valores de referência de duas "
+                         "casas decimais (tolerância de 1 t CO₂e)."])
 
 
 def construir_tabelas(d: dict) -> list[Tabela]:
@@ -885,8 +889,9 @@ def _eixos(ax, eixo_valor="x"):
 def _salvar(fig, nome) -> list[Path]:
     FIG.mkdir(parents=True, exist_ok=True)
     saidas = [FIG / f"{nome}.png", FIG / f"{nome}.pdf"]
-    fig.savefig(saidas[0], dpi=300, bbox_inches="tight", metadata={"Software": None})
-    fig.savefig(saidas[1], bbox_inches="tight", metadata={"CreationDate": None, "ModDate": None, "Producer": None})
+    # sem bbox_inches="tight": a página fica com o tamanho pedido (7 × 4,4 pol); o layout cabe por tight_layout
+    fig.savefig(saidas[0], dpi=300, metadata={"Software": None})
+    fig.savefig(saidas[1], metadata={"CreationDate": None, "ModDate": None, "Producer": None})
     return saidas
 
 
@@ -971,7 +976,7 @@ def figura3(d, plt) -> list[Path]:
     from matplotlib.patches import Patch
 
     fig.legend(handles=[Patch(color=AZUL, label="Emissões diretas"), Patch(color=LARANJA, label="Emissões indiretas")],
-               frameon=False, loc="lower center", ncol=2, fontsize=8, bbox_to_anchor=(0.5, -0.02))
+               frameon=False, loc="lower center", ncol=2, fontsize=8, bbox_to_anchor=(0.5, 0.0))
     fig.tight_layout(rect=(0, 0.06, 1, 1))
     s = _salvar(fig, "figura_3_emissoes_por_TWh")
     plt.close(fig)
@@ -1007,7 +1012,7 @@ def figura4(d, plt) -> list[Path]:
     from matplotlib.patches import Patch
 
     fig.legend(handles=[Patch(color=AZUL, label="MIP original"), Patch(color=LARANJA, label="MIP desagregada")],
-               frameon=False, loc="lower center", ncol=2, fontsize=8, bbox_to_anchor=(0.5, -0.02))
+               frameon=False, loc="lower center", ncol=2, fontsize=8, bbox_to_anchor=(0.5, 0.0))
     fig.tight_layout(rect=(0, 0.06, 1, 1))
     s = _salvar(fig, "figura_4_emissoes_por_cesta")
     plt.close(fig)
@@ -1204,7 +1209,8 @@ def numeros_chave(d: dict) -> dict:
         "R$ milhões", f"resultados/rodada05/checagens_{V}.csv › reagregacao_*", "maior diferença da re-agregação")
     a0 = d["A0"].set_index("cenario")
     put("a0_dif_artigo", max(abs(a0.loc[f"A0_{x.cenario}", "CO₂e total (t)"] - x.co2e_total) for x in ref.ESPERADO.itertuples()),
-        2, "t CO₂e", f"{sim} › A0 × src/mip/referencia.py", "maior diferença entre o A0 e os valores publicados")
+        2, "t CO₂e", f"{sim} › A0 × src/mip/referencia.py",
+        "maior diferença entre as emissões totais do A0 e os valores de referência (duas casas, Rodada 01)")
     if "diag" in d and "resumo" in d["diag"]:
         rs = _com_cabecalho(d["diag"]["resumo"], "item")
         rs = rs.dropna(subset=["valor"])

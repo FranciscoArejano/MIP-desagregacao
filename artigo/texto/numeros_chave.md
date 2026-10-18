@@ -4,7 +4,7 @@ Gerado por `scripts/rodada05_artigo.py` a partir dos arquivos de resultado. Cada
 
 | Chave | Descrição | Valor bruto | Padrão brasileiro | Unidade | Origem |
 |---|---|---:|---:|---|---|
-| `a0_dif_artigo` | maior diferença entre o A0 e os valores publicados | 0.004858762084040791 | 0,00 | t CO₂e | resultados/rodada05/simulacoes_v04.xlsx › A0 × src/mip/referencia.py |
+| `a0_dif_artigo` | maior diferença entre as emissões totais do A0 e os valores de referência (duas casas, Rodada 01) | 0.004858762084040791 | 0,00 | t CO₂e | resultados/rodada05/simulacoes_v04.xlsx › A0 × src/mip/referencia.py |
 | `a0_dif_fossil_renov` | diferença de emissões fóssil − renovável (A0) | 139638.75294936722 | 139.638,8 | t CO₂e | resultados/rodada05/simulacoes_v04.xlsx › A0 › F1 − R1 |
 | `a0_e1_co2e` | emissões totais, Energia elétrica agregada (A0) | 428113.5341067808 | 428.113,5 | t CO₂e | resultados/rodada05/simulacoes_v04.xlsx › A0 › A0_E1 |
 | `a0_e1_dx` | produção bruta induzida, Energia elétrica agregada (A0) | 1925.037208036543 | 1.925,0 | R\$ milhões | resultados/rodada05/simulacoes_v04.xlsx › A0 › A0_E1 |
